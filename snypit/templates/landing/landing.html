@@ -1,0 +1,189 @@
+{% extends 'landing/base.html' %}
+{% block content %}
+
+<div class="row no-bottom-padding">
+    <div class="col s12 m12 l3 valign-wrapper white-text" id="login-div">
+        <div class="center-element">
+            <div class="card transparent z-depth-0">
+                <div class="card-content">
+                    <div class="row no-bottom-padding">
+                        <div class="col s12">
+                            <h2 class="no-top-padding"><i class="fas fa-code purple-text text-darken-1"></i> Snypit</h2>
+                            <div class="section"></div>
+                        </div>
+                    </div>
+
+                    <div id="login-form-section">
+                        <form action="/login-submit" id="login-form" method="POST">
+                            <div class="row no-bottom-padding">
+                                <div class="col s12 input-field">
+                                    <i class="material-icons prefix white-text">email</i>
+                                    {{ login_form.email(class="white-text", required="", type="email")}}
+                                    {{ login_form.email.label }}
+
+                                    <span class="red-text text-accent-1 helper-text hidden" id="email-error-text">{{ error }}</span>
+                            
+                                    {% for error in login_form.email.errors %}
+                                        <span class="red-text text-accent-1">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            
+                            <div class="row no-bottom-padding">
+                                <div class="col s12 input-field">
+                                    <i class="material-icons prefix white-text">lock</i>
+                                    {{ login_form.password(class="white-text", id="password", required="",
+                                                            type="password", pattern=".{8,}", title="Must be at least 8 characters.")}}
+                                    {{ login_form.password.label }}
+
+                                    <span class="red-text text-accent-1 helper-text hidden" id="password-error-text">{{ error }}</span>
+                            
+                                    {%for error in login_form.password.errors %}
+                                        <span class="red-text text-accent-1">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col s12 input-field">
+                                    <div id="login-submit-btn">
+                                        <button class="btn-flat purple darken-1 full-width white-text" type="submit">
+                                            Sign In
+                                        </button>
+                                    </div>
+
+                                    <div class="progress hidden" id="login-preloader">
+                                        <div class="indeterminate"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col s12">
+                        <a href="#" class="white-text">Forgot Password?</a>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col s12">
+                        <div class="container">
+                            <div class="or">
+                                <hr class="bar">
+                                <h6 class="white-text">&nbsp;&nbsp;&nbsp;&nbsp;OR&nbsp;&nbsp;&nbsp;&nbsp;</h6>
+                                <hr class="bar" id="or-hr">
+                            </div>
+                
+                            <div class="row">
+                                <div class="col s12">
+                                    <a href="/create-account"
+                                        class="btn full-width transparent z-depth-0 border-white">Create Account</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row no-padding">
+                    <div class="col s12 no-padding">
+                        <div class="section"></div>
+                        <div class="center">
+                            <p class="white-text small-text-tos no-padding">
+                                Copyright © 2018-2019 VirtualZero. All rights reserved.
+                            </p>
+                            <p class="small-text-tos no-padding">
+                                <a href="#" class="red-text text-accent-1 uline-tos">Terms of Use</a> &nbsp;
+                
+                                <span class="white-text">
+                                    |
+                                </span> &nbsp;
+                
+                                <a href="#" class="red-text text-accent-1 uline-tos">Privacy Policy</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="s12 m12 l9">
+        <div id="landing-showcase" class="valign-wrapper">
+            <div class="container">
+                <div class="card transparent z-depth-0">
+                    <div class="card-content">
+                        <div class="row">
+                            <div class="col s12">
+            
+                                <h3 class="white-text">
+                                    A Modern Snippet Management System
+                                </h3>
+            
+                                <p class="flow-text white-text">
+                                    Organize your valuable code snippets and increase productivity. Get started using Snypit for free.
+                                </p>
+                            </div>
+                        </div>
+            
+                        <div class="row">
+                            <div class="col s12">
+                                <a href="/create-account" class="btn-large z-depth-0 transparent border-white white-text">Get
+                                    Started</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("login-form").addEventListener('submit', makeRequest);
+    var xhr
+    var csrf_token = "{{ csrf_token() }}"
+    function makeRequest(e) {
+        e.preventDefault()
+        document.getElementById("login-submit-btn").style.display = 'none';
+        document.getElementById("login-preloader").style.display = "block";
+        xhr = new XMLHttpRequest();
+        xhr.open('POST', '/login-submit', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+        xhr.setRequestHeader("X-CSRFToken", csrf_token);
+        var email = "email=" + document.getElementById('email').value + "&";
+        var password = "password=" + document.getElementById('password').value;
+        var params = email + password;
+        xhr.onload = function () {
+            document.getElementById("login-preloader").style.display = "none";
+            document.getElementById("login-submit-btn").style.display = 'block';
+            if (this.status === 200) {
+                alert('success')
+            }
+
+            else if (this.status === 400) {
+                var r = JSON.parse(this.response);
+                if (r.hasOwnProperty('errors')) {
+                    if (r.errors.hasOwnProperty('email')) {
+                        document.getElementById('email-error-text').style.display = 'block';
+                        document.getElementById('email-error-text').innerHTML = r.errors.email;
+                    }
+                    if (r.errors.hasOwnProperty('password')) {
+                        document.getElementById('password-error-text').style.display = 'block';
+                        document.getElementById('password-error-text').innerHTML = r.errors.password;
+                    }
+                }
+            }
+        };
+        xhr.onerror = function () {
+            document.getElementById("contact-us-form-btn").style.display = 'block';
+            document.getElementById("contact-preloader").style.display = 'none';
+            M.toast({ html: '<p><i class="fas fa-2x fa-exclamation-triangle red-text text-accent-1 center"></i></p> &nbsp;&nbsp;&nbsp;<p>An error occured submitting the form.</p>', classes: 'grey darken-3 button-border-purple white-text center' })
+        };
+        xhr.send(params);
+    };
+</script>
+
+
+{% endblock %}

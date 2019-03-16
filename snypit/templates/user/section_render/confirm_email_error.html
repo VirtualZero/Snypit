@@ -1,0 +1,156 @@
+<div class="row">
+    <h3 class="white-text">
+        Email Confirmation Error
+    </h3>
+</div>
+
+<div class="row">
+    <div class="col s12">
+        <p class="white-text flow-text">
+            {{ error_msg }}<br>
+            {{ status_msg }}<br>
+        </p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col s12 center">
+        <i class="fas fa-exclamation-triangle red-text center fa-5x animated pulse infinite text-accent-1"></i>
+    </div>
+    <div class="section"></div>
+</div>
+
+<div class="row">
+    <div class="section"></div>
+    <div class="col s12 m12 l6 center">
+        <form action="/resend-email-confirmation?email={{ email }}&token={{ token }}" method="POST" id="resend-email-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            <button type="submit" class="full-width-button btn-flat purple darken-1 white-text center" id="resend-confirmation-email-button">Resend
+                Confirmation Email</button>
+        </form>
+    </div>
+    
+    <div class="col s12 m12 l6 center">
+        <a href="#updateEmailModal" class="modal-trigger full-width-button btn-flat purple darken-1 white-text center">Update
+            Email Address</a>
+    </div>
+</div>
+
+<div id="updateEmailModal" class="modal grey darken-3 white-text">
+    <div class="modal-content">
+        <div class="row">
+            <h3>
+                Update Email Address<i class="fas fa-envelope-open white-text right"></i>
+            </h3>
+        </div>
+
+        <form action="/reset-confirmation-email?old_email={{ email }}" method="POST" id="reset-email-form">
+            <div class="row">
+                <div class="col s12">
+                    <div class="col s12 m12 l12 input-field">
+                        <i class="material-icons prefix white-text">email</i>
+                        {{ reset_confirm_email_form.hidden_tag() }} {{ reset_confirm_email_form.email(class="validate
+                        white-text", required="", type="email")}} {{ reset_confirm_email_form.email.label
+                        }} {% for error in reset_confirm_email_form.email.errors %}
+                        <span class="red-text accent-1">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="col s12 m12 l12 input-field">
+                        <i class="material-icons prefix white-text">lock</i>
+                        {{ reset_confirm_email_form.password(class="validate white-text", required="",
+                        type="password", pattern=".{8,}", title="Must be at least 8 characters.")}} {{
+                        reset_confirm_email_form.password.label
+                        }} {% for
+                        error in reset_confirm_email_form.password.errors %}
+                        <span class="red-text accent-1">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    <button class="waves-effect waves-purple transparent btn-flat right white-text" type="submit">Submit</button>
+                    <a href="#!" class="modal-close waves-effect waves-purple btn-flat white-text right">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById('preloader').style.display = 'none';
+    var elems = document.querySelectorAll('.modal');
+    var instances = M.Modal.init(elems, {});
+    M.updateTextFields();
+</script>
+
+<script>
+
+    $('#resend-email-form').on('submit', function (e) {
+        e.preventDefault();
+
+        document.getElementById('resend-confirmation-email-button').style.display = 'none';
+
+        new_resend_email_request = $.ajax({
+            url: "/resend-email-confirmation?email={{ email }}&token={{ token }}",
+            type: 'POST',
+            data: $('#resend-email-form').serialize(),
+            success: M.toast({ html: '<p>Confirmation Email Sent!</p>', classes: 'grey darken-3 white-text flow-text button-border-purple z-depth-5' })
+        });
+
+        var csrf_token = "{{ csrf_token() }}";
+
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrf_token);
+                }
+            }
+        });
+    });
+
+</script>
+
+<script>
+
+    $('#reset-email-form').on('submit', function (e) {
+        e.preventDefault();
+
+        new_reset_email_request = $.ajax({
+            url: "/reset-confirmation-email?old_email={{ email }}",
+            type: 'POST',
+            data: $('#reset-email-form').serialize(),
+            success: function (response) {
+                if (response.status == 'invalid_email') {
+                    M.toast({ html: '<p>Invalid Email Address!</p>', classes: 'grey darken-3 white-text flow-text button-border-purple z-depth-5' });
+                }
+
+                else if (response.status == 'invalid_password') {
+                    M.toast({ html: '<p>Incorrect Password!</p>', classes: 'grey darken-3 white-text flow-text button-border-purple z-depth-5' });
+                }
+
+                else if (response.redirrect) {
+                    window.location.href = response.redirect;
+                }
+
+                else {
+                    $('#login-form-section').html(response);
+                    M.toast({ html: '<p>Email Updated!</p>', classes: 'grey darken-3 white-text flow-text button-border-purple z-depth-5' });
+                }
+            }
+        });
+
+        var csrf_token = "{{ csrf_token() }}";
+
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrf_token);
+                }
+            }
+        });
+    });
+
+</script>

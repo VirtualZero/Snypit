@@ -1,0 +1,168 @@
+<form action="/create-account-submit" method="POST" id="create-account-form">
+    <div class="row">
+        <div class="col s12">
+            <h3 class="white-text">
+                Create Account<i class="fas fa-user-plus white-text right"></i>
+            </h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col s12">
+            <div class="container">
+                <div class="row">
+                    <div class="col s12 input-field">
+                        <i class="material-icons prefix white-text">person</i>
+                        {{ create_account_form.first_name(class="validate white-text active", required="")}}
+                        {{ create_account_form.first_name.label }}
+
+                        {% for error in create_account_form.first_name.errors %}
+                        <span class="red-text accent-1">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col s12 input-field">
+                        <i class="material-icons prefix white-text">person</i>
+                        {{ create_account_form.last_name(class="validate white-text active", required="")}}
+                        {{ create_account_form.last_name.label }}
+
+                        {% for error in create_account_form.last_name.errors %}
+                        <span class="red-text accent-1">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col s12 input-field">
+                        <i class="material-icons prefix white-text">email</i>
+                        {{ create_account_form.email(class="validate white-text active", required="", type="email")}}
+                        {{ create_account_form.email.label }}
+
+                        {% for error in create_account_form.email.errors %}
+                        <span class="red-text accent-1">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col s12 input-field">
+                        <i class="material-icons prefix white-text">lock</i>
+                        {{ create_account_form.password(class="validate white-text", required="", type="password",
+                        pattern=".{8,}", title="Must be at least 8 characters.")}}
+                        {{ create_account_form.password.label }}
+
+                        {%for error in create_account_form.password.errors %}
+                        <span class="red-text accent-1">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col s12 input-field">
+                        <i class="material-icons prefix white-text">lock</i>
+                        {{ create_account_form.confirm_password(class="validate white-text", required="",
+                        type="password", pattern=".{8,}", title="Must be at least 8 characters.")}}
+                        {{ create_account_form.confirm_password.label }}
+
+                        {%for error in create_account_form.confirm_password.errors %}
+                        <span class="red-text accent-1">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col s12 center">
+                        <small>Terms of Service</small>
+                        <p class="flow-text white-text">
+                
+                            <label for="confirm_tos">
+                                <input type="checkbox" id="confirm_tos" name="confirm_tos" class="filled-in validate" required>
+                                <span class="flow-text white-text">I Agree to the Terms of Service</span>
+                            </label>
+                        </p>
+                        <a href="#"><small class="blue-text">Terms of Service &nbsp;<i class="fas fa-external-link-alt blue-text"></i></small></a>
+                    </div>
+                </div>
+
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+                <div class="row">
+                    <div class="col s12 right">
+                        <span>
+                            <small class="white-text">
+                                Already have an account? <a href="/login" style="text-decoration: underline;" class="white-text">Login</a>.
+                            </small>
+                            <button class="waves-effect waves-purple btn-flat transparent right white-text submit-btn-padding" type="submit">Create</button>
+                        
+                            <a href="/" class="waves-effect waves-purple btn-flat transparent right white-text">Cancel</a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+{% if existing == True %}
+    <script>
+        M.toast({ html: '<p>That email address is<br>already being used.</p>', classes: 'grey darken-3 white-text flow-text button-border-purple z-depth-5' });
+    </script>
+
+{% elif tos_error = True %}
+    <script>
+        M.toast({ html: '<p>You must agree to<br>the terms of service.</p>', classes: 'grey darken-3 white-text flow-text button-border-purple z-depth-5' });
+    </script>
+{% endif %}
+
+<script>
+    M.updateTextFields();
+</script>
+
+<script>
+    var preloader = document.getElementById('preloader');
+
+    if (preloader.style.display === 'block') {
+        preloader.style.display = 'none';
+    }
+</script>
+
+<script>
+
+    $('#create-account-form').on('submit', function (e) {
+        e.preventDefault();
+
+        var preloader = document.getElementById('preloader');
+
+        if (preloader.style.display === 'none') {
+            preloader.style.display = 'block';
+        }
+
+        new_create_account_request = $.ajax({
+            url: '/create-account-submit',
+            type: 'POST',
+            data: $('#create-account-form').serialize(),
+            success: function (response) {
+                if (response.redirect) {
+                    window.location.href = response.redirect;
+                }
+            }
+        });
+
+        var csrf_token = "{{ csrf_token() }}";
+
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrf_token);
+                }
+            }
+        });
+
+        new_create_account_request.done(function (data) {
+            $('#create-account-form-section').html(data);
+        });
+    });
+
+</script>

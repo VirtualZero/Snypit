@@ -1,0 +1,62 @@
+<div class="row">
+    <div class="col s12">
+        <div class="section"></div>
+        <p class="flow-text white-text">
+            <strong>
+                First Name:
+            </strong>
+
+            <span class="grey-text text-lighten-2">&nbsp;{{ session['first_name'].title() }}</span>
+        </p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col s12">
+        <p class="flow-text white-text">
+            <strong>
+                Last Name:
+            </strong>
+
+            <span class="grey-text text-lighten-2">&nbsp;{{ session['last_name'].title() }}</span>
+        </p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col s12">
+        <p class="flow-text white-text">
+            <strong>
+                Email:
+            </strong>
+
+            <span class="grey-text text-lighten-2">&nbsp;{{ session['email'] }}</span>
+        </p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col s12">
+        <a href="#" onclick="getUserInfo({{ session['user_id'] }})" class="btn-flat purple darken-1 white-text waves-effect waves-light"><i
+                class="fas fa-pencil-alt white-text"></i></a>
+    </div>
+</div>
+
+<script>
+    document.getElementById('done-button-row').style.display = 'block';
+    document.getElementById('personal-done-button').setAttribute('href', "/{{ session['first_name'].title() }}_{{ session['last_name'].title() }}")
+    document.getElementById('navbar-dashboard-link').setAttribute('href', "/{{ session['first_name'].title() }}_{{ session['last_name'].title() }}");
+    document.getElementById('logo-home-link').setAttribute('href', "/{{ session['first_name'].title() }}_{{ session['last_name'].title() }}");
+</script>
+
+<script>
+    function getUserInfo(user_id) {
+        $.ajax({
+            url: '/update-personal-details?user_id=' + user_id,
+            type: 'get',
+            success: function (response) {
+                $('#personal-info-section').html(response);
+            }
+        })
+    }
+</script>

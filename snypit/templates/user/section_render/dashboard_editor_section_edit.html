@@ -1,0 +1,223 @@
+<form action='/new-snippet-submit' method='POST' id='new-snippet-form'>
+    <div class='row no-padding-bottom'>
+        <div class='col s12 m12 l6 input-field'>
+            <input id='last_name' type='text' class='validate white-text active' disabled value="{{ snippet_to_show.snippet_name }}">
+            <label for='last_name'>Snippet Name</label>
+        </div>
+
+        <div class='col s12 m12 l6 input-field'>
+            <select class='btn-border-purple' name='language' id='language' disabled onchange='updateLanguage()'>
+                {% if snippet_to_show.language == 'none' %}
+                    <option value='none&none' selected disabled>Choose Language</option>
+                {% else %}
+                    <option value='none&none' disabled>Choose Language</option>
+                {% endif %}
+
+                {% if snippet_to_show.language == 'C' %}
+                    <option value='C&clike' selected>C</option>
+                {% else %}
+                    <option value='C&clike'>C</option>
+                {% endif %}
+
+                {% if snippet_to_show.language == 'C++' %}
+                    <option value='C++&clike' selected>C++</option>
+                {% else %}
+                    <option value='C++&clike'>C++</option>
+                {% endif %}
+
+                {% if snippet_to_show.language == 'C#' %}
+                    <option value='C#&clike' selected>C#</option>
+                {% else %}
+                    <option value='C#&clike'>C#</option>
+                {% endif %}
+
+                {% if snippet_to_show.language == 'CSS' %}
+                    <option value='CSS&css' selected>CSS</option>
+                {% else %}
+                    <option value='CSS&css'>CSS</option>
+                {% endif %}
+
+                {% if snippet_to_show.language == 'HTML' %}
+                    <option value='HTML&xml' selected>HTML</option>
+                {% else %}
+                    <option value='HTML&xml'>HTML</option>
+                {% endif %}
+
+                {% if snippet_to_show.language == 'HTTP' %}
+                    <option value='HTTP&http' selected>HTTP</option>
+                {% else %}
+                    <option value='HTML&xml'>HTML</option>
+                {% endif %}
+
+                {% if snippet_to_show.language == 'Java' %}
+                    <option value='Java&clike' selected>Java</option>
+                {% else %}
+                    <option value='Java&clike'>Java</option>
+                {% endif %}
+
+                {% if snippet_to_show.language == 'JavaScript' %}
+                    <option value='JavaScript&javascript' selected>JavaScript</option>
+                {% else %}
+                    <option value='JavaScript&javascript'>JavaScript</option>
+                {% endif %}
+
+                {% if snippet_to_show.language == 'Jinja2' %}
+                    <option value='Jinja2&jinja2' selected>Jinja2</option>
+                {% else %}
+                    <option value='Jinja2&jinja2'>Jinja2</option>
+                {% endif %}
+
+                {% if snippet_to_show.language == 'Nginx' %}
+                    <option value='Nginx&nginx' selected>Nginx</option>
+                {% else %}
+                    <option value='Nginx&nginx'>Nginx</option>
+                {% endif %}
+
+                {% if snippet_to_show.language == 'Perl' %}
+                    <option value='Perl&perl' selected>Perl</option>
+                {% else %}
+                    <option value='Perl&perl'>Perl</option>
+                {% endif %}
+
+                {% if snippet_to_show.language == 'PHP' %}
+                    <option value='PHP&php' selected>PHP</option>
+                {% else %}
+                    <option value='PHP&php'>PHP</option>
+                {% endif %}
+
+                {% if snippet_to_show.language == 'PowerShell' %}
+                    <option value='PowerShell&powershell' selected>PowerShell</option>
+                {% else %}
+                    <option value='PowerShell&powershell'>PowerShell</option>
+                {% endif %}
+
+                {% if snippet_to_show.language == 'Python' %}
+                    <option value='Python&python' selected>Python</option>
+                {% else %}
+                    <option value='Python&python'>Python</option>
+                {% endif %}
+
+                {% if snippet_to_show.language == 'Ruby' %}
+                    <option value='Ruby&ruby' selected>Ruby</option>
+                {% else %}
+                    <option value='Ruby&ruby'>Ruby</option>
+                {% endif %}
+
+                {% if snippet_to_show.language == 'SASS' %}
+                    <option value='SASS&sass' selected>SASS</option>
+                {% else %}
+                    <option value='SASS&sass'>SASS</option>
+                {% endif %}
+
+                {% if snippet_to_show.language == 'Shell' %}
+                    <option value='Shell&shell' selected>Shell</option>
+                {% else %}
+                    <option value='Shell&shell'>Shell</option>
+                {% endif %}
+
+                {% if snippet_to_show.language == 'SQL' %}
+                    <option value='SQL&sql' selected>SQL</option>
+                {% else %}
+                    <option value='SQL&sql'>SQL</option>
+                {% endif %}
+
+                {% if snippet_to_show.language == 'Visual Basic' %}
+                    <option value='Visual Basic&vb' selected>Visual Basic</option>
+                {% else %}
+                    <option value='Visual Basic&vb'>Visual Basic</option>
+                {% endif %}
+
+                {% if snippet_to_show.language == 'VBScript' %}
+                    <option value='VBScript&vbscript' selected>VBScript</option>
+                {% else %}
+                    <option value='VBScript&vbscript'>VBScript</option>
+                {% endif %}
+
+                {% if snippet_to_show.language == 'YAML' %}
+                    <option value='YAML&yaml' selected>YAML</option>
+                {% else %}
+                    <option value='YAML&yaml'>YAML</option>
+                {% endif %}
+
+                {% if snippet_to_show.language == 'YAML Front Matter' %}
+                    <option value='YAML Front Matter&yaml-frontmatter' selected>YAML Front Matter</option>
+                {% else %}
+                    <option value='YAML Front Matter&yaml-frontmatter'>YAML Front Matter</option>
+                {% endif %}
+
+                {% if snippet_to_show.language == 'none' %}
+                    <option value='none&none' selected>Other</option>
+                {% else %}
+                    <option value='none&none'>Other</option>
+                {% endif %}
+            </select>
+        </div>
+    </div>
+
+    <div class='row no-padding-bottom'>
+        <div class='col s12 input-field no-top-padding'>
+            <textarea id='Description/Notes' class='materialize-textarea white-text' disabled name='description'>{{ snippet_to_show.description }}</textarea>
+            <label for='textarea1'>Description/Notes (Optional)</label>
+        </div>
+    </div>
+
+    <div class='row valign-wrapper'>
+        <div class='col s12 m12 l6 no-padding-top'>
+            <div class='chips chips-placeholder chips-initial white-text no-top-padding' disabled id='tags'></div>
+        </div>
+
+        <div class='col s12 m12 l6 center no-top-padding'>
+            <label>
+                {% if snippet_to_show.pinned == True %}
+                    <input type='checkbox' class='filled-in white-text' checked name='pin_to_favorites' disabled/>
+                {% else %}
+                    <input type='checkbox' class='filled-in white-text' name='pin_to_favorites' disabled/>
+                {% endif %}
+                <span class='white-text center'>Pin to my favorites!</span>
+            </label>
+        </div>
+    </div>
+
+    <div class='row'>
+        <div class='col s12'>
+            <input type='hidden' name='csrf_token' value='{{ csrf_token() }}' />
+            <input type='hidden' name='snippet_id' value='' id='snippet-id'>
+            <input type='hidden' name='tag-input' id='tag-input' value=''>
+            <textarea name='snippet_content' id='snippet-content' disabled>{{ snippet_to_show.snippet_content }}</textarea>
+        </div>
+    </div>
+
+    <div class='row'>
+        <div class='col s12'>
+            <button type='submit' disabled class='right btn-flat purple darken-1 white-text waves-effect waves-light'
+                id='snippet-submit-button'>Save</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    var tag_list = {{ snippet_to_show_tags|tojson }};
+    var initial_tags = [];
+
+    for (i = 0; i < tag_list.length; i++) {
+        initial_tags.push({tag: tag_list[i]})
+    }
+
+    var elems = document.querySelectorAll('.chips');
+    var instances = M.Chips.init(elems, {
+        placeholder: 'Enter Tags',
+        secondaryPlaceholder: '+Tags',
+        data: initial_tags
+    });
+
+    var editor = CodeMirror.fromTextArea(document.getElementById('snippet-content'), {
+        lineNumbers: true,
+        mode: 'python',
+        theme: 'colorforth'
+    });
+
+    var elems = document.querySelectorAll('select');
+    var instances = M.FormSelect.init(elems);
+
+    M.updateTextFields();
+</script>

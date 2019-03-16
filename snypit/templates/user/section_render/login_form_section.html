@@ -1,0 +1,114 @@
+<form action="/login-submit" method="POST" id="login-form">
+    <div class="row">
+        <div class="col s12">
+            <h3 class="white-text">
+                Login<i class="fas fa-sign-in-alt white-text right"></i>
+            </h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col s12">
+            <div class="container">
+                <div class="row">
+                    <div class="col s12 input-field">
+                        <i class="material-icons prefix white-text">email</i>
+                        {{ login_form.email(class="validate white-text active", required="", type="email")}}
+                        {{ login_form.email.label }}
+
+                        {% for error in login_form.email.errors %}
+                        <span class="red-text accent-1">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col s12 input-field">
+                        <i class="material-icons prefix white-text">lock</i>
+                        {{ login_form.password(class="validate white-text active", id="password", required="",
+                        type="password", pattern=".{8,}", title="Must be at least 8 characters.")}}
+                        {{ login_form.password.label }}
+
+                        {%for error in login_form.password.errors %}
+                        <span class="red-text accent-1">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+                <div class="row">
+                    <div class="section"></div>
+                    <div class="col s12">
+                        <small class="white-text">
+                            Don't have an account? <span style="text-decoration: underline;"><a href="/create-account" class="white-text">Create
+                                    one.</a></span>
+                        </small>
+                        <button class="waves-effect waves-purple btn-flat transparent right white-text no-padding" type="submit">Login</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+{% if confirmed == False %}
+    <script>
+        M.toast({ html: '<p>That email is not<br>associated with<br>an account.</p>', classes: 'grey darken-3 white-text flow-text button-border-purple z-depth-5' });
+    </script>
+{% endif %}
+
+{% if validated == False %}
+    <script>
+        M.toast({ html: '<p>Incorrect password.</p>', classes: 'grey darken-3 white-text flow-text button-border-purple z-depth-5' });
+    </script>
+{% endif %}
+
+<script>
+    M.updateTextFields();
+</script>
+
+<script>
+    var preloader = document.getElementById('preloader');
+
+    if (preloader.style.display === 'block') {
+        preloader.style.display = 'none';
+    }
+</script>
+
+<script>
+    $('#login-form').on('submit', function (e) {
+        e.preventDefault();
+
+        var preloader = document.getElementById('preloader');
+
+        if (preloader.style.display === 'none') {
+            preloader.style.display = 'block';
+        }
+
+        new_login_request = $.ajax({
+            url: '/login-submit',
+            type: 'POST',
+            data: $('#login-form').serialize(),
+            success: function (response) {
+                if (response.redirect) {
+                    window.location.href = response.redirect;
+                }
+
+                else {
+                    $('#login-form-section').html(response);
+                }
+            }
+        });
+
+        var csrf_token = "{{ csrf_token() }}";
+
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrf_token);
+                }
+            }
+        });
+    });
+</script>

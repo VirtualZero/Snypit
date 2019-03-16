@@ -1,0 +1,155 @@
+{% extends "user/logged_out_base.html" %}
+{% block content %}
+
+
+<div class="valign-wrapper full-height">
+    <div class="container" id="content">
+        <div class="row no-bottom-padding">
+            <div class="col s12">
+                <div class="card z-depth-0 grey darken-3 white-text">
+                    <div class="card-content">
+                        <div id="create-account-form-section">
+                            <form action="/create-account-submit" method="POST" id="create-account-form">
+                                <div class="row">
+                                    <div class="col s12">
+                                        <h3 class="">
+                                            Create Account<i class="fas fa-user-plus  right"></i>
+                                        </h3>
+                                    </div>
+                                </div>
+                            
+                                <div class="row no-bottom-padding">
+                                    <div class="col s12 m12 l6 input-field">
+                                        <i class="material-icons prefix ">person</i>
+                                        {{ create_account_form.username(class="white-text", required="")}}
+                                        {{ create_account_form.username.label }}
+                
+                                        {% for error in create_account_form.username.errors %}
+                                        <span class="red-text accent-1">{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+
+                                    <div class="col s12 m12 l6 input-field">
+                                        <i class="material-icons prefix ">lock</i>
+                                        {{ create_account_form.password(class="white-text", required="", type="password",
+                                                                                        pattern=".{8,}", title="Must be at least 8 characters.")}}
+                                        {{ create_account_form.password.label }}
+                                        
+                                        {%for error in create_account_form.password.errors %}
+                                        <span class="red-text accent-1">{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col s12 m12 l6 input-field">
+                                        <i class="material-icons prefix ">email</i>
+                                        {{ create_account_form.email(class="white-text", required="", type="email")}}
+                                        {{ create_account_form.email.label }}
+                                        
+                                        {% for error in create_account_form.email.errors %}
+                                        <span class="red-text accent-1">{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                
+                                    <div class="col s12 m12 l6 input-field">
+                                        <i class="material-icons prefix ">lock</i>
+                                        {{ create_account_form.confirm_password(class="white-text", required="",
+                                                                                        type="password", pattern=".{8,}", title="Must be at least 8 characters.")}}
+                                        {{ create_account_form.confirm_password.label }}
+                                        
+                                        {%for error in create_account_form.confirm_password.errors %}
+                                        <span class="red-text accent-1">{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+
+                                        <div class="row">
+                                            <div class="col s12 center">
+                                                <div class="section"></div>
+                                                <p class="flow-text ">
+                                        
+                                                    <label for="confirm_tos">
+                                                        <input type="checkbox" id="confirm_tos" name="confirm_tos" class="filled-in" required>
+                                                        <span class="flow-text white-text">I Agree to the Terms of Service</span>
+                                                    </label>
+                                                </p>
+                                                <a href="#"><small class="blue-text">Terms of Service &nbsp;<i class="fas fa-external-link-alt blue-text"></i></small></a>
+                                            </div>
+                                        </div>
+
+                        
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                        
+                                        <div class="row">
+                                            <div class="col s12 right">
+                                                <div class="section"></div>
+                                                <span>
+                                                    <small class="">
+                                                        Already have an account? <a href="/" style="text-decoration: underline;" class="white-text">Login</a>.
+                                                    </small>
+                                                    <button class="waves-effect waves-purple btn-flat transparent right white-text submit-btn-padding" type="submit">Create</button>
+                                                
+                                                    <a href="/" class="waves-effect waves-purple btn-flat white-text transparent right ">Cancel</a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="progress" style="display: none;" id="preloader">
+                            <div class="indeterminate"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function (e) {
+
+        $('#create-account-form').on('submit', function (e) {
+            e.preventDefault();
+
+            var preloader = document.getElementById('preloader');
+
+            if (preloader.style.display === 'none') {
+                preloader.style.display = 'block';
+            }
+
+            new_create_account_request = $.ajax({
+                url: '/create-account-submit',
+                type: 'POST',
+                data: $('#create-account-form').serialize(),
+                success: function (response) {
+                    if (response.redirect) {
+                        window.location.href = response.redirect;
+                    }
+
+                    else {
+                        $('#create-account-form-section').html(response);
+                    }
+                }
+            });
+
+            var csrf_token = "{{ csrf_token() }}";
+
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrf_token);
+                    }
+                }
+            });
+        });
+    });
+
+</script>
+
+
+{% endblock %}

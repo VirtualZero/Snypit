@@ -1,0 +1,46 @@
+<div class="row no-padding">
+    <div class="col s12 m11 l11 no-padding">
+        <h4 class="white-text">
+            {{ snippet_to_show.snippet_name }}
+        </h4>
+    </div>
+
+    <div class="col s12 m1 l1 no-padding right">
+        <h4 class="white-text right">
+            {{ snippet_to_show.language }}
+        </h4>
+    </div>
+</div>
+
+<p class="flow-text white-text">
+    <strong>
+        Description:
+    </strong>
+    <span class="grey-text text-lighten-2">{{ snippet_to_show.description }}</span>
+</p>
+
+<p class="flow-text white-text">
+    <strong>
+        Tags:
+    </strong>
+    <span class="grey-text text-lighten-2">
+        {{ tags }}
+    </span>
+</p>
+
+<div class="section"></div>
+
+<div class="row">
+    <div class="col s12">
+        <textarea name='snippet_content' id='snippet-content'>{{ snippet_to_show.snippet_content }}</textarea>
+    </div>
+</div>
+
+<script>
+    var editor = CodeMirror.fromTextArea(document.getElementById('snippet-content'), {
+            lineNumbers: true,
+            mode: '{{ snippet_to_show.codemirror_mode }}',
+            theme: "{{ session['editor_theme'] }}",
+            readOnly: 'nocursor'
+        });
+</script>

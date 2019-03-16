@@ -1,0 +1,70 @@
+<div class="row">
+    <div class="col s12">
+        <h3 class="white-text">Search Results<i class="fas fa-search right white-text"></i></h3>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col s12">
+        
+        {% for search_match in search_match_list %}
+            <div id="search-results-editor-section{{ search_match.id }}">
+                {% if search_match.id != search_match_list[0].id %}
+                    <div class="section"></div>
+                {% endif %}
+                <strong>
+                    <p class="flow-text white-text">{{ search_match.snippet_name }} <span class="right">{{ search_match.language }}</span></p>
+                </strong>
+                <p class="flow-text white-text">Description: <span class="grey-text text-lighten-2">{{ search_match.description }}</span></p>
+                <textarea name='snippet_content{{ search_match.id }}' id='snippet-content{{ search_match.id }}'>{{ search_match.snippet_content }}</textarea>
+                <div style="margin-top: 10px;" >
+                    <a href="#" onclick="getSnippet( {{ search_match.id }} )" class="btn-flat purple darken-1 white-text right waves-effect waves-light">View</a>
+                </div>
+                <div class="section"></div>
+                <div class="section"></div>
+            </div>
+        {% endfor %}
+
+    </div>
+</div>
+
+<script>
+    var elems = document.querySelectorAll('.collapsible');
+    var instances = M.Collapsible.init(elems);
+    document.getElementById('search-preloader-row').style.display = 'none';
+</script>
+
+<script>
+    function changeCollapseColor(search_match_id) {
+        document.getElementById('collapsible-header' + search_match_id).style.color = 'red';
+        console.log('collapsible-header' + search_match_id)
+    }
+</script>
+
+<script>
+    function getSnippet(snippet_id) {
+        $.ajax({
+            url: '/dashboard-editor-update?snippet_id=' + snippet_id,
+            type: 'get',
+            success: function (response) {
+                $('#editor-section').html(response);
+            }
+        })
+    };
+</script>
+
+{% for search_match in search_match_list %}
+    <script>
+        var editorInstance = 'snippet-content{{ search_match.id }}';
+        var editor = CodeMirror.fromTextArea(document.getElementById(editorInstance), {
+            lineNumbers: true,
+            mode: '{{ search_match.codemirror_mode }}',
+            theme: "{{ session['editor_theme'] }}",
+            readOnly: 'nocursor'
+        });
+
+        if (document.getElementById('search-results-editor-section{{ search_match.id }}').clientHeight >= 350) {
+            editor.setSize(null, 225);
+        };
+    </script>
+{% endfor %}

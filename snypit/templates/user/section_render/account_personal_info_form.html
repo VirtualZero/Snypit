@@ -1,0 +1,120 @@
+<div class="section"></div>
+<form action="/update-personal-details" method="POST" id="update-personal-details-form">
+    <div class="row">
+        <div class="col s12 m12 l6 input-field">
+            <i class="material-icons prefix white-text">person</i>
+            {{ account_personal_details_form.first_name(class="validate white-text active", required="", value=session['first_name'].title())}}
+            {{ account_personal_details_form.first_name.label }}
+            
+            {% for error in account_personal_details_form.first_name.errors %}
+            <span class="red-text accent-1">{{ error }}</span>
+            {% endfor %}
+        </div>
+
+        <div class="col s12 m12 l6 input-field">
+            <i class="material-icons prefix white-text">person</i>
+            {{ account_personal_details_form.last_name(class="validate white-text active", required="", value=session['last_name'].title())}}
+            {{ account_personal_details_form.last_name.label }}
+        
+            {% for error in account_personal_details_form.last_name.errors %}
+            <span class="red-text accent-1">{{ error }}</span>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="row valign-wrapper">
+        <div class="col s12 m12 l6 input-field">
+            <i class="material-icons prefix white-text">email</i>
+            {{ account_personal_details_form.email(class="validate white-text active active", required="", type="email", value=session['email'])}}
+            {{ account_personal_details_form.email.label }}
+            
+            {% for error in account_personal_details_form.email.errors %}
+            <span class="red-text accent-1">{{ error }}</span>
+            {% endfor %}
+        </div>
+
+        <div class="col s12 m12 l6 center">
+            <a href="#" class="white-text center" onclick="getPasswordReset({{ session['user_id'] }})"><i class="fas fa-lock white-text"></i>&nbsp; Reset Password</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col s12">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            <button class="right btn-flat transparent waves-effect waves-purple white-text" type="submit">Save</button>
+            <a href="#" onclick="getPersonalDetails({{ session['user_id'] }})" class="right btn-flat transparent white-text waves-effect waves-purple">Cancel</a>
+        </div>
+    </div>
+</form>
+
+<script>
+    M.updateTextFields();
+</script>
+
+<script>
+    document.getElementById('done-button-row').style.display = 'none';
+    document.getElementById('personal-done-button').setAttribute('href', "/{{ session['first_name'].title() }}_{{ session['last_name'].title() }}")
+    document.getElementById('navbar-dashboard-link').setAttribute('href', "/{{ session['first_name'].title() }}_{{ session['last_name'].title() }}");
+    document.getElementById('logo-home-link').setAttribute('href', "/{{ session['first_name'].title() }}_{{ session['last_name'].title() }}");
+</script>
+
+<script>
+    function getPersonalDetails(user_id) {
+        $.ajax({
+            url: '/update-personal-details?user_id=' + user_id + '&request_method=cancel',
+            type: 'get',
+            success: function (response) {
+                $('#personal-info-section').html(response);
+            }
+        })
+    }
+</script>
+
+<script>
+    function getPasswordReset(user_id) {
+        $.ajax({
+            url: '/update-password?user_id=' + user_id,
+            type: 'get',
+            success: function (response) {
+                $('#personal-info-section').html(response);
+            }
+        })
+    }
+</script>
+
+<script>
+    var preloader = document.getElementById('preloader');
+
+    if (preloader.style.display === 'block') {
+        preloader.style.display = 'none';
+    }
+</script>
+
+<script>
+
+    $('#update-personal-details-form').on('submit', function (e) {
+        e.preventDefault();
+
+        new_update_personal_details_request = $.ajax({
+            url: "/update-personal-details?user_id={{ session['user_id'] }}",
+            type: 'POST',
+            data: $('#update-personal-details-form').serialize(),
+        });
+
+        var csrf_token = "{{ csrf_token() }}";
+
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrf_token);
+                }
+            }
+        });
+
+        new_update_personal_details_request.done(function (data) {
+            M.toast({ html: '<p>Account Updated!</p>', classes: 'grey darken-3 white-text flow-text button-border-purple z-depth-5' });
+            $('#personal-info-section').html(data);
+        });
+    });
+
+</script>
