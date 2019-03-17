@@ -208,14 +208,11 @@
 
             else if (this.status === 400) {
 
-                if (r.hasOwnProperty('errors')) {
-                    if (r.errors.hasOwnProperty('email')) {
-                        emailErrorText.style.display = 'block';
-                        emailErrorText.innerHTML = r.errors.email;
-                    }
-                    if (r.errors.hasOwnProperty('password')) {
-                        passwordErrorText.style.display = 'block';
-                        passwordErrorText.innerHTML = r.errors.password;
+                if (r.hasOwnProperty('status')) {
+                    if (r.hasOwnProperty('status')) {
+                        if (r.status === 'confirmed') {
+                            window.location.href = '/?confirmed=True'
+                        }
                     }
                 }
             }

@@ -18,10 +18,12 @@
                             <div class="row no-bottom-padding">
                                 <div class="col s12 input-field">
                                     <i class="material-icons prefix white-text">email</i>
-                                    {{ login_form.email(class="white-text", required="", type="email")}}
+                                    {{ login_form.email(class="white-text", required="", type="email", pattern=".{1,100}", title="Must be less than 100 characters.", maxlength="100")}}
                                     {{ login_form.email.label }}
 
-                                    <span class="red-text text-accent-1 helper-text" style="display: none;" id="email-error-text"></span>
+                                    <div class="right">
+                                        <span class="red-text text-accent-1 helper-text" style="display: none;" id="email-error-text"></span>
+                                    </div>
                             
                                     {% for error in login_form.email.errors %}
                                         <span class="red-text text-accent-1">{{ error }}</span>
@@ -32,11 +34,12 @@
                             <div class="row no-bottom-padding">
                                 <div class="col s12 input-field">
                                     <i class="material-icons prefix white-text">lock</i>
-                                    {{ login_form.password(class="white-text", id="password", required="",
-                                                            type="password", pattern=".{8,}", title="Must be at least 8 characters.")}}
+                                    {{ login_form.password(class="white-text", id="password", required="", type="password", pattern=".{8,128}", title="Must be 8-128 characters.", maxlength="128")}}
                                     {{ login_form.password.label }}
 
-                                    <span class="red-text text-accent-1 helper-text" style="display: none;" id="password-error-text"></span>
+                                    <div class="right">
+                                        <span class="red-text text-accent-1 helper-text" style="display: none;" id="password-error-text"></span>
+                                    </div>
                             
                                     {%for error in login_form.password.errors %}
                                         <span class="red-text text-accent-1">{{ error }}</span>
@@ -142,12 +145,20 @@
 
 <script>
     document.getElementById("login-form").addEventListener('submit', makeRequest);
-    var xhr
-    var csrf_token = "{{ csrf_token() }}"
     function makeRequest(e) {
-        e.preventDefault()
-        document.getElementById("login-submit-btn").style.display = 'none';
-        document.getElementById("login-preloader").style.display = "block";
+        e.preventDefault();
+        var xhr;
+        var csrf_token = "{{ csrf_token() }}";
+        var loginFormBtns = document.getElementById("login-submit-btn");
+        var preloader = document.getElementById("login-preloader");
+        var emailErrorText = document.getElementById('email-error-text');
+        var pwErrorText = document.getElementById('password-error-text');
+
+        emailErrorText.style.display = 'none';
+        pwErrorText.style.display = 'none';
+        loginFormBtns.style.display = 'none';
+        preloader.style.display = "block";
+
         xhr = new XMLHttpRequest();
         xhr.open('POST', '/login-submit', true);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
@@ -156,8 +167,9 @@
         var password = "password=" + document.getElementById('password').value;
         var params = email + password;
         xhr.onload = function () {
-            document.getElementById("login-preloader").style.display = "none";
-            document.getElementById("login-submit-btn").style.display = 'block';
+            preloader.style.display = "none";
+            loginFormBtns.style.display = 'block';
+
             if (this.status === 200) {
                 alert('success')
             }
@@ -166,19 +178,26 @@
                 var r = JSON.parse(this.response);
                 if (r.hasOwnProperty('errors')) {
                     if (r.errors.hasOwnProperty('email')) {
-                        document.getElementById('email-error-text').style.display = 'block';
-                        document.getElementById('email-error-text').innerHTML = r.errors.email;
+                        if (r.errors.email === 'unconfirmed_email') {
+                            window.location.href = '/email-confirmation-sent?email=' + document.getElementById('email').value;
+                        }
+                        emailErrorText.style.display = 'block';
+                        emailErrorText.innerHTML = r.errors.email;
+                        document.getElementById('password').value = '';
+                        M.updateTextFields();c
                     }
                     if (r.errors.hasOwnProperty('password')) {
-                        document.getElementById('password-error-text').style.display = 'block';
-                        document.getElementById('password-error-text').innerHTML = r.errors.password;
+                        pwErrorText.style.display = 'block';
+                        pwErrorText.innerHTML = r.errors.password;
+                        document.getElementById('password').value = '';
+                        M.updateTextFields();
                     }
                 }
             }
         };
         xhr.onerror = function () {
-            document.getElementById("contact-us-form-btn").style.display = 'block';
-            document.getElementById("contact-preloader").style.display = 'none';
+            loginFormBtns.style.display = 'block';
+            preloader.style.display = 'none';
             M.toast({ html: '<p><i class="fas fa-2x fa-exclamation-triangle red-text text-accent-1 center"></i></p> &nbsp;&nbsp;&nbsp;<p>An error occured submitting the form.</p>', classes: 'grey darken-3 button-border-purple white-text center' })
         };
         xhr.send(params);

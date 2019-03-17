@@ -1,11 +1,35 @@
-from flask import render_template, jsonify, request, redirect, flash, abort, url_for
-from snypit import app, bcrypt, db
-from snypit.forms.forms import LoginForm, CreateAccountForm, Reset_Confirm_Email_Form
+from flask import (
+    render_template, 
+    jsonify, 
+    request, 
+    redirect, 
+    flash, 
+    abort, 
+    url_for, 
+    session
+)
+from snypit.forms.forms import (
+    LoginForm, 
+    CreateAccountForm, 
+    Reset_Confirm_Email_Form
+)
+from snypit import (
+    app, 
+    bcrypt, 
+    db
+)
+from itsdangerous import (
+    URLSafeTimedSerializer, 
+    SignatureExpired, 
+    BadTimeSignature
+)
+from sqlalchemy import (
+    and_, 
+    desc
+)
 from snypit.models.user_models import User
-from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadTimeSignature
 import os
 import requests
-from sqlalchemy import and_, desc
 
 
 verify_email_serializer = URLSafeTimedSerializer(
@@ -18,6 +42,10 @@ verify_email_serializer = URLSafeTimedSerializer(
 @app.route('/')
 def landing():
     login_form = LoginForm()
+
+    if request.args.get('confirmed'):
+        flash('Your email has been confirmed.')
+
     return render_template(
         'landing/landing.html',
         title='Snypit',
@@ -30,6 +58,15 @@ def login_submit():
     login_form = LoginForm()
 
     if login_form.validate_on_submit():
+        user = User.query.filter_by(
+            email=login_form.email.data
+        ).first()
+
+        if not user:
+            abort(403)
+
+        
+
         return jsonify(
             {
                 'status': 'success'

@@ -214,12 +214,12 @@
 
                 if (r.hasOwnProperty('status')) {
                     if (r.status === 'confirmed') {
-                        window.location.href = '/'
+                        window.location.href = '/?confirmed=True'
                     }
                 }
             }
         };
-        
+
         xhr.onerror = function () {
             formBtns.style.display = 'block';
             preloader.style.display = 'none';
