@@ -15,6 +15,7 @@
                                         <h3 class="">
                                             Create Account<i class="fas fa-user-plus  right"></i>
                                         </h3>
+                                        <div class="section"></div>
                                     </div>
                                 </div>
                             
@@ -25,30 +26,30 @@
                                         {{ create_account_form.username.label }}
                 
                                         {% for error in create_account_form.username.errors %}
-                                        <span class="red-text accent-1">{{ error }}</span>
+                                            <span class="red-text accent-1">{{ error }}</span>
                                         {% endfor %}
                                     </div>
 
-                                    <div class="col s12 m12 l6 input-field">
-                                        <i class="material-icons prefix ">lock</i>
-                                        {{ create_account_form.password(class="white-text", required="", type="password",
-                                                                                        pattern=".{8,}", title="Must be at least 8 characters.")}}
-                                        {{ create_account_form.password.label }}
-                                        
-                                        {%for error in create_account_form.password.errors %}
-                                        <span class="red-text accent-1">{{ error }}</span>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-
-                                <div class="row">
                                     <div class="col s12 m12 l6 input-field">
                                         <i class="material-icons prefix ">email</i>
                                         {{ create_account_form.email(class="white-text", required="", type="email")}}
                                         {{ create_account_form.email.label }}
                                         
                                         {% for error in create_account_form.email.errors %}
-                                        <span class="red-text accent-1">{{ error }}</span>
+                                            <span class="red-text accent-1">{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col s12 m12 l6 input-field">
+                                        <i class="material-icons prefix ">lock</i>
+                                        {{ create_account_form.password(class="white-text", required="", type="password",
+                                                                                                                                pattern=".{8,}", title="Must be at least 8 characters.")}}
+                                        {{ create_account_form.password.label }}
+                                        
+                                        {%for error in create_account_form.password.errors %}
+                                            <span class="red-text accent-1">{{ error }}</span>
                                         {% endfor %}
                                     </div>
                                 
@@ -59,41 +60,34 @@
                                         {{ create_account_form.confirm_password.label }}
                                         
                                         {%for error in create_account_form.confirm_password.errors %}
-                                        <span class="red-text accent-1">{{ error }}</span>
+                                            <span class="red-text accent-1">{{ error }}</span>
                                         {% endfor %}
                                     </div>
                                 </div>
 
-                                        <div class="row">
-                                            <div class="col s12 center">
-                                                <div class="section"></div>
-                                                <p class="flow-text ">
-                                        
-                                                    <label for="confirm_tos">
-                                                        <input type="checkbox" id="confirm_tos" name="confirm_tos" class="filled-in" required>
-                                                        <span class="flow-text white-text">I Agree to the Terms of Service</span>
-                                                    </label>
-                                                </p>
-                                                <a href="#"><small class="blue-text">Terms of Service &nbsp;<i class="fas fa-external-link-alt blue-text"></i></small></a>
-                                            </div>
-                                        </div>
-
+                                <div class="row">
+                                    <div class="col s12 center">
+                                        <div class="section"></div>
+                                        <p class="flow-text ">
+                                
+                                            <label for="confirm_tos">
+                                                <input type="checkbox" id="confirm_tos" name="confirm_tos" class="filled-in" required>
+                                                <span class="flow-text white-text">I Agree to the Terms of Service</span>
+                                            </label>
+                                        </p>
+                                        <a href="#" class="white-text"><small>Terms of Service &nbsp;<i class="fas fa-external-link-alt white-text"></i></small></a>
+                                    </div>
+                                </div>
                         
-                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-                        
-                                        <div class="row">
-                                            <div class="col s12 right">
-                                                <div class="section"></div>
-                                                <span>
-                                                    <small class="">
-                                                        Already have an account? <a href="/" style="text-decoration: underline;" class="white-text">Login</a>.
-                                                    </small>
-                                                    <button class="waves-effect waves-purple btn-flat transparent right white-text submit-btn-padding" type="submit">Create</button>
-                                                
-                                                    <a href="/" class="waves-effect waves-purple btn-flat white-text transparent right ">Cancel</a>
-                                                </span>
-                                            </div>
-                                        </div>
+                                <div class="row">
+                                    <div class="col s12 right">
+                                        <div class="section"></div>
+                                        <p>
+                                            Already have an account? <a href="/" style="text-decoration: underline;" class="white-text">Login</a>.
+                                            <button class="waves-effect waves-purple btn-flat purple darken-1 right white-text btn-spacing btn-hover"
+                                                type="submit">Create</button>
+                                            <a href="/" class="waves-effect waves-purple btn-flat white-text purple darken-1 right btn-hover">Cancel</a>
+                                        </p>
                                     </div>
                                 </div>
                             </form>
