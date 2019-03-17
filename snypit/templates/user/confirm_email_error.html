@@ -1,18 +1,20 @@
-{% extends "base.html" %}
+{% extends "user/logged_out_base.html" %}
 {% block content %}
 
-<div class="valign-wrapper" id="showcase">
+<div class="valign-wrapper full-height">
     <div class="container" id="content">
         <div class="row">
             <div class="container">
                 <div class="col s12">
-                    <div class="card hoverable grey darken-3 button-border-purple">
+                    <div class="card z-depth-0 grey darken-3 button-border-purple">
                         <div class="card-content">
                             <div id="email-error-section">
                                 <div class="row">
-                                    <h3 class="white-text">
-                                        Email Confirmation Error
-                                    </h3>
+                                    <div class="col s12">
+                                        <h3 class="white-text">
+                                            <i class="fas fa-exclamation-triangle red-text text-accent-1"></i> &nbsp;Email Confirmation Error
+                                        </h3>
+                                    </div>
                                 </div>
                                 
                                 <div class="row">
@@ -26,25 +28,23 @@
                                 
                                 <div class="row">
                                     <div class="section"></div>
-                                    <div class="col s12 center">
-                                        <i class="fas fa-exclamation-triangle red-text center fa-5x animated pulse infinite text-accent-1"></i>
-                                    </div>
-                                    <div class="section"></div>
-                                </div>
-                                
-                                <div class="row">
-                                    <div class="section"></div>
                                     <div class="col s12 m12 l6 center">
-                                        <form action="/resend-email-confirmation?email={{ email }}&token={{ token }}" method="POST" id="resend-email-form">
-                                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-                                            <button type="submit" class="full-width-button btn-flat purple darken-1 white-text center" id="resend-confirmation-email-button">Resend
-                                                Confirmation Email</button>
-                                        </form>
+                                        <div class="progress" style="display: none;" id="resend-email-preloader">
+                                            <div class="indeterminate"></div>
+                                        </div>
+                                        
+                                        <div id="resend-btn">
+                                            <form action="/resend-email-confirmation" method="POST" id="resend-email-form">
+                                                <input type="hidden" name="resend_email_value" id="resend_email_value" value="{{ email }}">
+                                                <button type="submit" class="full-width btn-flat purple darken-1 white-text btn-hover center"
+                                                    id="resend-confirmation-email-button">Resend Email</button>
+                                            </form>
+                                        </div>
                                     </div>
                                 
                                     <div class="col s12 m12 l6 center">
-                                        <a href="#updateEmailModal" class="modal-trigger full-width-button btn-flat purple darken-1 white-text center">Update
-                                            Email Address</a>
+                                        <div class="section hide-on-large-only"></div>
+                                        <a href="#updateEmailModal" class="modal-trigger full-width btn-flat purple darken-1 white-text center btn-hover">Update Email</a>
                                     </div>
                                 </div>
                             </div>
@@ -59,40 +59,53 @@
 <div id="updateEmailModal" class="modal grey darken-3 white-text">
     <div class="modal-content">
         <div class="row">
-            <h3>
-                Update Email Address<i class="fas fa-envelope-open white-text right"></i>
-            </h3>
+            <div class="col s12">
+                <h3>
+                    Update Email Address<i class="fas fa-envelope-open white-text right"></i>
+                </h3>
+            </div>
         </div>
 
         <form action="/reset-confirmation-email?old_email={{ email }}" method="POST" id="reset-email-form">
             <div class="row">
-                <div class="col s12">
-                    <div class="col s12 m12 l12 input-field">
-                        <i class="material-icons prefix white-text">email</i>
-                        {{ reset_confirm_email_form.hidden_tag() }} {{ reset_confirm_email_form.email(class="validate
-                        white-text", required="", type="email")}} {{ reset_confirm_email_form.email.label
-                        }} {% for error in reset_confirm_email_form.email.errors %}
-                        <span class="red-text accent-1">{{ error }}</span>
-                        {% endfor %}
-                    </div>
+                <div class="col s12 m12 l6 input-field">
+                    <i class="material-icons prefix white-text">email</i>
+                    {{ reset_confirm_email_form.email(class="white-text", required="", pattern=".{1,100}", title="Must be less than 100 characters.", maxlength="100", type="email")}} 
+                    {{ reset_confirm_email_form.email.label}} 
 
-                    <div class="col s12 m12 l12 input-field">
-                        <i class="material-icons prefix white-text">lock</i>
-                        {{ reset_confirm_email_form.password(class="validate white-text", required="",
-                        type="password", pattern=".{8,}", title="Must be at least 8 characters.")}} {{
-                        reset_confirm_email_form.password.label
-                        }} {% for
-                        error in reset_confirm_email_form.password.errors %}
+                    <span class="red-text text-accent-1 helper-text" style="display: none;" id="email-error-text"></span>
+                    
+                    {% for error in reset_confirm_email_form.email.errors %}
                         <span class="red-text accent-1">{{ error }}</span>
-                        {% endfor %}
-                    </div>
+                    {% endfor %}
+
+                    {{ reset_confirm_email_form.old_email(value=email)}}
+                    {{ reset_confirm_email_form.email.label}}
+                </div>
+
+                <div class="col s12 m12 l6 input-field">
+                    <i class="material-icons prefix white-text">lock</i>
+                    {{ reset_confirm_email_form.password(class="white-text", required="", type="password", pattern=".{8,128}", title="Must be at 8-128 characters.", maxlength="128")}} 
+                    {{reset_confirm_email_form.password.label}} 
+
+                    <span class="red-text text-accent-1 helper-text" style="display: none;" id="password-error-text"></span>
+                    
+                    {% for error in reset_confirm_email_form.password.errors %}
+                        <span class="red-text accent-1">{{ error }}</span>
+                    {% endfor %}
                 </div>
             </div>
 
             <div class="row">
                 <div class="col s12">
-                    <button class="waves-effect waves-purple transparent btn-flat right white-text" type="submit">Submit</button>
-                    <a href="#!" class="modal-close waves-effect waves-purple btn-flat white-text right">Cancel</a>
+                    <div id="reset-email-btns">
+                        <button class="waves-effect waves-purple purple darken-1 btn-flat btn-hover right white-text btn-spacing" type="submit">Submit</button>
+                        <a href="#!" class="modal-close waves-effect waves-purple purple darken-1 btn-flat btn-hover right white-text">Cancel</a>
+                    </div>
+
+                    <div class="progress" style="display: none;" id="reset-email-preloader">
+                        <div class="indeterminate"></div>
+                    </div>
                 </div>
             </div>
         </form>
@@ -107,6 +120,116 @@
 </script>
 
 <script>
+    document.getElementById("reset-email-form").addEventListener('submit', makeRequest);
+    function makeRequest(e) {
+        e.preventDefault();
+        var xhr;
+        var csrf_token = "{{ csrf_token() }}";
+        var preloader = document.getElementById("reset-email-preloader");
+        var formBtns = document.getElementById("reset-email-btns");
+        var emailErrorText = document.getElementById('email-error-text');
+        var passwordErrorText = document.getElementById('password-error-text');
+
+        emailErrorText.style.display = 'none';
+        passwordErrorText.style.display = 'none';
+        
+        formBtns.style.display = 'none';
+        preloader.style.display = "block";
+
+        xhr = new XMLHttpRequest();
+        xhr.open('POST', '/reset-confirmation-email', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+        xhr.setRequestHeader("X-CSRFToken", csrf_token);
+        var email = "email=" + document.getElementById('email').value + "&";
+        var oldEmail = "old_email=" + document.getElementById('old_email').value + "&";
+        var password = "password=" + document.getElementById('password').value;
+        var params = email + oldEmail + password ;
+        xhr.onload = function () {
+            preloader.style.display = "none";
+            formBtns.style.display = 'block';
+
+            var r = JSON.parse(this.response);
+
+            if (this.status === 200) {
+                window.location.href = r.redirect_url
+            }
+
+            else if (this.status === 400) {
+                
+                if (r.hasOwnProperty('errors')) {
+                    if (r.errors.hasOwnProperty('email')) {
+                        emailErrorText.style.display = 'block';
+                        emailErrorText.innerHTML = r.errors.email;
+                    }
+                    if (r.errors.hasOwnProperty('password')) {
+                        passwordErrorText.style.display = 'block';
+                        passwordErrorText.innerHTML = r.errors.password;
+                    }
+                }
+            }
+        };
+        xhr.onerror = function () {
+            formBtns.style.display = 'block';
+            preloader.style.display = 'none';
+            M.toast({ html: '<p><i class="fas fa-2x fa-exclamation-triangle red-text text-accent-1 center"></i></p> &nbsp;&nbsp;&nbsp;<p>An error occured submitting the form.</p>', classes: 'grey darken-3 white-text center' })
+        };
+        xhr.send(params);
+    };
+</script>
+
+<script>
+    document.getElementById("resend-email-form").addEventListener('submit', makeRequest);
+    function makeRequest(e) {
+        e.preventDefault();
+        var xhr;
+        var csrf_token = "{{ csrf_token() }}";
+        var preloader = document.getElementById("resend-email-preloader");
+        var formBtns = document.getElementById("resend-btn");
+
+        formBtns.style.display = 'none';
+        preloader.style.display = "block";
+
+        xhr = new XMLHttpRequest();
+        xhr.open('POST', '/resend-email-confirmation', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+        xhr.setRequestHeader("X-CSRFToken", csrf_token);
+        var email = "email=" + document.getElementById('resend_email_value').value;
+        var params = email;
+
+        xhr.onload = function () {
+            preloader.style.display = "none";
+            formBtns.style.display = 'block';
+
+            var r = JSON.parse(this.response);
+
+            if (this.status === 200) {
+                window.location.href = r.redirect_url
+            }
+
+            else if (this.status === 400) {
+
+                if (r.hasOwnProperty('errors')) {
+                    if (r.errors.hasOwnProperty('email')) {
+                        emailErrorText.style.display = 'block';
+                        emailErrorText.innerHTML = r.errors.email;
+                    }
+                    if (r.errors.hasOwnProperty('password')) {
+                        passwordErrorText.style.display = 'block';
+                        passwordErrorText.innerHTML = r.errors.password;
+                    }
+                }
+            }
+        };
+        xhr.onerror = function () {
+            formBtns.style.display = 'block';
+            preloader.style.display = 'none';
+            M.toast({ html: '<p><i class="fas fa-2x fa-exclamation-triangle red-text text-accent-1 center"></i></p> &nbsp;&nbsp;&nbsp;<p>An error occured submitting the form.</p>', classes: 'grey darken-3 white-text center' })
+        };
+        xhr.send(params);
+    };
+</script>
+
+{#<script>
     $(document).ready(function (e) {
         $('#resend-email-form').on('submit', function (e) {
             e.preventDefault();
@@ -173,6 +296,6 @@
             });
         });
     });
-</script>
+</script>#}
 
 {% endblock %}

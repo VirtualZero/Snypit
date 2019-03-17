@@ -21,7 +21,7 @@
                                     {{ login_form.email(class="white-text", required="", type="email")}}
                                     {{ login_form.email.label }}
 
-                                    <span class="red-text text-accent-1 helper-text hidden" id="email-error-text">{{ error }}</span>
+                                    <span class="red-text text-accent-1 helper-text" style="display: none;" id="email-error-text"></span>
                             
                                     {% for error in login_form.email.errors %}
                                         <span class="red-text text-accent-1">{{ error }}</span>
@@ -36,7 +36,7 @@
                                                             type="password", pattern=".{8,}", title="Must be at least 8 characters.")}}
                                     {{ login_form.password.label }}
 
-                                    <span class="red-text text-accent-1 helper-text hidden" id="password-error-text">{{ error }}</span>
+                                    <span class="red-text text-accent-1 helper-text" style="display: none;" id="password-error-text"></span>
                             
                                     {%for error in login_form.password.errors %}
                                         <span class="red-text text-accent-1">{{ error }}</span>
