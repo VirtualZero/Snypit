@@ -27,7 +27,10 @@ from sqlalchemy import (
     and_, 
     desc
 )
-from snypit.models.user_models import User
+from snypit.models.user_models import (
+    User, 
+    AccountActivity
+)
 import os
 import requests
 
@@ -65,11 +68,29 @@ def login_submit():
         if not user:
             abort(403)
 
-        
+        new_account_activity = AccountActivity(
+            user.id,
+            db.func.now(),
+            request.environ.get(
+                'HTTP_X_REAL_IP',
+                request.remote_addr
+            )
+        )
+
+        db.session.add(new_account_activity)
+        user.login_count+=1
+        db.session.commit()
+
+        session['current_session_id'] = new_account_activity.id
+        session['user_id'] = user.id
+        session['email'] = user.email
+        session['username'] = user.username
+        session['is_admin'] = user.is_admin
+        session['editor_theme'] = user.editor_theme
 
         return jsonify(
             {
-                'status': 'success'
+                'redirect_url': f'/dashboard?id={user.id}&username={user.username}&login=True'
             }
         )
 
@@ -84,6 +105,39 @@ def login_submit():
             'errors': errors
         }
     ), 400
+
+
+@app.route('/logout')
+def logout():
+    try:
+        session_to_close = AccountActivity.query.filter_by(
+            id=session['current_session_id']
+        ).first()
+
+        if session_to_close:
+            session_to_close.logout = db.func.now()
+            db.session.commit()
+
+    except KeyError:
+        pass
+
+    except:
+        pass
+
+    try:
+        del session['current_session_id']
+        del session['user_id']
+        del session['email']
+        del session['username']
+        del session['is_admin']
+        del session['editor_theme']
+
+        flash('Logged Out.')
+        return redirect('/')
+
+    except KeyError:
+        flash('You are not logged in.')
+        return redirect('/')
 
 
 @app.route('/create-account')

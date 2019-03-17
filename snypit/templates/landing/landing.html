@@ -170,12 +170,13 @@
             preloader.style.display = "none";
             loginFormBtns.style.display = 'block';
 
+            var r = JSON.parse(this.response);
+
             if (this.status === 200) {
-                alert('success')
+                window.location.href = r.redirect_url
             }
 
             else if (this.status === 400) {
-                var r = JSON.parse(this.response);
                 if (r.hasOwnProperty('errors')) {
                     if (r.errors.hasOwnProperty('email')) {
                         if (r.errors.email === 'unconfirmed_email') {

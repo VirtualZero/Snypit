@@ -18,5 +18,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
+# Models
 from snypit.models.user_models import User, AccountActivity
+
+# Routes
 from snypit.user.routes import user_routes
+from snypit.user_admin.routes import user_admin_routes
