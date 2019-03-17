@@ -4,10 +4,9 @@ class User(db.Model):
     __tablename__ = 'user'
 
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(150), index=True)
-    first_name = db.Column(db.String(150))
-    last_name = db.Column(db.String(150))
-    pw_hash = db.Column(db.String(150))
+    email = db.Column(db.String(100), index=True)
+    username = db.Column(db.String(20))
+    pw_hash = db.Column(db.String(300))
     editor_theme = db.Column(db.String(50), default="seti")
     is_admin = db.Column(db.Boolean, default=False, index=True)
     account_created_on = db.Column(db.DateTime, default=db.func.now())
@@ -23,16 +22,14 @@ class User(db.Model):
 
     def __init__(
         self,
+        username,
         email,
-        first_name,
-        last_name,
         pw_hash,
         is_admin,
     ):
 
+        self.username = username
         self.email = email
-        self.first_name = first_name
-        self.last_name = last_name
         self.pw_hash = pw_hash
         self.is_admin = is_admin
 

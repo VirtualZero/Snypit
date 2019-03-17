@@ -1,6 +1,11 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField
-from wtforms.validators import DataRequired, email, Length, EqualTo, Regexp
+from wtforms.validators import DataRequired, email, Length, EqualTo, Regexp, ValidationError
+from snypit import db
+from snypit.models.user_models import User
+
+
+
 
 
 class LoginForm(FlaskForm):
@@ -24,16 +29,32 @@ class LoginForm(FlaskForm):
 
 
 class CreateAccountForm(FlaskForm):
+    def unique_user(form, field):
+        existing_user = User.query.filter_by(
+            email=field.data
+        ).first()
+
+        if existing_user:
+            raise ValidationError(
+                'That email address is taken.'
+            )
+
+
     username = StringField(
         'Username', 
-        [DataRequired()]
+        [
+            DataRequired(),
+            Length(max=20)    
+        ]
     )
 
     email = StringField(
         'Email', 
         [
             DataRequired(), 
-            email()
+            email(),
+            Length(max=100),
+            unique_user
         ]
     )
 
@@ -41,7 +62,10 @@ class CreateAccountForm(FlaskForm):
         'Password', 
         [
             DataRequired(), 
-            Length(min=8)
+            Length(
+                min=8,
+                max=128
+            )
         ]
     )
 
@@ -50,7 +74,8 @@ class CreateAccountForm(FlaskForm):
         [
             DataRequired(), 
             Length(
-                min=8
+                min=8,
+                max=128
             ), 
             EqualTo(
                 'password', 
