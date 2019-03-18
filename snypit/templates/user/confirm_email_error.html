@@ -36,8 +36,7 @@
                                         <div id="resend-btn">
                                             <form action="/resend-email-confirmation" method="POST" id="resend-email-form">
                                                 <input type="hidden" name="resend_email_value" id="resend_email_value" value="{{ email }}">
-                                                <button type="submit" class="full-width btn-flat purple darken-1 white-text btn-hover center"
-                                                    id="resend-confirmation-email-button">Resend Email</button>
+                                                <button type="submit" class="full-width btn-flat purple darken-1 white-text btn-hover center" id="resend-confirmation-email-button">Resend Email</button>
                                             </form>
                                         </div>
                                     </div>
@@ -225,74 +224,5 @@
         xhr.send(params);
     };
 </script>
-
-{#<script>
-    $(document).ready(function (e) {
-        $('#resend-email-form').on('submit', function (e) {
-            e.preventDefault();
-
-            document.getElementById('resend-confirmation-email-button').style.display = 'none';
-
-            new_resend_email_request = $.ajax({
-                url: "/resend-email-confirmation?email={{ email }}&token={{ token }}",
-                type: 'POST',
-                data: $('#resend-email-form').serialize(),
-                success: M.toast({ html: '<p>Confirmation Email Sent!</p>', classes: 'grey darken-3 white-text flow-text button-border-purple z-depth-5' })
-            });
-
-            var csrf_token = "{{ csrf_token() }}";
-
-            $.ajaxSetup({
-                beforeSend: function (xhr, settings) {
-                    if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
-                        xhr.setRequestHeader("X-CSRFToken", csrf_token);
-                    }
-                }
-            });
-        });
-    });
-</script>
-
-<script>
-    $(document).ready(function (e) {
-        $('#reset-email-form').on('submit', function (e) {
-            e.preventDefault();
-
-            new_reset_email_request = $.ajax({
-                url: "/reset-confirmation-email?old_email={{ email }}",
-                type: 'POST',
-                data: $('#reset-email-form').serialize(),
-                success: function (response) {
-                    if (response.status == 'invalid_email') {
-                        M.toast({ html: '<p>Invalid Email Address!</p>', classes: 'grey darken-3 white-text flow-text button-border-purple z-depth-5' });
-                    }
-
-                    else if (response.status == 'invalid_password') {
-                        M.toast({ html: '<p>Incorrect Password!</p>', classes: 'grey darken-3 white-text flow-text button-border-purple z-depth-5' });
-                    }
-
-                    else if (response.redirrect) {
-                        window.location.href = response.redirect;
-                    }
-
-                    else {
-                        $('#email-error-section').html(response);
-                        M.toast({ html: '<p>Email Updated!</p>', classes: 'grey darken-3 white-text flow-text button-border-purple z-depth-5' });
-                    }
-                }
-            });
-
-            var csrf_token = "{{ csrf_token() }}";
-
-            $.ajaxSetup({
-                beforeSend: function (xhr, settings) {
-                    if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
-                        xhr.setRequestHeader("X-CSRFToken", csrf_token);
-                    }
-                }
-            });
-        });
-    });
-</script>#}
 
 {% endblock %}

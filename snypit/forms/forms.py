@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, HiddenField
-from wtforms.validators import DataRequired, email, Length, EqualTo, Regexp, ValidationError
+from wtforms.validators import DataRequired, email, Length, EqualTo, ValidationError
 from snypit import db, bcrypt
 from snypit.models.user_models import User
 from flask import flash
@@ -23,6 +23,7 @@ class LoginForm(FlaskForm):
                 'unconfirmed_email'
             )
 
+
     def valid_pw(form, field):
         user = User.query.filter_by(
             email=form.email.data
@@ -33,7 +34,8 @@ class LoginForm(FlaskForm):
 
         else:
             validated_pw = bcrypt.check_password_hash(
-                user.pw_hash, form.password.data
+                user.pw_hash, 
+                form.password.data
             )
 
             if not validated_pw:
@@ -142,7 +144,8 @@ class Reset_Confirm_Email_Form(FlaskForm):
         ).first()
 
         validated_pw = bcrypt.check_password_hash(
-            user.pw_hash, form.password.data
+            user.pw_hash, 
+            form.password.data
         )
 
         if not validated_pw:

@@ -1,5 +1,4 @@
-from functools import wraps
-from flask import session, redirect, flash, url_for
+from flask import url_for
 
 
 def make_confirm_email_message(verify_email_token):

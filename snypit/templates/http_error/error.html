@@ -36,7 +36,7 @@
                                     <div class="section"></div>
                                     <div class="col s12">
                                         {% if 'vzin' in session %}
-                                            <a href="/dashboard" class="grey-text text-darken-4 red accent-1 right btn-flat waves-effect waves-purple btn-hover">Home</a>
+                                            <a href="/dashboard?vzin={{ session['vzin'] }}&username={{ session['username'].title() }}" class="grey-text text-darken-4 red accent-1 right btn-flat waves-effect waves-purple btn-hover">Home</a>
                                         {% else %}
                                             <a href="/" class="grey-text text-darken-4 red accent-1 right btn-flat waves-effect waves-purple btn-hover">Home</a>
                                         {% endif %}

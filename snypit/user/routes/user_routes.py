@@ -5,7 +5,6 @@ from flask import (
     redirect, 
     flash, 
     abort, 
-    url_for, 
     session
 )
 from snypit.forms.forms import (
@@ -26,8 +25,7 @@ from itsdangerous import (
     BadTimeSignature
 )
 from sqlalchemy import (
-    and_, 
-    desc
+    and_
 )
 from snypit.models.user_models import (
     User, 
