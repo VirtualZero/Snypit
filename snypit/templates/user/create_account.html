@@ -47,7 +47,7 @@
                                 <div class="row">
                                     <div class="col s12 m12 l6 input-field">
                                         <i class="material-icons prefix ">lock</i>
-                                        {{ create_account_form.password(class="white-text", required="", type="password", pattern=".{8,128}", maxlength="128",title="Must be at least 8 characters.")}}
+                                        {{ create_account_form.password(class="white-text", required="", type="password", pattern=".{8,128}", maxlength="128", title="Must be at 8-128 characters.")}}
                                         {{ create_account_form.password.label }}
 
                                         <span class="red-text text-accent-1 helper-text" style="display: none;" id="password_error_text"></span>
@@ -59,7 +59,7 @@
                                 
                                     <div class="col s12 m12 l6 input-field">
                                         <i class="material-icons prefix ">lock</i>
-                                        {{ create_account_form.confirm_password(class="white-text", required="", type="password", pattern=".{8,128}", maxlength="128",title="Must be at least 8 characters.")}}
+                                        {{ create_account_form.confirm_password(class="white-text", required="", type="password", pattern=".{8,128}", maxlength="128", title="Must be at 8-128 characters.")}}
                                         {{ create_account_form.confirm_password.label }}
 
                                         <span class="red-text text-accent-1 helper-text" style="display: none;" id="confirm_password_error_text"></span>

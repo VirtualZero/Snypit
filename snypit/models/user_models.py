@@ -60,3 +60,37 @@ class AccountActivity(db.Model):
         self.user_id = user_id
         self.login = login
         self.login_from_ip = login_from_ip
+
+
+class PasswordResetToken(db.Model):
+    __tablename__ = 'pwtoken'
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('user.id'),
+        index=True
+    )
+
+    pw_reset_token = db.Column(
+        db.String(250)
+    )
+
+    token_owner = db.relationship(
+        'User',
+        backref='pwtoken',
+        foreign_keys=[user_id]
+    )
+
+    def __init__(
+        self,
+        user_id,
+        pw_reset_token
+    ):
+
+        self.user_id = user_id
+        self.pw_reset_token = pw_reset_token

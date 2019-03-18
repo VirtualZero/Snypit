@@ -19,7 +19,11 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 # Models
-from snypit.models.user_models import User, AccountActivity
+from snypit.models.user_models import (
+    User, 
+    AccountActivity,
+    PasswordResetToken
+)
 
 # Routes
 from snypit.user.routes import user_routes

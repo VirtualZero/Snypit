@@ -3,6 +3,7 @@ from wtforms import StringField, PasswordField, HiddenField
 from wtforms.validators import DataRequired, email, Length, EqualTo, Regexp, ValidationError
 from snypit import db, bcrypt
 from snypit.models.user_models import User
+from flask import flash
 
 
 class LoginForm(FlaskForm):
@@ -17,6 +18,7 @@ class LoginForm(FlaskForm):
             )
 
         if not user.email_confirmed:
+            flash('Please confirm you email first.')
             raise ValidationError(
                 'unconfirmed_email'
             )
@@ -175,4 +177,67 @@ class Reset_Confirm_Email_Form(FlaskForm):
             ),
             valid_pw
         ]
+    )
+
+
+class ForgotPasswordForm(FlaskForm):
+    def valid_user(form, field):
+        user = User.query.filter_by(
+            email=field.data
+        ).first()
+
+        if not user:
+            raise ValidationError(
+                'Incorrect email address.'
+            )
+
+        if not user.email_confirmed:
+            flash('Please confirm you email first.')
+            raise ValidationError(
+                'unconfirmed_email'
+            )
+            
+    forgot_password_email = StringField(
+        "Your Email Address",
+        [
+            DataRequired(),
+            email(),
+            Length(
+                max=100,
+                message="Email cannot exceed 150 characters."
+            ),
+            valid_user
+        ]
+    )
+
+
+class ResetPasswordForm(FlaskForm):
+    reset_password = PasswordField(
+        "New Password",
+        [
+            DataRequired(),
+            Length(
+                min=8,
+                max=128
+            )
+        ]
+    )
+
+    confirm_reset_password = PasswordField(
+        "Confirm New Password",
+        [
+            DataRequired(),
+            Length(
+                min=8,
+                max=128
+            ),
+            EqualTo(
+                'reset_password',
+                message="Passwords must match."
+            )
+        ]
+    )
+
+    email = HiddenField(
+        "email"
     )

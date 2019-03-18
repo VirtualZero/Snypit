@@ -66,7 +66,7 @@
 
                 <div class="row">
                     <div class="col s12">
-                        <a href="#" class="white-text">Forgot Password?</a>
+                        <a href="/forgot-password" class="white-text">Forgot Password?</a>
                     </div>
                 </div>
                 
@@ -185,7 +185,7 @@
                         emailErrorText.style.display = 'block';
                         emailErrorText.innerHTML = r.errors.email;
                         document.getElementById('password').value = '';
-                        M.updateTextFields();c
+                        M.updateTextFields();
                     }
                     if (r.errors.hasOwnProperty('password')) {
                         pwErrorText.style.display = 'block';

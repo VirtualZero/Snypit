@@ -11,7 +11,9 @@ from flask import (
 from snypit.forms.forms import (
     LoginForm, 
     CreateAccountForm, 
-    Reset_Confirm_Email_Form
+    Reset_Confirm_Email_Form,
+    ForgotPasswordForm,
+    ResetPasswordForm
 )
 from snypit import (
     app, 
@@ -29,18 +31,28 @@ from sqlalchemy import (
 )
 from snypit.models.user_models import (
     User, 
-    AccountActivity
+    AccountActivity,
+    PasswordResetToken
 )
 import os
 import requests
 import string
 import random
-from snypit.user.helpers.user_helpers import make_confirm_email_message
+from snypit.user.helpers.user_helpers import (
+    make_confirm_email_message,
+    make_pw_reset_message
+)
 
 
 verify_email_serializer = URLSafeTimedSerializer(
     os.environ[
         'VERIFY_EMAIL_SERIALIZER_SECRET'
+    ]
+)
+
+reset_password_serializer = URLSafeTimedSerializer(
+    os.environ[
+        'RESET_PASSWORD_SERIALIZER_SECRET'
     ]
 )
 
@@ -265,7 +277,7 @@ def confirm_snypit_email(token):
         email = verify_email_serializer.loads(
             token,
             salt=os.environ['VERIFY_EMAIL_SALT'],
-            max_age=60
+            max_age=86400
         )
 
         account_to_update = User.query.filter(
@@ -430,10 +442,161 @@ def resend_email_confirmation():
             "redirect_url": f'/email-confirmation-sent?email={email}'
         }
     )
-    
-    
+
+
+@app.route('/forgot-password')
+def forgot_password():
+    forgot_password_form = ForgotPasswordForm()
+    return render_template(
+        'user/forgot_password.html',
+        title='Forgot Password',
+        forgot_password_form=forgot_password_form)
+
+
+@app.route('/send-password-reset-link', methods=['POST'])
+def send_password_reset_link():
+    forgot_password_form = ForgotPasswordForm()
+
+    if forgot_password_form.validate_on_submit():
+        email = forgot_password_form.forgot_password_email.data
+
+        user = User.query.filter_by(
+            email=email
+        ).first()
+
+        if not user:
+            abort(403)
+
+        forgot_password_token = reset_password_serializer.dumps(
+            email,
+            salt=os.environ['RESET_PASSWORD_SALT']
+        )
+
+        existing_token = PasswordResetToken.query.filter_by(
+            user_id=user.id
+        ).first()
+
+        if existing_token:
+            existing_token.pw_reset_token = forgot_password_token
+
+        else:
+            new_token = PasswordResetToken(
+                user.id,
+                forgot_password_token
+            )
+
+            db.session.add(new_token)
+            
+        db.session.commit()
+
+        requests.post(
+            'https://mailapi.virtualzero.tech/mail/send-mail',
+            headers={
+                'X-API-KEY': os.environ['MAIL_API_KEY']
+            },
+            json={
+                "recipients": [email],
+                "subject": "Snypit - Password Reset Link",
+                "message": make_pw_reset_message(forgot_password_token)
+            }
+        )
+
+        return jsonify(
+            {
+                'status': 'success'
+            }
+        ), 200
+
+    errors = {}
+
+    for fieldName, errorMessages in forgot_password_form.errors.items():
+        errors[fieldName] = errorMessages[0]
+
     return jsonify(
         {
-            'status': 'success'
+            'status': 'error',
+            'errors': errors
         }
-    )
+    ), 400
+
+
+@app.route('/reset-password/<token>')
+def reset_password(token):
+    try:
+        email = reset_password_serializer.loads(
+            token,
+            salt=os.environ['RESET_PASSWORD_SALT'],
+            max_age=86400
+        )
+
+        user = User.query.filter_by(
+            email=email
+        ).first()
+
+        if not user:
+            abort(403)
+
+        reset_password_form = ResetPasswordForm()
+
+        return render_template(
+            'user/reset_password.html',
+            title='Reset Password',
+            email=email,
+            reset_password_form=reset_password_form
+        )
+
+    except SignatureExpired:
+        flash('Link Expired')
+        return redirect('/forgot-password')
+
+    except BadTimeSignature:
+        flash('Bad Link')
+        return redirect('/forgot-password')
+
+    except:
+        flash('Bad Link')
+        return redirect('/forgot-password')
+
+
+@app.route('/submit-new-password', methods=['POST'])
+def submit_new_password():
+    reset_password_form = ResetPasswordForm()
+
+    if reset_password_form.validate_on_submit():
+        password = reset_password_form.reset_password.data
+
+        user = User.query.filter_by(
+            email=reset_password_form.email.data
+        ).first()
+
+        if not user:
+            abort(403)
+
+        pw_hash = bcrypt.generate_password_hash(
+            password
+        ).decode(
+            'utf-8'
+        )
+
+        user.pw_hash = pw_hash
+        db.session.commit()
+
+        flash("Password Reset!")
+
+        return jsonify(
+            {
+                'redirect_url': '/'
+            }
+        ), 200
+
+    errors = {}
+
+    for fieldName, errorMessages in reset_password_form.errors.items():
+        errors[fieldName] = errorMessages[0]
+
+    return jsonify(
+        {
+            'status': 'error',
+            'errors': errors
+        }
+    ), 400
