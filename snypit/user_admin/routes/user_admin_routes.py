@@ -5,7 +5,7 @@ from flask import (
     flash, 
     request
 )
-from snypit.user.helpers.user_helpers import login_required
+from snypit.user_admin.helpers.user_admin_helpers import login_required
 
 
 @app.route('/dashboard')

@@ -35,6 +35,7 @@ import os
 import requests
 import string
 import random
+from snypit.user.helpers.user_helpers import make_confirm_email_message
 
 
 verify_email_serializer = URLSafeTimedSerializer(
@@ -232,7 +233,7 @@ def create_account_submit():
             json={
                 "recipients": [email],
                 "subject": "Snypit - Please confirm your email.",
-                "message": make_create_account_message(verify_email_token)
+                "message": make_confirm_email_message(verify_email_token)
             }
         )
 
@@ -254,18 +255,6 @@ def create_account_submit():
             'errors': errors
         }
     ), 400
-
-
-def make_create_account_message(verify_email_token):
-    verify_email_link = url_for(
-        'confirm_snypit_email',
-        token=verify_email_token,
-        _external=True
-    )
-
-    return f'Thank you for choosing Snypit. Please click the following '\
-        f'link to verify your email address: {verify_email_link}\n\n'\
-        f'Enjoy using Snypit!\nThe VirtualZero Team'
 
 
 @app.route('/confirm-snypit-email/<token>')
@@ -362,7 +351,7 @@ def reset_confirmation_email():
             json={
                 "recipients": [reset_confirm_email_form.email.data],
                 "subject": "Snypit - Please confirm your email.",
-                "message": make_reset_email_message(verify_email_token)
+                "message": make_confirm_email_message(verify_email_token)
             }
         )
 
@@ -385,18 +374,6 @@ def reset_confirmation_email():
         }
     ), 400
 
-       
-def make_reset_email_message(verify_email_token):
-    verify_email_link = url_for(
-        'confirm_snypit_email',
-        token=verify_email_token,
-        _external=True
-    )
-
-    return f'Thank you for choosing Snypit. Please click the following '\
-        f'link to verify your email address: {verify_email_link}\n\n'\
-        f'Enjoy using Snypit!\nThe VirtualZero Team'
-
 
 @app.route('/email-confirmation-sent')
 def email_confirmation_sent():
@@ -408,18 +385,6 @@ def email_confirmation_sent():
         email=email,
         reset_confirm_email_form=reset_confirm_email_form
     )
-
-
-def make_resend_email_message(verify_email_token):
-    verify_email_link = url_for(
-        'confirm_snypit_email',
-        token=verify_email_token,
-        _external=True
-    )
-
-    return f'Thank you for choosing Snypit. Please click the following '\
-        f'link to verify your email address: {verify_email_link}\n\n'\
-        f'Enjoy using Snypit!\nThe VirtualZero Team'
 
 
 @app.route('/resend-email-confirmation', methods=['POST'])
@@ -455,7 +420,7 @@ def resend_email_confirmation():
         json={
             "recipients": [email],
             "subject": "Snypit - Please confirm your email.",
-            "message": make_resend_email_message(verify_email_token)
+            "message": make_confirm_email_message(verify_email_token)
         }
     )
 
