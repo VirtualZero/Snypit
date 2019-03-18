@@ -18,7 +18,7 @@ from flask_wtf.csrf import CSRFError
 @validate_vzin
 def dashboard():
     if request.args.get('login'):
-        flash('Logged In.')
+        flash('Logged in.')
 
     return render_template(
         'user_admin/dashboard.html',

@@ -21,7 +21,7 @@ def validate_vzin(f):
     def decorated(*args, **kwargs):
         if request.args.get('vzin') != session['vzin']:
             return redirect(
-                f'/dashboard?vzin={session["vzin"]}&username={session["username"].title()}'
+                f'{request.path}?vzin={session["vzin"]}&username={session["username"].title()}'
             )
 
         return f(*args, **kwargs)

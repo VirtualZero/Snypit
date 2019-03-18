@@ -22,20 +22,48 @@
 
     <body>
         <main>
-            {% block content %}
-
-            {% endblock %}
-
-            {% with messages = get_flashed_messages() %} 
-                {% if messages %} 
-                    {% for message in messages %}
-                        <script>
-                            M.toast({ html: '<p>{{ message }}</p>', classes: 'grey darken-3 white-text' });
-                        </script>
-                    {% endfor %} 
-                {% endif %} 
-            {% endwith %}
+            <div class="row valign-wrapper full-height" id="landing-preloader">
+                <div class="col s12 center">
+                    <div class="preloader-wrapper big active">
+                        <div class="spinner-layer spinner-blue-only">
+                            <div class="circle-clipper left">
+                                <div class="circle"></div>
+                            </div>
             
+                            <div class="gap-patch">
+                                <div class="circle"></div>
+                            </div>
+            
+                            <div class="circle-clipper right">
+                                <div class="circle"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="landing-content">
+                {% block content %}
+
+                {% endblock %}
+
+                {% with messages = get_flashed_messages() %} 
+                    {% if messages %} 
+                        {% for message in messages %}
+                            <script>
+                                M.toast({ html: '<p>{{ message }}</p>', classes: 'grey darken-3 white-text' });
+                            </script>
+                        {% endfor %} 
+                    {% endif %} 
+                {% endwith %}
+            </div>
+            
+            <script>
+                window.onload = function () {
+                    document.getElementById('landing-preloader').style.display = 'none';
+                    document.getElementById('landing-content').style.display = 'block';
+                }
+            </script>
             <script defer src="/static/fontawesome/fontawesome-all.min.js"></script>
         </main>
     </body>

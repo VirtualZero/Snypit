@@ -149,7 +149,7 @@ def logout():
         del session['is_admin']
         del session['editor_theme']
 
-        flash('Logged Out.')
+        flash('Logged out.')
         return redirect('/')
 
     except KeyError:

@@ -1,4 +1,4 @@
-{% if 'email' in session %}
+{% if 'vzin' in session %}
     {% extends "user_admin/logged_in_base.html" %}
 {% else %}
     {% extends "user/logged_out_base.html" %}
@@ -35,7 +35,11 @@
                                 <div class="row">
                                     <div class="section"></div>
                                     <div class="col s12">
-                                        <a href="/" class="grey-text text-darken-4 red accent-1 right btn-flat waves-effect waves-purple btn-hover">Home</a>
+                                        {% if 'vzin' in session %}
+                                            <a href="/dashboard" class="grey-text text-darken-4 red accent-1 right btn-flat waves-effect waves-purple btn-hover">Home</a>
+                                        {% else %}
+                                            <a href="/" class="grey-text text-darken-4 red accent-1 right btn-flat waves-effect waves-purple btn-hover">Home</a>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
