@@ -4,6 +4,7 @@ class User(db.Model):
     __tablename__ = 'user'
 
     id = db.Column(db.Integer, primary_key=True)
+    vzin = db.Column(db.String(8))
     email = db.Column(db.String(100), index=True)
     username = db.Column(db.String(20))
     pw_hash = db.Column(db.String(300))
@@ -22,12 +23,14 @@ class User(db.Model):
 
     def __init__(
         self,
+        vzin,
         username,
         email,
         pw_hash,
         is_admin,
     ):
 
+        self.vzin = vzin
         self.username = username
         self.email = email
         self.pw_hash = pw_hash

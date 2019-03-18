@@ -5,8 +5,11 @@ from flask import (
     flash, 
     request
 )
+from snypit.user.helpers.user_helpers import login_required
+
 
 @app.route('/dashboard')
+@login_required
 def dashboard():
     if request.args.get('login'):
         flash('Logged In.')

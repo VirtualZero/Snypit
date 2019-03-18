@@ -33,6 +33,8 @@ from snypit.models.user_models import (
 )
 import os
 import requests
+import string
+import random
 
 
 verify_email_serializer = URLSafeTimedSerializer(
@@ -82,6 +84,7 @@ def login_submit():
         db.session.commit()
 
         session['current_session_id'] = new_account_activity.id
+        session['vzin'] = user.vzin
         session['user_id'] = user.id
         session['email'] = user.email
         session['username'] = user.username
@@ -90,7 +93,7 @@ def login_submit():
 
         return jsonify(
             {
-                'redirect_url': f'/dashboard?id={user.id}&username={user.username}&login=True'
+                'redirect_url': f'/dashboard?vzin={user.vzin}&username={user.username}&login=True'
             }
         )
 
@@ -126,6 +129,7 @@ def logout():
 
     try:
         del session['current_session_id']
+        del session['vzin']
         del session['user_id']
         del session['email']
         del session['username']
@@ -189,7 +193,22 @@ def create_account_submit():
             salt=os.environ['VERIFY_EMAIL_SALT']
         )
 
+        unique = False
+        vzin = ""
+
+        while not unique:
+            for i in range(8):
+                vzin = f"{vzin}{random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase)}"
+
+            id_in_use = User.query.filter_by(
+                vzin=vzin
+            ).first()
+
+            if not id_in_use:
+                unique = True
+
         new_user = User(
+            vzin,
             username,
             email,
             pw_hash,
