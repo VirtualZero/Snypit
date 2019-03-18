@@ -1,0 +1,50 @@
+{% if 'email' in session %}
+    {% extends "user_admin/logged_in_base.html" %}
+{% else %}
+    {% extends "user/logged_out_base.html" %}
+{% endif %}
+
+{% block content %}
+
+<div class="valign-wrapper full-height">
+    <div class="container" id="content">
+        <div class="row no-bottom-padding">
+            <div class="col s12">
+                <div class="container">
+                    <div class="card z-depth-0 grey darken-3 white-text">
+                        <div class="card-content">
+                            <div id="forgot-pw-form-section">
+                                <div class="row">
+                                    <div class="col s12">
+                                        <h3 class="white-text">
+                                            Uh Oh!<i class="fas fa-exclamation-triangle red-text text-accent-1 right"></i>
+                                        </h3>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col s12">
+                                        <p class="flow-text white-text">
+                                            {{ error_msg|safe }}<br>
+                                            {{ status_msg|safe }}<br>
+                                            {{ code_msg|safe }} <span class="red-text text-accent-1">{{ status_code }}</span>
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="section"></div>
+                                    <div class="col s12">
+                                        <a href="/" class="grey-text text-darken-4 red accent-1 right btn-flat waves-effect waves-purple btn-hover">Home</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -106,7 +106,7 @@ def login_submit():
 
         return jsonify(
             {
-                'redirect_url': f'/dashboard?vzin={user.vzin}&username={user.username}&login=True'
+                'redirect_url': f'/dashboard?vzin={user.vzin}&username={user.username.title()}&login=True'
             }
         )
 
