@@ -15,8 +15,14 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        <script type="text/javascript" src="/static/js/materialize.min.js"></script>
-        <link rel="stylesheet" href="/static/css/style.css" type="text/css">
+        
+        {% assets 'snypit_js' %}
+            <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+        {% endassets %}
+        
+        {% assets 'snypit_css' %}
+            <link rel="stylesheet" href="{{ ASSET_URL }}" type="text/css">
+        {% endassets %}
 
         <title>{{title}}</title>
     </head>
@@ -54,8 +60,6 @@
                     {% endfor %} 
                 {% endif %} 
             {% endwith %}
-
-            <script defer src="/static/fontawesome/fontawesome-all.min.js"></script>
         </main>
     </body>
 </html>

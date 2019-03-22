@@ -13,6 +13,7 @@ bcrypt = Bcrypt(app)
 csrf = CSRFProtect(app)
 assets = Environment(app)
 
+
 # SQLAlchemy
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['SQL_DATABASE_URI']
 app.config['SQLALCHEMY_ECHO'] = True
@@ -20,9 +21,11 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
+
 # Assets
 js = Bundle(
-    'js/materialize.min.js', 
+    'js/materialize.min.js',
+    'fontawesome/fontawesome-all.min.js',
     output='assets/snypit.js', 
     filters='jsmin'
 )
@@ -41,6 +44,7 @@ from snypit.models.user_models import (
     AccountActivity,
     PasswordResetToken
 )
+
 
 # Routes
 from snypit.errors.routes import error_routes
