@@ -19,11 +19,16 @@ def login_required(f):
 def validate_vzin(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        if request.args.get('vzin') != session['vzin']:
-            return redirect(
-                f'{request.path}?vzin={session["vzin"]}&username={session["username"].title()}'
-            )
+        excluded_routes = [
+            '/logout'
+        ]
 
-        return f(*args, **kwargs)
+        if request.path not in excluded_routes:
+            if request.args.get('vzin') != session['vzin']:
+                return redirect(
+                    f'{request.path}?vzin={session["vzin"]}&username={session["username"].title()}'
+                )
+
+            return f(*args, **kwargs)
 
     return decorated

@@ -4,7 +4,8 @@ from flask import (
     session, 
     flash, 
     request,
-    abort
+    abort,
+    jsonify
 )
 from snypit.user_admin.helpers.user_admin_helpers import (
     login_required,
@@ -38,4 +39,14 @@ def new_snippet():
         'user_admin/snippet/new_snippet.html',
         title='New Snippet',
         new_snippet_form=new_snippet_form
+    )
+
+
+@app.route('/new-snippet-submit', methods=['POST'])
+@login_required
+def new_snippet_submit():
+    return jsonify(
+        {
+            'status': 'success'
+        }
     )

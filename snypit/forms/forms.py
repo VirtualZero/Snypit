@@ -60,7 +60,9 @@ class LoginForm(FlaskForm):
         'Email', 
         [
             email(), 
-            DataRequired(),
+            DataRequired(
+                message='This field is required.'
+            ),
             Length(
                 max=100
             ),
@@ -71,7 +73,9 @@ class LoginForm(FlaskForm):
     password = PasswordField(
         'Password', 
         [
-            DataRequired(), 
+            DataRequired(
+                message='This field is required.'
+            ), 
             Length(
                 min=8,
                 max=128
@@ -96,7 +100,9 @@ class CreateAccountForm(FlaskForm):
     username = StringField(
         'Username', 
         [
-            DataRequired(),
+            DataRequired(
+                message='This field is required.'
+            ),
             Length(max=20)    
         ]
     )
@@ -104,7 +110,9 @@ class CreateAccountForm(FlaskForm):
     email = StringField(
         'Email', 
         [
-            DataRequired(), 
+            DataRequired(
+                message='This field is required.'
+            ), 
             email(),
             Length(max=100),
             unique_user
@@ -114,7 +122,9 @@ class CreateAccountForm(FlaskForm):
     password = PasswordField(
         'Password', 
         [
-            DataRequired(), 
+            DataRequired(
+                message='This field is required.'
+            ), 
             Length(
                 min=8,
                 max=128
@@ -125,7 +135,9 @@ class CreateAccountForm(FlaskForm):
     confirm_password = PasswordField(
         'Confirm Password', 
         [
-            DataRequired(), 
+            DataRequired(
+                message='This field is required.'
+            ), 
             Length(
                 min=8,
                 max=128
@@ -170,7 +182,9 @@ class Reset_Confirm_Email_Form(FlaskForm):
         'New Email Address', 
         [
             email(), 
-            DataRequired(),
+            DataRequired(
+                message='This field is required.'
+            ),
             unique_user,
             Length(
                 max=100
@@ -185,7 +199,9 @@ class Reset_Confirm_Email_Form(FlaskForm):
     password = PasswordField(
         'Password', 
         [
-            DataRequired(), 
+            DataRequired(
+                message='This field is required.'
+            ), 
             Length(
                 min=8,
                 max=128
@@ -215,7 +231,9 @@ class ForgotPasswordForm(FlaskForm):
     forgot_password_email = StringField(
         "Your Email Address",
         [
-            DataRequired(),
+            DataRequired(
+                message='This field is required.'
+            ),
             email(),
             Length(
                 max=100,
@@ -230,7 +248,9 @@ class ResetPasswordForm(FlaskForm):
     reset_password = PasswordField(
         "New Password",
         [
-            DataRequired(),
+            DataRequired(
+                message='This field is required.'
+            ),
             Length(
                 min=8,
                 max=128
@@ -241,7 +261,9 @@ class ResetPasswordForm(FlaskForm):
     confirm_reset_password = PasswordField(
         "Confirm New Password",
         [
-            DataRequired(),
+            DataRequired(
+                message='This field is required.'
+            ),
             Length(
                 min=8,
                 max=128
@@ -262,7 +284,9 @@ class NewSnippetForm(FlaskForm):
     snippet_name = StringField(
         'Snippet Name', 
         [
-            DataRequired(),
+            DataRequired(
+                message='This field is required.'
+            ),
             Length(
                 max=150
             )
@@ -272,7 +296,9 @@ class NewSnippetForm(FlaskForm):
     language = SelectField(
         'Choose Language',
         [
-            DataRequired()
+            DataRequired(
+                message='This field is required.'
+            )
         ],
         choices=[
             ('none&none', 'Choose Language'),
@@ -298,25 +324,17 @@ class NewSnippetForm(FlaskForm):
             ('VBScript&vbscript', 'VBScript'),
             ('YAML&yaml', 'YAML'),
             ('YAML Front Matter&yaml-frontmatter', 'YAML Front Matter'),
-            ('none&none', 'Other')
         ]
     )
 
     description = TextAreaField(
         'Description',
         [
+            DataRequired(
+                message='This field is required.'
+            ),
             Length(
                 max=1500
-            )
-        ]
-    )
-
-    snippet = TextAreaField(
-        '',
-        [
-            DataRequired(),
-            Length(
-                max=50000
             )
         ]
     )
