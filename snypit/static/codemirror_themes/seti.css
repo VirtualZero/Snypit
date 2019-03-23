@@ -24,21 +24,21 @@
 .cm-s-seti .CodeMirror-line::selection, .cm-s-seti .CodeMirror-line > span::selection, .cm-s-seti .CodeMirror-line > span > span::selection { background: rgba(255, 255, 255, 0.10); }
 .cm-s-seti .CodeMirror-line::-moz-selection, .cm-s-seti .CodeMirror-line > span::-moz-selection, .cm-s-seti .CodeMirror-line > span > span::-moz-selection { background: rgba(255, 255, 255, 0.10); }
 .cm-s-seti span.cm-comment { color: #41535b; }
-.cm-s-seti span.cm-string, .cm-s-seti span.cm-string-2 { color: #55b5db; }
-.cm-s-seti span.cm-number { color: #cd3f45; }
-.cm-s-seti span.cm-variable { color: #55b5db; }
-.cm-s-seti span.cm-variable-2 { color: #a074c4; }
-.cm-s-seti span.cm-def { color: #55b5db; }
+.cm-s-seti span.cm-string, .cm-s-seti span.cm-string-2 { color: #f8bbd0; }
+.cm-s-seti span.cm-number { color: #ff8a80; }
+.cm-s-seti span.cm-variable { color: #81d4fa; }
+.cm-s-seti span.cm-variable-2 { color: #ce93d8; }
+.cm-s-seti span.cm-def { color: #81d4fa; }
 .cm-s-seti span.cm-keyword { color: #ff79c6; }
-.cm-s-seti span.cm-operator { color: #9fca56; }
-.cm-s-seti span.cm-keyword { color: #e6cd69; }
-.cm-s-seti span.cm-atom { color: #cd3f45; }
-.cm-s-seti span.cm-meta { color: #55b5db; }
-.cm-s-seti span.cm-tag { color: #55b5db; }
-.cm-s-seti span.cm-attribute { color: #9fca56; }
-.cm-s-seti span.cm-qualifier { color: #9fca56; }
-.cm-s-seti span.cm-property { color: #a074c4; }
-.cm-s-seti span.cm-variable-3, .cm-s-seti span.cm-type { color: #9fca56; }
-.cm-s-seti span.cm-builtin { color: #9fca56; }
+.cm-s-seti span.cm-operator { color: #4db6ac; }
+.cm-s-seti span.cm-keyword { color: #fff59d; }
+.cm-s-seti span.cm-atom { color: #ff8a80; }
+.cm-s-seti span.cm-meta { color: #81d4fa; }
+.cm-s-seti span.cm-tag { color: #81d4fa; }
+.cm-s-seti span.cm-attribute { color: #a5d6a7; }
+.cm-s-seti span.cm-qualifier { color: #a5d6a7; }
+.cm-s-seti span.cm-property { color: #ce93d8; }
+.cm-s-seti span.cm-variable-3, .cm-s-seti span.cm-type { color: #a5d6a7; }
+.cm-s-seti span.cm-builtin { color: #a5d6a7; }
 .cm-s-seti .CodeMirror-activeline-background { background: #101213; }
 .cm-s-seti .CodeMirror-matchingbracket { text-decoration: underline; color: white !important; }
