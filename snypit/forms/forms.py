@@ -310,3 +310,13 @@ class NewSnippetForm(FlaskForm):
             )
         ]
     )
+
+    snippet = TextAreaField(
+        '',
+        [
+            DataRequired(),
+            Length(
+                max=50000
+            )
+        ]
+    )

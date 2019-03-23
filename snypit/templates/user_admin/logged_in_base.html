@@ -16,11 +16,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         
-        {% assets 'snypit_js' %}
+        {% assets 'snypit_admin_js' %}
             <script type="text/javascript" src="{{ ASSET_URL }}"></script>
         {% endassets %}
         
-        {% assets 'snypit_css' %}
+        {% assets 'snypit_admin_css' %}
             <link rel="stylesheet" href="{{ ASSET_URL }}" type="text/css">
         {% endassets %}
 
@@ -44,6 +44,16 @@
                     {% endfor %} 
                 {% endif %} 
             {% endwith %}
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    var elems = document.querySelectorAll('.chips');
+                    var instances = M.Chips.init(elems, {
+                        placeholder: 'Enter Tags',
+                        secondaryPlaceholder: '+Tags'
+                    });
+                });
+            </script>
 
             <script>
                 M.AutoInit();

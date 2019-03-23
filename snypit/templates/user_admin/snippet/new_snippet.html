@@ -1,6 +1,7 @@
 {% extends "user_admin/logged_in_base.html" %}
 {% block content %}
 
+
 <div class="valign-wrapper full-height">
     <div class="container" id="content">
         <div class="row no-bottom-padding">
@@ -31,7 +32,7 @@
 
                                     <div id="slang">
                                         <div class="col s12 m12 l6 input-field">
-                                            {{ new_snippet_form.language(class="white", required="")}}
+                                            {{ new_snippet_form.language(class="white", required="", onchange="updateLanguage()")}}
                                     
                                             {% for error in new_snippet_form.language.errors %}
                                                 <span class="red-text accent-1">{{ error }}</span>
@@ -65,6 +66,13 @@
                                         </label>
                                     </div>
                                 </div>
+
+                                <div class="row">
+                                    <div class="col s12">
+                                        <div class="section"></div>
+                                        {{ new_snippet_form.snippet(required="") }}
+                                    </div>
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -74,64 +82,11 @@
     </div>
 </div>
 
-<!-- <script src="/static/codemirror_modes/python/python.js"></script>
-<script src="/static/codemirror_modes/clike/clike.js"></script>
-<script src="/static/codemirror_modes/css/css.js"></script>
-<script src="/static/codemirror_modes/http/http.js"></script>
-<script src="/static/codemirror_modes/javascript/javascript.js"></script>
-<script src="/static/codemirror_modes/jinja2/jinja2.js"></script>
-<script src="/static/codemirror_modes/nginx/nginx.js"></script>
-<script src="/static/codemirror_modes/perl/perl.js"></script>
-<script src="/static/codemirror_modes/php/php.js"></script>
-<script src="/static/codemirror_modes/powershell/powershell.js"></script>
-<script src="/static/codemirror_modes/ruby/ruby.js"></script>
-<script src="/static/codemirror_modes/sass/sass.js"></script>
-<script src="/static/codemirror_modes/shell/shell.js"></script>
-<script src="/static/codemirror_modes/sql/sql.js"></script>
-<script src="/static/codemirror_modes/vb/vb.js"></script>
-<script src="/static/codemirror_modes/vbscript/vbscript.js"></script>
-<script src="/static/codemirror_modes/xml/xml.js"></script>
-<script src="/static/codemirror_modes/yaml/yaml.js"></script>
-<script src="/static/codemirror_modes/yaml-frontmatter/yaml-frontmatter.js"></script> -->
-
-
-
 <script>
-    var editor = CodeMirror.fromTextArea(document.getElementById('snippet-content'), {
+    var editor = CodeMirror.fromTextArea(document.getElementById('snippet'), {
         lineNumbers: true,
         mode: 'python',
         theme: "{{ session['editor_theme'] }}"
-    });
-
-    editor.on('change', function () {
-        document.getElementById('snippet-submit-button').removeAttribute('disabled');
-    });
-</script>
-
-
-<script>
-    inputs = document.getElementsByTagName('input');
-    for (i=0; i<inputs.length; i++) {
-        inputs[i].addEventListener('change', function() {
-            document.getElementById('snippet-submit-button').removeAttribute('disabled')
-        });
-    };  
-</script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-            var elems = document.querySelectorAll('.chips');
-            var instances = M.Chips.init(elems, {
-                placeholder: 'Enter Tags',
-                secondaryPlaceholder: '+Tags'
-            });
-        });
-</script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var elems = document.querySelectorAll('select');
-        var instances = M.FormSelect.init(elems);
     });
 </script>
 

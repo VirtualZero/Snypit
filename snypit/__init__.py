@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_migrate import Migrate
 from flask_assets import Bundle, Environment
+from snypit.helpers.helpers import make_bundles
 
 
 app = Flask(__name__)
@@ -23,19 +24,11 @@ migrate = Migrate(app, db)
 
 
 # Assets
-js = Bundle(
-    'js/materialize.min.js',
-    'fontawesome/fontawesome-all.min.js',
-    output='assets/snypit.js', 
-    filters='jsmin'
-)
-css = Bundle(
-    'css/style.css', 
-    output='assets/snypit.css', 
-    filters='cssmin'
-)
-assets.register('snypit_js', js)
-assets.register('snypit_css', css)
+bundles = make_bundles()
+assets.register('snypit_js', bundles['js'])
+assets.register('snypit_css', bundles['css'])
+assets.register('snypit_admin_js', bundles['admin_js'])
+assets.register('snypit_admin_css', bundles['admin_css'])
 
 
 # Models
