@@ -1,6 +1,18 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, HiddenField
-from wtforms.validators import DataRequired, email, Length, EqualTo, ValidationError
+from wtforms import (
+    StringField, 
+    PasswordField, 
+    HiddenField, 
+    SelectField,
+    TextAreaField
+)
+from wtforms.validators import (
+    DataRequired, 
+    email, 
+    Length, 
+    EqualTo, 
+    ValidationError
+)
 from snypit import db, bcrypt
 from snypit.models.user_models import User
 from flask import flash
@@ -243,4 +255,58 @@ class ResetPasswordForm(FlaskForm):
 
     email = HiddenField(
         "email"
+    )
+
+
+class NewSnippetForm(FlaskForm):
+    snippet_name = StringField(
+        'Snippet Name', 
+        [
+            DataRequired(),
+            Length(
+                max=150
+            )
+        ]
+    )
+
+    language = SelectField(
+        'Choose Language',
+        [
+            DataRequired()
+        ],
+        choices=[
+            ('none&none', 'Choose Language'),
+            ('C&clike', 'C'),
+            ('C++&clike', 'C++'),
+            ('C#&clike', 'C#'),
+            ('CSS&css', 'CSS'),
+            ('HTML&xml', 'HTML'),
+            ('HTTP&http', 'HTTP'),
+            ('Java&clike', 'Java'),
+            ('JavaScript&javascript', 'JavaScript'),
+            ('Jinja2&jinja2', 'Jinja2'),
+            ('Nginx&nginx', 'Nginx'),
+            ('Perl&perl', 'Perl'),
+            ('PHP&php', 'PHP'),
+            ('PowerShell&powershell', 'PowerShell'),
+            ('Python&python', 'Python'),
+            ('Ruby&ruby', 'Ruby'),
+            ('SASS&sass', 'Sass'),
+            ('Shell&shell', 'Shell'),
+            ('SQL&sql', 'SQL'),
+            ('Visual Basic&vb', 'Visual Basic'),
+            ('VBScript&vbscript', 'VBScript'),
+            ('YAML&yaml', 'YAML'),
+            ('YAML Front Matter&yaml-frontmatter', 'YAML Front Matter'),
+            ('none&none', 'Other')
+        ]
+    )
+
+    description = TextAreaField(
+        'Description',
+        [
+            Length(
+                max=1500
+            )
+        ]
     )

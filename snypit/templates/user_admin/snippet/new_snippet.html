@@ -1,0 +1,204 @@
+{% extends "user_admin/logged_in_base.html" %}
+{% block content %}
+
+<div class="valign-wrapper full-height">
+    <div class="container" id="content">
+        <div class="row no-bottom-padding">
+            <div class="col s12">
+                <div class="card white-text grey darken-3 z-depth-0">
+                    <div class="card-content">
+                        <div class="row">
+                            <div class="col s12">
+                                <h3 class="white-text">
+                                    New Snippet<i class="fas fa-code white-text right"></i>
+                                </h3>
+                            </div>
+                        </div>
+
+                        <div id="new-snippet-form-section">
+                            <form action="/new-snippet-submit" method="POST" id="new-snippet-form">
+                                <div class="row no-bottom-padding">
+                                    <div id="sname">
+                                        <div class="col s12 m12 l6 input-field">
+                                            {{ new_snippet_form.snippet_name(class="white-text", required="")}}
+                                            {{ new_snippet_form.snippet_name.label }}
+                            
+                                            {% for error in new_snippet_form.snippet_name.errors %}
+                                                <span class="red-text accent-1">{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+
+                                    <div id="slang">
+                                        <div class="col s12 m12 l6 input-field">
+                                            {{ new_snippet_form.language(class="white", required="")}}
+                                    
+                                            {% for error in new_snippet_form.language.errors %}
+                                                <span class="red-text accent-1">{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row no-bottom-padding">
+                                    <div id="sdesc">
+                                        <div class="col s12 input-field">
+                                            {{ new_snippet_form.description(class="white-text materialize-textarea", required="")}}
+                                            {{ new_snippet_form.description.label }}
+                            
+                                            {% for error in new_snippet_form.description.errors %}
+                                                <span class="red-text accent-1">{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row valign-wrapper" id="stagsnpin">
+                                    <div class="col s12 m12 l6 no-padding-top">
+                                        <div class="chips chips-placeholder white-text no-top-padding" id="tags"></div>
+                                    </div>
+                                
+                                    <div class="col s12 m12 l6 center no-top-padding">
+                                        <label>
+                                            <input type="checkbox" class="filled-in white-text" name="pin_to_favorites" />
+                                            <span class="white-text center">Pin to my favorites!</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <script src="/static/codemirror_modes/python/python.js"></script>
+<script src="/static/codemirror_modes/clike/clike.js"></script>
+<script src="/static/codemirror_modes/css/css.js"></script>
+<script src="/static/codemirror_modes/http/http.js"></script>
+<script src="/static/codemirror_modes/javascript/javascript.js"></script>
+<script src="/static/codemirror_modes/jinja2/jinja2.js"></script>
+<script src="/static/codemirror_modes/nginx/nginx.js"></script>
+<script src="/static/codemirror_modes/perl/perl.js"></script>
+<script src="/static/codemirror_modes/php/php.js"></script>
+<script src="/static/codemirror_modes/powershell/powershell.js"></script>
+<script src="/static/codemirror_modes/ruby/ruby.js"></script>
+<script src="/static/codemirror_modes/sass/sass.js"></script>
+<script src="/static/codemirror_modes/shell/shell.js"></script>
+<script src="/static/codemirror_modes/sql/sql.js"></script>
+<script src="/static/codemirror_modes/vb/vb.js"></script>
+<script src="/static/codemirror_modes/vbscript/vbscript.js"></script>
+<script src="/static/codemirror_modes/xml/xml.js"></script>
+<script src="/static/codemirror_modes/yaml/yaml.js"></script>
+<script src="/static/codemirror_modes/yaml-frontmatter/yaml-frontmatter.js"></script> -->
+
+
+
+<script>
+    var editor = CodeMirror.fromTextArea(document.getElementById('snippet-content'), {
+        lineNumbers: true,
+        mode: 'python',
+        theme: "{{ session['editor_theme'] }}"
+    });
+
+    editor.on('change', function () {
+        document.getElementById('snippet-submit-button').removeAttribute('disabled');
+    });
+</script>
+
+
+<script>
+    inputs = document.getElementsByTagName('input');
+    for (i=0; i<inputs.length; i++) {
+        inputs[i].addEventListener('change', function() {
+            document.getElementById('snippet-submit-button').removeAttribute('disabled')
+        });
+    };  
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+            var elems = document.querySelectorAll('.chips');
+            var instances = M.Chips.init(elems, {
+                placeholder: 'Enter Tags',
+                secondaryPlaceholder: '+Tags'
+            });
+        });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var elems = document.querySelectorAll('select');
+        var instances = M.FormSelect.init(elems);
+    });
+</script>
+
+<script type="text/javascript">
+    function updateLanguage() {
+        var selectBox = document.getElementById("language");
+        var selectedLanguage = selectBox.options[selectBox.selectedIndex].value.split("&")[1];
+        editor.setOption("mode", selectedLanguage);
+    }
+</script>
+
+{#<script>
+    $(document).ready(function (e) {
+
+            $('#new-snippet-form').on('submit', function (e) {
+                e.preventDefault();
+
+                if (document.getElementById('language').value === 'none&none') {
+                    M.toast({ html: '<p>Please Choose a Language</p>', classes: 'grey darken-3 white-text flow-text button-border-purple z-depth-5' });
+                    return;
+                };
+
+                var tagData = M.Chips.getInstance(document.getElementById('tags'));
+                document.getElementById('tag-input').value = JSON.stringify(tagData.chipsData);
+
+                new_snippet_request = $.ajax({
+                    url: '/new-snippet-submit',
+                    type: 'POST',
+                    data: $('#new-snippet-form').serialize(),
+                    success: function (response) {
+                        if (response.redirect) {
+                            window.location.href = response.redirect;
+                        }
+
+                        else if (response.added) {
+                            M.toast({ html: '<p>Snippet Saved!</p>', classes: 'grey darken-3 white-text flow-text button-border-purple z-depth-5' });
+                            $('#snippet-id').val(response.added);
+
+                            document.getElementById('snippet-submit-button').setAttribute('disabled', true);
+                            document.getElementById('save-new-snippet-button-row').style.display = 'none';
+                            document.getElementById('sname').innerHTML = "<div class='col s12 m12 l8'><h4 class='white-text'>" + response.snippet_name + "</h4></div>"
+                            document.getElementById('slang').innerHTML = "<div class='col s12 m12 l4'><h4 class='white-text right'>" + response.snippet_language + "</h4></div>"
+                            document.getElementById('sdesc').innerHTML = "<div class='col s12 m12 l12'><p class='grey-text text-lighten-2 flow-text'>" + response.snippet_description + "</p><div class='section'></div></div>"
+                            document.getElementById('stagsnpin').style.display = 'none';
+                            document.getElementById('another-snippet-row').style.display = 'block';
+                        }
+
+                        else if (response.update) {
+                            M.toast({ html: '<p>Snippet Updated!</p>', classes: 'grey darken-3 white-text flow-text button-border-purple z-depth-5' });
+
+                            document.getElementById('snippet-submit-button').setAttribute('disabled', true);
+                        }
+                    }
+                });
+
+                var csrf_token = "{{ csrf_token() }}";
+
+                $.ajaxSetup({
+                    beforeSend: function (xhr, settings) {
+                        if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrf_token);
+                        }
+                    }
+                });
+            });
+        });
+</script>#}
+
+
+{% endblock %}
