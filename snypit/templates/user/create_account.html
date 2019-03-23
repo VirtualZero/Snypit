@@ -108,6 +108,10 @@
     </div>
 </div>
 
+{% assets 'snypit_js' %}
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+
 <script>
     document.getElementById("create-account-form").addEventListener('submit', makeRequest);
     function makeRequest(e) {

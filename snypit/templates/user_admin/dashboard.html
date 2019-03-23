@@ -17,4 +17,12 @@
     </div>
 </div>
 
+{% assets 'snypit_admin_js' %}
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+
+<script>
+    M.AutoInit();
+</script>
+
 {% endblock %}

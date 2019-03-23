@@ -73,6 +73,18 @@
                                         {{ new_snippet_form.snippet(required="") }}
                                     </div>
                                 </div>
+
+                                <div class="row" id="save-new-snippet-button-row">
+                                    <div class="col s12">
+                                        <div class="section"></div>
+                                        <span class="right">
+                                            <a href="/dashboard?vzin={{ session['vzin'] }}&username={{ session['username'].title() }}"
+                                                class="purple darken-1 white-text waves-effect waves-light btn-flat">Cancel</a>&nbsp;
+                                            <button type="submit" class="btn-flat purple darken-1 white-text waves-effect waves-light"
+                                                id="snippet-submit-button">Save</button>
+                                        </span>
+                                    </div>
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -81,6 +93,24 @@
         </div>
     </div>
 </div>
+
+{% assets 'snypit_admin_js' %}
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var elems = document.querySelectorAll('.chips');
+        var instances = M.Chips.init(elems, {
+            placeholder: 'Enter Tags',
+            secondaryPlaceholder: '+Tags'
+        });
+    });
+</script>
+
+<script>
+    M.AutoInit();
+</script>
 
 <script>
     var editor = CodeMirror.fromTextArea(document.getElementById('snippet'), {
