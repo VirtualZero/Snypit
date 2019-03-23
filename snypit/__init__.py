@@ -44,6 +44,9 @@ from snypit.models.user_models import (
     AccountActivity,
     PasswordResetToken
 )
+from snypit.models.snippet_models import (
+    Snippet
+)
 
 
 # Routes
