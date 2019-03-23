@@ -57,7 +57,8 @@
 
                                 <div class="row valign-wrapper" id="stagsnpin">
                                     <div class="col s12 m12 l6 no-padding-top">
-                                        <div class="chips chips-placeholder white-text no-top-padding" id="tags"></div>
+                                        <div class="chips chips-placeholder white-text no-top-padding no-bottom-padding" id="tags"></div>
+                                        <a href="#" onclick="tagsHelp()" class="white-text"><i class="far fa-question-circle"></i></a>
                                     </div>
                                 
                                     <div class="col s12 m12 l6 center no-top-padding">
@@ -127,6 +128,16 @@
         var selectedLanguage = selectBox.options[selectBox.selectedIndex].value.split("&")[1];
         editor.setOption("mode", selectedLanguage);
     }
+</script>
+
+<script>
+    function tagsHelp() {
+        M.toast({ 
+            html: '<p>To create a tag, type the tag content & press Enter.<br><br>To delete a tag, press Backspace twice.</p>',
+            classes: 'grey darken-3 white-text',
+            'displayLength': 6000 
+        });
+    };
 </script>
 
 {#<script>
