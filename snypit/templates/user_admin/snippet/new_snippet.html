@@ -80,7 +80,7 @@
                                     </div>
                                 </div>
 
-                                <div class="row hide-on-large-only" id="stagsnpin">
+                                <div class="row hide-on-large-only" id="sm-stagsnpin">
                                     <div class="col s12 m12 l6 no-padding-top input-field">
                                         <i class="material-icons prefix ">search</i>
                                         <div class="chips chips-placeholder white-text no-top-padding no-bottom-padding" id="sm-tags"></div>
@@ -112,14 +112,24 @@
                                         <div id="new-snippet-btns">
                                             <span class="right">
                                                 <a href="/dashboard?vzin={{ session['vzin'] }}&username={{ session['username'].title() }}"
-                                                    class="purple darken-1 white-text waves-effect waves-light btn-flat">Cancel</a>&nbsp;
-                                                <button type="submit" class="btn-flat purple darken-1 white-text waves-effect waves-light"
+                                                    class="purple darken-1 white-text waves-effect waves-purple btn-hover btn-flat">Cancel</a>&nbsp;
+                                                <button type="submit" class="btn-flat purple darken-1 white-text waves-effect waves-purple btn-hover"
                                                     id="snippet-submit-button">Save</button>
                                             </span>
                                         </div>
 
                                         <div class="progress" style="display: none;" id="new-snippet-preloader">
                                             <div class="indeterminate"></div>
+                                        </div>
+
+                                        <div class="row" id="another-snippet-row" style="display: none;">
+                                            <div class="col s12">
+                                                <span class="right">
+                                                    <a href="/dashboard?vzin={{ session['vzin'] }}&username={{ session['username'].title() }}"
+                                                        class="btn-flat purple darken-1 white-text waves-effect waves-purple btn-hover">Done</a>&nbsp;
+                                                    <a href="#" onclick="getNewSnippetForm()" class="btn-flat purple darken-1 white-text btn-hover waves-effect waves-purple">New</a>
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -281,7 +291,22 @@
                 var r = JSON.parse(this.response);
 
                 if (this.status === 200) {
-                    alert('Success')
+                    formBtns.style.display = 'none';
+                    document.getElementById('another-snippet-row').style.display = 'block';
+                    document.getElementById('sname').innerHTML = "<div class='col s12 m12 l8'><h4 class='white-text'>" + snippetName + "</h4></div>"
+
+                    if (snippetLanguage === "CPlusPlus||clike"){
+                        document.getElementById('slang').innerHTML = "<div class='col s12 m12 l4'><h4 class='white-text right'>C++</h4></div>"
+                    }
+
+                    else {
+                        document.getElementById('slang').innerHTML = "<div class='col s12 m12 l4'><h4 class='white-text right'>" + snippetLanguage.split("||")[0] + "</h4></div>"
+                    };
+
+                    document.getElementById('sdesc').innerHTML = "<div class='col s12 m12 l12'><p class='white-text flow-text'>" + snippetDescription + "</p><div class='section'></div></div>"
+                    document.getElementById('stagsnpin').style.display = 'none';
+                    document.getElementById('sm-stagsnpin').style.display = 'none';
+                    M.toast({ html: '<p>Snippet Saved!</p>', classes: 'grey darken-3 white-text' });
                 }
 
                 else if (this.status === 400) {
@@ -320,7 +345,7 @@
                 preloader.style.display = 'none';
                 M.toast({ html: '<p><i class="fas fa-2x fa-exclamation-triangle red-text text-accent-1 center"></i></p> &nbsp;&nbsp;&nbsp;<p>An error occured submitting the form.</p>', classes: 'grey darken-3 white-text center' })
             };
-            
+
             xhr.send(params);
         };
 </script>

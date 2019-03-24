@@ -131,7 +131,7 @@ def new_snippet_submit():
             {
                 'status': 'success'
             }
-        )
+        ), 200
 
     errors = {}
 
