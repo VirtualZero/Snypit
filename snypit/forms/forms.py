@@ -310,7 +310,7 @@ class NewSnippetForm(FlaskForm):
         choices=[
             ('none||none', 'Choose Language'),
             ('C||clike', 'C'),
-            ('C++||clike', 'C++'),
+            ('CPlusPlus||clike', 'C++'),
             ('C#||clike', 'C#'),
             ('CSS||css', 'CSS'),
             ('HTML||xml', 'HTML'),
