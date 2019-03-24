@@ -75,7 +75,7 @@
                                     <div class="col s12 m12 l6 center no-top-padding">
                                         <label>
                                             <input type="checkbox" class="filled-in white-text" name="pin" id="pin"/>
-                                            <span class="white-text center">Pin to my favorites!</span>
+                                            <span class="white-text center"><i class="fas fa-thumbtack"></i> &nbsp;Pin to my favorites!</span>
                                         </label>
                                     </div>
                                 </div>
@@ -93,7 +93,7 @@
                                         <div class="section"></div>
                                         <label>
                                             <input type="checkbox" class="filled-in white-text" name="pin" id="pin" />
-                                            <span class="white-text center">Pin to my favorites!</span>
+                                            <span class="white-text center"><i class="fas fa-thumbtack"></i> &nbsp;Pin to my favorites!</span>
                                         </label>
                                     </div>
                                 </div>
@@ -155,7 +155,7 @@
 <script type="text/javascript">
     function updateLanguage() {
         var selectBox = document.getElementById("language");
-        var selectedLanguage = selectBox.options[selectBox.selectedIndex].value.split("&")[1];
+        var selectedLanguage = selectBox.options[selectBox.selectedIndex].value.split("||")[1];
         editor.setOption("mode", selectedLanguage);
     }
 </script>
@@ -188,7 +188,7 @@
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
             xhr.setRequestHeader("X-CSRFToken", csrf_token);
             var snippetName = document.getElementById('snippet_name').value;
-            var snippetLanguage = document.getElementById('language').value.split("&")[0];
+            var snippetLanguage = document.getElementById('language').value;
             var snippetDescription = document.getElementById('description').value;
             var snippetContent = document.getElementById('snippet').value;
             var nameErrorText = document.getElementById('name_error_text');
@@ -202,7 +202,7 @@
             
             for (var i=0; i<tagData.chipsData.length; i++) {
                 if (i === 0) {
-                    tags = tagData.chipsData[i].tag;
+                    tags = "tags=" + tagData.chipsData[i].tag;
                 }
 
                 else if (i !==0 && i !==tagData.chipsData.length - 1) {
@@ -220,10 +220,14 @@
             else {
                 var pin = 'pin=False&';
             };
-
             
+            nameErrorText.style.display = "none";
+            languageErrorText.style.display = "none";
+            descErrorText.style.display = "none";
+            tagsErrorText.style.display = "none";
+            snippetErrorText.style.display = "none";
 
-            if (snippetLanguage === "none") {
+            if (snippetLanguage === "none||none") {
                 languageErrorText.style.display = 'block';
                 languageErrorText.innerHTML = 'This field is required.'
                 return false;
@@ -232,6 +236,12 @@
             if (snippetContent == "") {
                 snippetErrorText.style.display = 'block';
                 snippetErrorText.innerHTML = 'This field is required.'
+                return false;
+            }
+
+            if (snippetContent.length > 50000) {
+                snippetErrorText.style.display = 'block';
+                snippetErrorText.innerHTML = 'Must not exceed 50000 characters.'
                 return false;
             }
 
@@ -246,7 +256,6 @@
             var description = "description=" + snippetDescription + "&";
             var snippet = "snippet=" + snippetContent;
             var params = name + language + description + tags + pin + snippet;
-            
             xhr.onload = function () {
                 /*preloader.style.display = "none";
                 formBtns.style.display = 'block';*/
@@ -260,12 +269,29 @@
                 else if (this.status === 400) {
 
                     if (r.hasOwnProperty('errors')) {
-                        if (r.errors.hasOwnProperty('forgot_password_email')) {
-                            if (r.errors.forgot_password_email === 'unconfirmed_email') {
-                                window.location.href = '/email-confirmation-sent?email=' + document.getElementById('forgot_password_email').value;
-                            }
-                            emailErrorText.style.display = 'block';
-                            emailErrorText.innerHTML = r.errors.forgot_password_email;
+                        if (r.errors.hasOwnProperty('language')) {
+                            languageErrorText.style.display = 'block';
+                            languageErrorText.innerHTML = r.errors.language;
+                        }
+
+                        if (r.errors.hasOwnProperty('snippet_name')) {
+                            nameErrorText.style.display = 'block';
+                            nameErrorText.innerHTML = r.errors.snippet_name;
+                        }
+
+                        if (r.errors.hasOwnProperty('description')) {
+                            descriptionErrorText.style.display = 'block';
+                            descriptionErrorText.innerHTML = r.errors.description;
+                        }
+
+                        if (r.errors.hasOwnProperty('snippet')) {
+                            snippetErrorText.style.display = 'block';
+                            snippetErrorText.innerHTML = r.errors.snippet;
+                        }
+
+                        if (r.errors.hasOwnProperty('tags')) {
+                            tagsErrorText.style.display = 'block';
+                            tagsErrorText.innerHTML = r.errors.tags;
                         }
                     }
                 }

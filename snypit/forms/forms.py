@@ -281,8 +281,14 @@ class ResetPasswordForm(FlaskForm):
 
 
 class NewSnippetForm(FlaskForm):
+    def valid_language(form, field):
+        if field.data == 'none||none':
+            raise ValidationError(
+                'This field is required.'
+            )
+
     snippet_name = StringField(
-        'Snippet Name', 
+        'Snippet Title', 
         [
             DataRequired(
                 message='This field is required.'
@@ -298,32 +304,33 @@ class NewSnippetForm(FlaskForm):
         [
             DataRequired(
                 message='This field is required.'
-            )
+            ),
+            valid_language
         ],
         choices=[
-            ('none&none', 'Choose Language'),
-            ('C&clike', 'C'),
-            ('C++&clike', 'C++'),
-            ('C#&clike', 'C#'),
-            ('CSS&css', 'CSS'),
-            ('HTML&xml', 'HTML'),
-            ('HTTP&http', 'HTTP'),
-            ('Java&clike', 'Java'),
-            ('JavaScript&javascript', 'JavaScript'),
-            ('Jinja2&jinja2', 'Jinja2'),
-            ('Nginx&nginx', 'Nginx'),
-            ('Perl&perl', 'Perl'),
-            ('PHP&php', 'PHP'),
-            ('PowerShell&powershell', 'PowerShell'),
-            ('Python&python', 'Python'),
-            ('Ruby&ruby', 'Ruby'),
-            ('SASS&sass', 'Sass'),
-            ('Shell&shell', 'Shell'),
-            ('SQL&sql', 'SQL'),
-            ('Visual Basic&vb', 'Visual Basic'),
-            ('VBScript&vbscript', 'VBScript'),
-            ('YAML&yaml', 'YAML'),
-            ('YAML Front Matter&yaml-frontmatter', 'YAML Front Matter'),
+            ('none||none', 'Choose Language'),
+            ('C||clike', 'C'),
+            ('C++||clike', 'C++'),
+            ('C#||clike', 'C#'),
+            ('CSS||css', 'CSS'),
+            ('HTML||xml', 'HTML'),
+            ('HTTP||http', 'HTTP'),
+            ('Java||clike', 'Java'),
+            ('JavaScript||javascript', 'JavaScript'),
+            ('Jinja2||jinja2', 'Jinja2'),
+            ('Nginx||nginx', 'Nginx'),
+            ('Perl||perl', 'Perl'),
+            ('PHP||php', 'PHP'),
+            ('PowerShell||powershell', 'PowerShell'),
+            ('Python||python', 'Python'),
+            ('Ruby||ruby', 'Ruby'),
+            ('SASS||sass', 'Sass'),
+            ('Shell||shell', 'Shell'),
+            ('SQL||sql', 'SQL'),
+            ('Visual Basic||vb', 'Visual Basic'),
+            ('VBScript||vbscript', 'VBScript'),
+            ('YAML||yaml', 'YAML'),
+            ('YAML Front Matter||yaml-frontmatter', 'YAML Front Matter'),
         ]
     )
 

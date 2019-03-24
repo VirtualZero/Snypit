@@ -15,6 +15,9 @@ from snypit.forms.forms import (
     NewSnippetForm
 )
 from flask_wtf.csrf import CSRFError
+from snypit.forms.forms import (
+    NewSnippetForm
+)
 
 
 @app.route('/dashboard')
@@ -45,8 +48,43 @@ def new_snippet():
 @app.route('/new-snippet-submit', methods=['POST'])
 @login_required
 def new_snippet_submit():
+    new_snippet_form = NewSnippetForm()
+
+    if new_snippet_form.validate_on_submit():
+        if len(request.form['tags']) > 500:
+            return jsonify(
+                {
+                    'status': 'error',
+                    'errors': {
+                        'tags': 'There are too many tags.'
+                    }
+                }
+            ), 400
+
+        if len(request.form['snippet']) > 50000:
+            return jsonify(
+                {
+                    'status': 'error',
+                    'errors': {
+                        'snippet': 'Cannot exceed 50,000 characters.'
+                    }
+                }
+            ), 400
+
+        return jsonify(
+            {
+                'status': 'success'
+            }
+        )
+
+    errors = {}
+
+    for fieldName, errorMessages in new_snippet_form.errors.items():
+        errors[fieldName] = errorMessages[0]
+
     return jsonify(
         {
-            'status': 'success'
+            'status': 'error',
+            'errors': errors
         }
-    )
+    ), 400
