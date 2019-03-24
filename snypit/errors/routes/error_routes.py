@@ -78,16 +78,4 @@ def error_csrf(error):
         status_code=status_code), 403
 
 
-@app.errorhandler(400)
-def error_400(error):
-    error_msg = "A bad request was made on your end."
-    status_msg = "<strong>Status:</strong> Bad Request"
-    status_code = 400
-    code_msg = "<strong>Status Code:</strong> "
-    return render_template(
-        'http_error/error.html',
-        title="Bad Request (400)",
-        error_msg=error_msg,
-        status_msg=status_msg,
-        code_msg=code_msg,
-        status_code=status_code), 400
+

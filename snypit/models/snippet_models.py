@@ -12,7 +12,7 @@ class Snippet(db.Model):
         index=True
     )
 
-    snippet_id = db.Column(
+    vzsid = db.Column(
         db.String(32)
     )
 
@@ -73,7 +73,7 @@ class Snippet(db.Model):
     def __init__(
         self,
         user_id,
-        snippet_id,
+        vzsid,
         snippet_name,
         language,
         codemirror_mode,
@@ -84,7 +84,7 @@ class Snippet(db.Model):
     ):
 
         self.user_id = user_id
-        self.snippet_id = snippet_id
+        self.vzsid = vzsid
         self.snippet_name = snippet_name
         self.language = language
         self.codemirror_mode = codemirror_mode

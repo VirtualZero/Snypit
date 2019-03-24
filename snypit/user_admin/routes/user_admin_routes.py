@@ -1,4 +1,7 @@
-from snypit import app
+from snypit import (
+    app,
+    db
+)
 from flask import (
     render_template, 
     session, 
@@ -14,10 +17,9 @@ from snypit.user_admin.helpers.user_admin_helpers import (
 from snypit.forms.forms import (
     NewSnippetForm
 )
-from flask_wtf.csrf import CSRFError
-from snypit.forms.forms import (
-    NewSnippetForm
-)
+from snypit.models.snippet_models import Snippet
+import random
+import string
 
 
 @app.route('/dashboard')
@@ -61,6 +63,22 @@ def new_snippet_submit():
                 }
             ), 400
 
+        if not request.form['tags']:
+            tags = None
+
+        else:
+            tags = request.form['tags']
+
+        if not request.form['snippet']:
+            return jsonify(
+                {
+                    'status': 'error',
+                    'errors': {
+                        'snippet': 'This field is required.'
+                    }
+                }
+            ), 400
+        
         if len(request.form['snippet']) > 50000:
             return jsonify(
                 {
@@ -70,6 +88,44 @@ def new_snippet_submit():
                     }
                 }
             ), 400
+
+        if request.form['pin'] == 'True':
+            pinned = True
+
+        else:
+            pinned = False
+
+        vzsid = ''
+        unique = False
+
+        while not unique:
+            for i in range(32):
+                vzsid = f"{vzsid}{random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase)}"
+
+            id_in_use = Snippet.query.filter_by(
+                vzsid=vzsid
+            ).first()
+
+            if not id_in_use:
+                unique = True
+
+        if 'CPlusPlus' in new_snippet_form.language.data:
+            new_snippet_form.language.data = 'C++||clike'
+
+        new_snippet = Snippet(
+            session['user_id'],
+            vzsid,
+            new_snippet_form.snippet_name.data.strip(),
+            new_snippet_form.language.data.split('||')[0],
+            new_snippet_form.language.data.split('||')[1],
+            new_snippet_form.description.data.strip(),
+            request.form['snippet'],
+            tags,
+            pinned
+        )
+
+        db.session.add(new_snippet)
+        db.session.commit()
 
         return jsonify(
             {

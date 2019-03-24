@@ -180,15 +180,9 @@
         document.getElementById("new-snippet-form").addEventListener('submit', makeRequest);
         function makeRequest(e) {
             e.preventDefault();
-            var xhr;
             var csrf_token = "{{ csrf_token() }}";
             var preloader = document.getElementById("new-snippet-preloader");
             var formBtns = document.getElementById("new-snippet-btns");
-
-            xhr = new XMLHttpRequest();
-            xhr.open('POST', '/new-snippet-submit', true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-            xhr.setRequestHeader("X-CSRFToken", csrf_token);
             var snippetName = document.getElementById('snippet_name').value;
             var snippetLanguage = document.getElementById('language').value;
             var snippetDescription = document.getElementById('description').value;
@@ -198,35 +192,45 @@
             var descErrorText = document.getElementById('description_error_text');
             var tagsErrorText = document.getElementById('tags_error_text');
             var snippetErrorText = document.getElementById('snippet_error_text');
-
-            var tags = '';
+            var tags = 'tags=';
             var tagData = M.Chips.getInstance(document.getElementById('lg-tags'));
 
             if (tagData.chipsData.length === 0) {
                 var tagData = M.Chips.getInstance(document.getElementById('sm-tags'));
+            };
+
+            if (tagData.chipsData.length === 0) {
+                tags = tags + "&";
+            };
+
+            if (tagData.chipsData.length === 1) {
+                tags = tags + tagData.chipsData[0].tag + "&";
             }
-            
-            for (var i=0; i<tagData.chipsData.length; i++) {
-                if (i === 0) {
-                    tags = "tags=" + tagData.chipsData[i].tag;
-                }
 
-                else if (i !==0 && i !==tagData.chipsData.length - 1) {
-                    tags = tags + "," + tagData.chipsData[i].tag;
-                }
+            else if (tagData.chipsData.length > 1) {
+                for (var i = 0; i < tagData.chipsData.length; i++) {
+                    if (i === 0) {
+                        tags = tags + tagData.chipsData[i].tag;
+                    }
 
-                else {
-                    tags = tags + "," + tagData.chipsData[i].tag + "&";
+                    else if (i !== 0 && i !== tagData.chipsData.length - 1) {
+                        tags = tags + "," + tagData.chipsData[i].tag;
+                    }
+
+                    else {
+                        tags = tags + "," + tagData.chipsData[i].tag + "&";
+                    };
                 };
             };
 
             if (document.getElementById('pin').checked) {
                 var pin = 'pin=True&';
             }
+
             else {
                 var pin = 'pin=False&';
             };
-            
+
             nameErrorText.style.display = "none";
             languageErrorText.style.display = "none";
             descErrorText.style.display = "none";
@@ -237,7 +241,7 @@
                 languageErrorText.style.display = 'block';
                 languageErrorText.innerHTML = 'This field is required.'
                 return false;
-            }
+            };
 
             if (snippetContent == "") {
                 snippetErrorText.style.display = 'block';
@@ -257,14 +261,19 @@
                 return false;
             }
 
-            formBtns.style.display = 'none';
-            preloader.style.display = "block";
-
             var name = "snippet_name=" + snippetName + "&";
             var language = "language=" + snippetLanguage + "&";
             var description = "description=" + snippetDescription + "&";
             var snippet = "snippet=" + snippetContent;
             var params = name + language + description + tags + pin + snippet;
+
+            formBtns.style.display = 'none';
+            preloader.style.display = "block";
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/new-snippet-submit', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+            xhr.setRequestHeader("X-CSRFToken", csrf_token);
             xhr.onload = function () {
                 preloader.style.display = "none";
                 formBtns.style.display = 'block';
@@ -305,11 +314,13 @@
                     }
                 }
             };
+
             xhr.onerror = function () {
                 formBtns.style.display = 'block';
                 preloader.style.display = 'none';
                 M.toast({ html: '<p><i class="fas fa-2x fa-exclamation-triangle red-text text-accent-1 center"></i></p> &nbsp;&nbsp;&nbsp;<p>An error occured submitting the form.</p>', classes: 'grey darken-3 white-text center' })
             };
+            
             xhr.send(params);
         };
 </script>
