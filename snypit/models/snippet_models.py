@@ -24,6 +24,10 @@ class Snippet(db.Model):
         db.String(150)
     )
 
+    language_icon = db.Column(
+        db.String(150)
+    )
+
     codemirror_mode = db.Column(
         db.String(50)
     )
@@ -76,6 +80,7 @@ class Snippet(db.Model):
         vzsid,
         snippet_name,
         language,
+        language_icon,
         codemirror_mode,
         description,
         snippet_content,
@@ -87,6 +92,7 @@ class Snippet(db.Model):
         self.vzsid = vzsid
         self.snippet_name = snippet_name
         self.language = language
+        self.language_icon = language_icon
         self.codemirror_mode = codemirror_mode
         self.description = description
         self.snippet_content = snippet_content

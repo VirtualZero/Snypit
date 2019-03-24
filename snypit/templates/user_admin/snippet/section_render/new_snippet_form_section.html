@@ -1,0 +1,121 @@
+<form action="/new-snippet-submit" method="POST" id="new-snippet-form">
+    <div class="row no-bottom-padding">
+        <div id="sname">
+            <div class="col s12 m12 l6 input-field">
+                <i class="material-icons prefix ">title</i>
+                {{ new_snippet_form.snippet_name(class="white-text", required="", maxlength="150", pattern=".{1,150}", title="Must be less than 150 characters.")}}
+                {{ new_snippet_form.snippet_name.label }}
+
+                <span class="red-text text-accent-1 helper-text" style="display: none;" id="name_error_text"></span>
+
+                {% for error in new_snippet_form.snippet_name.errors %}
+                <span class="red-text accent-1">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div id="slang">
+            <div class="col s12 m12 l6 input-field">
+                <i class="material-icons prefix ">code</i>
+                {{ new_snippet_form.language(class="white", required="", onchange="updateLanguage()")}}
+
+                <span class="red-text text-accent-1 helper-text" style="display: none;" id="language_error_text"></span>
+
+                {% for error in new_snippet_form.language.errors %}
+                <span class="red-text accent-1">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="row no-bottom-padding">
+        <div id="sdesc">
+            <div class="col s12 input-field">
+                <i class="material-icons prefix ">description</i>
+                {{ new_snippet_form.description(class="white-text materialize-textarea", required="", maxlength="1500", pattern=".{1,1500}", title="Must be less than 1500 characters.")}}
+                {{ new_snippet_form.description.label }}
+
+                <span class="red-text text-accent-1 helper-text" style="display: none;"
+                    id="description_error_text"></span>
+
+                {% for error in new_snippet_form.description.errors %}
+                <span class="red-text accent-1">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="row valign-wrapper hide-on-med-and-down" id="stagsnpin">
+        <div class="col s12 m12 l6 no-padding-top input-field">
+            <i class="material-icons prefix ">search</i>
+            <div class="chips chips-placeholder white-text no-top-padding no-bottom-padding" id="lg-tags"></div>
+            <span class="red-text text-accent-1 helper-text" style="display: none;" id="tags_error_text"></span>
+            <a href="#" onclick="tagsHelp()" style="color: #9e9e9e;"><i
+                    class="far fa-question-circle right help-text-top-padding"></i></a>
+        </div>
+
+        <div class="col s12 m12 l6 center no-top-padding">
+            <label>
+                <input type="checkbox" class="filled-in white-text" name="pin" id="pin" />
+                <span class="white-text center"><i class="fas fa-thumbtack"></i> &nbsp;Pin to my favorites!</span>
+            </label>
+        </div>
+    </div>
+
+    <div class="row hide-on-large-only" id="sm-stagsnpin">
+        <div class="col s12 m12 l6 no-padding-top input-field">
+            <i class="material-icons prefix ">search</i>
+            <div class="chips chips-placeholder white-text no-top-padding no-bottom-padding" id="sm-tags"></div>
+            <span class="red-text text-accent-1 helper-text" style="display: none;" id="tags_error_text"></span>
+            <a href="#" onclick="tagsHelp()" style="color: #9e9e9e;"><i class="far fa-question-circle right"
+                    style="margin-top:.25rem !important;"></i></a>
+        </div>
+
+        <div class="col s12 m12 l6 center no-top-padding">
+            <div class="section"></div>
+            <label>
+                <input type="checkbox" class="filled-in white-text" name="pin" id="pin" />
+                <span class="white-text center"><i class="fas fa-thumbtack"></i> &nbsp;Pin to my favorites!</span>
+            </label>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col s12 input-field">
+            <div class="section"></div>
+            <textarea name="snippet" id="snippet" maxlength="50000" , pattern=".{1,50000}"></textarea>
+            <span class="red-text text-accent-1 helper-text help-text-top-padding" style="display: none;"
+                id="snippet_error_text"></span>
+        </div>
+    </div>
+
+    <div class="row" id="save-new-snippet-button-row">
+        <div class="col s12">
+            <div class="section"></div>
+            <div id="new-snippet-btns">
+                <span class="right">
+                    <a href="/dashboard?vzin={{ session['vzin'] }}&username={{ session['username'].title() }}"
+                        class="purple darken-1 white-text waves-effect waves-purple btn-hover btn-flat">Cancel</a>&nbsp;
+                    <button type="submit"
+                        class="btn-flat purple darken-1 white-text waves-effect waves-purple btn-hover"
+                        id="snippet-submit-button">Save</button>
+                </span>
+            </div>
+
+            <div class="progress" style="display: none;" id="new-snippet-preloader">
+                <div class="indeterminate"></div>
+            </div>
+
+            <div class="row" id="another-snippet-row" style="display: none;">
+                <div class="col s12">
+                    <span class="right">
+                        <a href="/dashboard?vzin={{ session['vzin'] }}&username={{ session['username'].title() }}"
+                            class="btn-flat purple darken-1 white-text waves-effect waves-purple btn-hover">Done</a>&nbsp;
+                        <a href="#" onclick="getNewSnippetForm()"
+                            class="btn-flat purple darken-1 white-text btn-hover waves-effect waves-purple">New</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

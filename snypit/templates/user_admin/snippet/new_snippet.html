@@ -9,7 +9,7 @@
                 <div class="top-section-padding"></div>
                 <div class="card white-text grey darken-3 z-depth-0">
                     <div class="card-content">
-                        <div class="row">
+                        <div class="row" id="title-row">
                             <div class="col s12">
                                 <h3 class="white-text">
                                     New Snippet<i class="fas fa-code white-text right"></i>
@@ -187,6 +187,204 @@
 </script>
 
 <script>
+    function getNewSnippetForm() {
+        document.getElementById('title-row').style.display = 'block';
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/get-new-snippet-form', true);
+        xhr.onload = function () {
+            if (this.status === 200) {
+                document.getElementById('new-snippet-form-section').innerHTML = this.response;
+                var elems = document.querySelectorAll('.chips');
+                var instances = M.Chips.init(elems, {
+                    placeholder: 'Enter Tags',
+                    secondaryPlaceholder: '+Tags'
+                });
+
+                var elems = document.querySelectorAll('select');
+                var instances = M.FormSelect.init(elems);
+
+                var editor = CodeMirror.fromTextArea(document.getElementById('snippet'), {
+                    lineNumbers: true,
+                    mode: 'python',
+                    theme: "{{ session['editor_theme'] }}"
+                });
+
+                document.getElementById("new-snippet-form").addEventListener('submit', makeRequest);
+                function makeRequest(e) {
+                    e.preventDefault();
+                    var csrf_token = "{{ csrf_token() }}";
+                    var preloader = document.getElementById("new-snippet-preloader");
+                    var formBtns = document.getElementById("new-snippet-btns");
+                    var snippetName = document.getElementById('snippet_name').value;
+                    var snippetLanguage = document.getElementById('language').value;
+                    var snippetDescription = document.getElementById('description').value;
+                    var snippetContent = document.getElementById('snippet').value;
+                    var nameErrorText = document.getElementById('name_error_text');
+                    var languageErrorText = document.getElementById('language_error_text');
+                    var descErrorText = document.getElementById('description_error_text');
+                    var tagsErrorText = document.getElementById('tags_error_text');
+                    var snippetErrorText = document.getElementById('snippet_error_text');
+                    var tags = 'tags=';
+                    var tagData = M.Chips.getInstance(document.getElementById('lg-tags'));
+
+                    if (tagData.chipsData.length === 0) {
+                        var tagData = M.Chips.getInstance(document.getElementById('sm-tags'));
+                    };
+
+                    if (tagData.chipsData.length === 0) {
+                        tags = tags + "&";
+                    };
+
+                    if (tagData.chipsData.length === 1) {
+                        tags = tags + tagData.chipsData[0].tag + "&";
+                    }
+
+                    else if (tagData.chipsData.length > 1) {
+                        for (var i = 0; i < tagData.chipsData.length; i++) {
+                            if (i === 0) {
+                                tags = tags + tagData.chipsData[i].tag;
+                            }
+
+                            else if (i !== 0 && i !== tagData.chipsData.length - 1) {
+                                tags = tags + "," + tagData.chipsData[i].tag;
+                            }
+
+                            else {
+                                tags = tags + "," + tagData.chipsData[i].tag + "&";
+                            };
+                        };
+                    };
+
+                    if (document.getElementById('pin').checked) {
+                        var pin = 'pin=True&';
+                    }
+
+                    else {
+                        var pin = 'pin=False&';
+                    };
+
+                    nameErrorText.style.display = "none";
+                    languageErrorText.style.display = "none";
+                    descErrorText.style.display = "none";
+                    tagsErrorText.style.display = "none";
+                    snippetErrorText.style.display = "none";
+
+                    if (snippetLanguage === "none||none") {
+                        languageErrorText.style.display = 'block';
+                        languageErrorText.innerHTML = 'This field is required.'
+                        return false;
+                    };
+
+                    if (snippetContent == "") {
+                        snippetErrorText.style.display = 'block';
+                        snippetErrorText.innerHTML = 'This field is required.'
+                        return false;
+                    }
+
+                    if (snippetContent.length > 50000) {
+                        snippetErrorText.style.display = 'block';
+                        snippetErrorText.innerHTML = 'Cannot exceed 50,000 characters.'
+                        return false;
+                    }
+
+                    if (tags.length > 500) {
+                        tagsErrorText.style.display = 'block';
+                        tagsErrorText.innerHTML = 'There are too many tags.';
+                        return false;
+                    }
+
+                    var name = "snippet_name=" + snippetName + "&";
+                    var language = "language=" + snippetLanguage + "&";
+                    var description = "description=" + snippetDescription + "&";
+                    var snippet = "snippet=" + snippetContent;
+                    var params = name + language + description + tags + pin + snippet;
+
+                    formBtns.style.display = 'none';
+                    preloader.style.display = "block";
+
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('POST', '/new-snippet-submit', true);
+                    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+                    xhr.setRequestHeader("X-CSRFToken", csrf_token);
+                    xhr.onload = function () {
+                        preloader.style.display = "none";
+                        formBtns.style.display = 'block';
+
+                        var r = JSON.parse(this.response);
+
+                        if (this.status === 200) {
+                            formBtns.style.display = 'none';
+                            document.getElementById('another-snippet-row').style.display = 'block';
+                            document.getElementById('title-row').style.display = 'none';
+                            document.getElementById('slang').style.display = 'none';
+
+                            if (snippetLanguage === "CPlusPlus||clike") {
+                                document.getElementById('sname').innerHTML = "<div class='col s12'><h3 class='white-text'>" + snippetName + "<span class='right'>C++</span></h3></div>";
+                            }
+
+                            else {
+                                document.getElementById('sname').innerHTML = "<div class='col s12'><h3 class='white-text'>" + snippetName + "<span class='right'>" + snippetLanguage.split("||")[0] + "</span></h3></div>";
+                            };
+
+                            document.getElementById('sdesc').innerHTML = "<div class='col s12 m12 l12'><p class='white-text flow-text'>" + snippetDescription + "</p></div>";
+                            document.getElementById('stagsnpin').style.display = 'none';
+                            document.getElementById('sm-stagsnpin').style.display = 'none';
+                            M.toast({ html: '<p>Snippet Saved!</p>', classes: 'grey darken-3 white-text' });
+                        }
+
+                        else if (this.status === 400) {
+
+                            if (r.hasOwnProperty('errors')) {
+                                if (r.errors.hasOwnProperty('language')) {
+                                    languageErrorText.style.display = 'block';
+                                    languageErrorText.innerHTML = r.errors.language;
+                                }
+
+                                if (r.errors.hasOwnProperty('snippet_name')) {
+                                    nameErrorText.style.display = 'block';
+                                    nameErrorText.innerHTML = r.errors.snippet_name;
+                                }
+
+                                if (r.errors.hasOwnProperty('description')) {
+                                    descriptionErrorText.style.display = 'block';
+                                    descriptionErrorText.innerHTML = r.errors.description;
+                                }
+
+                                if (r.errors.hasOwnProperty('snippet')) {
+                                    snippetErrorText.style.display = 'block';
+                                    snippetErrorText.innerHTML = r.errors.snippet;
+                                }
+
+                                if (r.errors.hasOwnProperty('tags')) {
+                                    tagsErrorText.style.display = 'block';
+                                    tagsErrorText.innerHTML = r.errors.tags;
+                                }
+                            }
+                        }
+                    };
+
+                    xhr.onerror = function () {
+                        formBtns.style.display = 'block';
+                        preloader.style.display = 'none';
+                        M.toast({ html: '<p><i class="fas fa-2x fa-exclamation-triangle red-text text-accent-1 center"></i></p> &nbsp;&nbsp;&nbsp;<p>An error occured submitting the form.</p>', classes: 'grey darken-3 white-text center' })
+                    };
+
+                    xhr.send(params);
+                };
+            };
+        };
+
+        xhr.onerror = function () {
+            formBtns.style.display = 'block';
+            preloader.style.display = 'none';
+            M.toast({ html: '<p><i class="fas fa-2x fa-exclamation-triangle red-text text-accent-1 center"></i></p> &nbsp;&nbsp;&nbsp;<p>An error occured submitting the form.</p>', classes: 'grey darken-3 white-text center' })
+        };
+
+        xhr.send();
+    }
+</script>
+
+<script>
         document.getElementById("new-snippet-form").addEventListener('submit', makeRequest);
         function makeRequest(e) {
             e.preventDefault();
@@ -293,17 +491,18 @@
                 if (this.status === 200) {
                     formBtns.style.display = 'none';
                     document.getElementById('another-snippet-row').style.display = 'block';
-                    document.getElementById('sname').innerHTML = "<div class='col s12 m12 l8'><h4 class='white-text'>" + snippetName + "</h4></div>"
+                    document.getElementById('title-row').style.display = 'none';
+                    document.getElementById('slang').style.display = 'none';
 
                     if (snippetLanguage === "CPlusPlus||clike"){
-                        document.getElementById('slang').innerHTML = "<div class='col s12 m12 l4'><h4 class='white-text right'>C++</h4></div>"
+                        document.getElementById('sname').innerHTML = "<div class='col s12'><h3 class='white-text'>" + snippetName + "<span class='right'>C++</span></h3></div>";
                     }
 
                     else {
-                        document.getElementById('slang').innerHTML = "<div class='col s12 m12 l4'><h4 class='white-text right'>" + snippetLanguage.split("||")[0] + "</h4></div>"
+                        document.getElementById('sname').innerHTML = "<div class='col s12'><h3 class='white-text'>" + snippetName + "<span class='right'>" + snippetLanguage.split("||")[0] + "</span></h3></div>";
                     };
 
-                    document.getElementById('sdesc').innerHTML = "<div class='col s12 m12 l12'><p class='white-text flow-text'>" + snippetDescription + "</p><div class='section'></div></div>"
+                    document.getElementById('sdesc').innerHTML = "<div class='col s12 m12 l12'><p class='white-text flow-text'>" + snippetDescription + "</p></div>";
                     document.getElementById('stagsnpin').style.display = 'none';
                     document.getElementById('sm-stagsnpin').style.display = 'none';
                     M.toast({ html: '<p>Snippet Saved!</p>', classes: 'grey darken-3 white-text' });

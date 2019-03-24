@@ -144,3 +144,12 @@ def new_snippet_submit():
             'errors': errors
         }
     ), 400
+
+
+@app.route('/get-new-snippet-form')
+def get_new_snippet_form():
+    new_snippet_form = NewSnippetForm()
+    return render_template(
+        'user_admin/snippet/section_render/new_snippet_form_section.html',
+        new_snippet_form=new_snippet_form
+    )
