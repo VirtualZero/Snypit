@@ -32,6 +32,9 @@ from snypit.models.user_models import (
     AccountActivity,
     PasswordResetToken
 )
+from snypit.models.snippet_models import (
+    Snippet
+)
 import os
 import requests
 import string
@@ -233,6 +236,35 @@ def create_account_submit():
         new_user.agreed_to_tos = confirmed_TOS
         new_user.verify_email_token = verify_email_token
         new_user.email_confirmed = False
+
+        unique = False
+        vzsid = ''
+
+        while not unique:
+            for i in range(32):
+                vzsid = f"{vzsid}{random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase)}"
+
+            id_in_use = Snippet.query.filter_by(
+                vzsid=vzsid
+            ).first()
+
+            if not id_in_use:
+                unique = True
+
+        new_snippet = Snippet(
+            new_user.id,
+            vzsid,
+            'Hello, World!',
+            'Python',
+            '<i class="fab fa-python"></i>',
+            'python',
+            'My first snippet! Prints "Hello, World!" in the terminal.',
+            "if __name__ == '__main__':\n    print('Hello, World!')\n    exit(0)",
+            'Python,Hello World!,First Snippet',
+            True
+        )
+
+        db.session.add(new_snippet)
         db.session.commit()
 
         requests.post(
