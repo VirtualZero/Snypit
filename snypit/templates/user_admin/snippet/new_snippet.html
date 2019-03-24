@@ -109,12 +109,18 @@
                                 <div class="row" id="save-new-snippet-button-row">
                                     <div class="col s12">
                                         <div class="section"></div>
-                                        <span class="right">
-                                            <a href="/dashboard?vzin={{ session['vzin'] }}&username={{ session['username'].title() }}"
-                                                class="purple darken-1 white-text waves-effect waves-light btn-flat">Cancel</a>&nbsp;
-                                            <button type="submit" class="btn-flat purple darken-1 white-text waves-effect waves-light"
-                                                id="snippet-submit-button">Save</button>
-                                        </span>
+                                        <div id="new-snippet-btns">
+                                            <span class="right">
+                                                <a href="/dashboard?vzin={{ session['vzin'] }}&username={{ session['username'].title() }}"
+                                                    class="purple darken-1 white-text waves-effect waves-light btn-flat">Cancel</a>&nbsp;
+                                                <button type="submit" class="btn-flat purple darken-1 white-text waves-effect waves-light"
+                                                    id="snippet-submit-button">Save</button>
+                                            </span>
+                                        </div>
+
+                                        <div class="progress" style="display: none;" id="new-snippet-preloader">
+                                            <div class="indeterminate"></div>
+                                        </div>
                                     </div>
                                 </div>
                             </form>
@@ -176,12 +182,8 @@
             e.preventDefault();
             var xhr;
             var csrf_token = "{{ csrf_token() }}";
-            /*var preloader = document.getElementById("forgot-pw-preloader");
-            var formBtns = document.getElementById("forgot-pw-form-btns");
-            var emailErrorText = document.getElementById('email-error-text');
-
-            formBtns.style.display = 'none';
-            preloader.style.display = "block";*/
+            var preloader = document.getElementById("new-snippet-preloader");
+            var formBtns = document.getElementById("new-snippet-btns");
 
             xhr = new XMLHttpRequest();
             xhr.open('POST', '/new-snippet-submit', true);
@@ -255,14 +257,17 @@
                 return false;
             }
 
+            formBtns.style.display = 'none';
+            preloader.style.display = "block";
+
             var name = "snippet_name=" + snippetName + "&";
             var language = "language=" + snippetLanguage + "&";
             var description = "description=" + snippetDescription + "&";
             var snippet = "snippet=" + snippetContent;
             var params = name + language + description + tags + pin + snippet;
             xhr.onload = function () {
-                /*preloader.style.display = "none";
-                formBtns.style.display = 'block';*/
+                preloader.style.display = "none";
+                formBtns.style.display = 'block';
 
                 var r = JSON.parse(this.response);
 
