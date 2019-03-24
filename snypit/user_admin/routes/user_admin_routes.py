@@ -117,6 +117,7 @@ def new_snippet_submit():
             vzsid,
             new_snippet_form.snippet_name.data.strip(),
             new_snippet_form.language.data.split('||')[0],
+            get_language_icon(new_snippet_form.language.data.split('||')[0]),
             new_snippet_form.language.data.split('||')[1],
             new_snippet_form.description.data.strip(),
             request.form['snippet'],
@@ -125,11 +126,13 @@ def new_snippet_submit():
         )
 
         db.session.add(new_snippet)
+        db.session.flush()
         db.session.commit()
 
         return jsonify(
             {
-                'status': 'success'
+                'status': 'success',
+                'language_icon': new_snippet.language_icon
             }
         ), 200
 
@@ -145,6 +148,45 @@ def new_snippet_submit():
         }
     ), 400
 
+
+def get_language_icon(language):
+    language_icon = None
+
+    if language == 'CSS':
+        language_icon = '<i class="fab fa-css3-alt"></i>'
+
+    if language == 'HTML':
+        language_icon = '<i class="fab fa-html5"></i>'
+
+    if language == 'Java':
+        language_icon = '<i class="fab fa-java"></i>'
+
+    if language == 'JavaScript':
+        language_icon = '<i class="fab fa-js"></i>'
+
+    if language == 'PHP':
+        language_icon = '<i class="fab fa-php"></i>'
+
+    if language == 'PowerShell':
+        language_icon = '<i class="fas fa-terminal"></i>'
+
+    if language == 'Python':
+        language_icon = '<i class="fab fa-python"></i>'
+
+    if language == 'SASS':
+        language_icon = '<i class="fab fa-sass"></i>'
+
+    if language == 'Shell':
+        language_icon = '<i class="fas fa-terminal"></i>'
+
+    if language == 'SQL':
+        language_icon = '<i class="fas fa-database"></i>'
+
+    if not language_icon:
+        language_icon = '<i class="fas fa-file-code"></i>'
+
+    return language_icon
+    
 
 @app.route('/get-new-snippet-form')
 def get_new_snippet_form():

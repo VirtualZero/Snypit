@@ -317,16 +317,8 @@
                             document.getElementById('another-snippet-row').style.display = 'block';
                             document.getElementById('title-row').style.display = 'none';
                             document.getElementById('slang').style.display = 'none';
-
-                            if (snippetLanguage === "CPlusPlus||clike") {
-                                document.getElementById('sname').innerHTML = "<div class='col s12'><h3 class='white-text'>" + snippetName + "<span class='right'>C++</span></h3></div>";
-                            }
-
-                            else {
-                                document.getElementById('sname').innerHTML = "<div class='col s12'><h3 class='white-text'>" + snippetName + "<span class='right'>" + snippetLanguage.split("||")[0] + "</span></h3></div>";
-                            };
-
-                            document.getElementById('sdesc').innerHTML = "<div class='col s12 m12 l12'><p class='white-text flow-text'>" + snippetDescription + "</p></div>";
+                            document.getElementById('sname').innerHTML = "<div class='col s12'><h3 class='white-text'>" + snippetName + "<span class='right'>" + r.language_icon + "</span></h3></div>";
+                            document.getElementById('sdesc').innerHTML = "<div class='col s12 m12 l12'><p class='white-text flow-text'><strong>" + snippetLanguage.split("||")[0] + "</strong><br>" + snippetDescription + "</p></div>";
                             document.getElementById('stagsnpin').style.display = 'none';
                             document.getElementById('sm-stagsnpin').style.display = 'none';
                             M.toast({ html: '<p>Snippet Saved!</p>', classes: 'grey darken-3 white-text' });
@@ -493,16 +485,8 @@
                     document.getElementById('another-snippet-row').style.display = 'block';
                     document.getElementById('title-row').style.display = 'none';
                     document.getElementById('slang').style.display = 'none';
-
-                    if (snippetLanguage === "CPlusPlus||clike"){
-                        document.getElementById('sname').innerHTML = "<div class='col s12'><h3 class='white-text'>" + snippetName + "<span class='right'>C++</span></h3></div>";
-                    }
-
-                    else {
-                        document.getElementById('sname').innerHTML = "<div class='col s12'><h3 class='white-text'>" + snippetName + "<span class='right'>" + snippetLanguage.split("||")[0] + "</span></h3></div>";
-                    };
-
-                    document.getElementById('sdesc').innerHTML = "<div class='col s12 m12 l12'><p class='white-text flow-text'>" + snippetDescription + "</p></div>";
+                    document.getElementById('sname').innerHTML = "<div class='col s12'><h3 class='white-text'>" + snippetName + "<span class='right'>" + r.language_icon + "</span></h3></div>";
+                    document.getElementById('sdesc').innerHTML = "<div class='col s12 m12 l12'><p class='white-text flow-text'><strong>" + snippetLanguage.split("||")[0] + "</strong><br>"+ snippetDescription + "</p></div>";
                     document.getElementById('stagsnpin').style.display = 'none';
                     document.getElementById('sm-stagsnpin').style.display = 'none';
                     M.toast({ html: '<p>Snippet Saved!</p>', classes: 'grey darken-3 white-text' });
