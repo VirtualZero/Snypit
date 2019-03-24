@@ -12,7 +12,8 @@ from flask import (
 )
 from snypit.user_admin.helpers.user_admin_helpers import (
     login_required,
-    validate_vzin
+    validate_vzin,
+    get_language_icon
 )
 from snypit.forms.forms import (
     NewSnippetForm
@@ -147,45 +148,6 @@ def new_snippet_submit():
             'errors': errors
         }
     ), 400
-
-
-def get_language_icon(language):
-    language_icon = None
-
-    if language == 'CSS':
-        language_icon = '<i class="fab fa-css3-alt"></i>'
-
-    if language == 'HTML':
-        language_icon = '<i class="fab fa-html5"></i>'
-
-    if language == 'Java':
-        language_icon = '<i class="fab fa-java"></i>'
-
-    if language == 'JavaScript':
-        language_icon = '<i class="fab fa-js"></i>'
-
-    if language == 'PHP':
-        language_icon = '<i class="fab fa-php"></i>'
-
-    if language == 'PowerShell':
-        language_icon = '<i class="fas fa-terminal"></i>'
-
-    if language == 'Python':
-        language_icon = '<i class="fab fa-python"></i>'
-
-    if language == 'SASS':
-        language_icon = '<i class="fab fa-sass"></i>'
-
-    if language == 'Shell':
-        language_icon = '<i class="fas fa-terminal"></i>'
-
-    if language == 'SQL':
-        language_icon = '<i class="fas fa-database"></i>'
-
-    if not language_icon:
-        language_icon = '<i class="fas fa-file-code"></i>'
-
-    return language_icon
     
 
 @app.route('/get-new-snippet-form')
