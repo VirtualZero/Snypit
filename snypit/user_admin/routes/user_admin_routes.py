@@ -64,11 +64,7 @@ def new_snippet_submit():
                 }
             ), 400
 
-        if not request.form['tags']:
-            tags = None
-
-        else:
-            tags = request.form['tags']
+        tags = request.form['tags'] if request.form['tags'] else None
 
         if not request.form['snippet']:
             return jsonify(
@@ -90,17 +86,13 @@ def new_snippet_submit():
                 }
             ), 400
 
-        if request.form['pin'] == 'True':
-            pinned = True
-
-        else:
-            pinned = False
+        pinned = True if request.form['pin'] == 'True' else False
 
         vzsid = ''
         unique = False
 
         while not unique:
-            for i in range(32):
+            for _ in range(32):
                 vzsid = f"{vzsid}{random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase)}"
 
             id_in_use = Snippet.query.filter_by(

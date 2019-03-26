@@ -208,7 +208,7 @@ def create_account_submit():
         vzin = ""
 
         while not unique:
-            for i in range(8):
+            for _ in range(8):
                 vzin = f"{vzin}{random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase)}"
 
             id_in_use = User.query.filter_by(
