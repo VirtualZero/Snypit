@@ -73,15 +73,11 @@ def get_snippet():
     if snippet.user_id != session['user_id']:
         abort(403)
 
-    return jsonify(
-        {
-            'status': 'success',
-            'snippet_name': snippet.snippet_name,
-            'snippet_description': snippet.description,
-            'snippet_tags': snippet.tags.replace(',', ', '),
-            'snippet_content': snippet.snippet_content,
-            'snippet_icon': snippet.language_icon
-        }
+    snippet.tags = snippet.tags.replace(',', ', ')
+
+    return render_template(
+        'user_admin/sections/dashboard_editor_section.html',
+        snippet=snippet
     )
 
 

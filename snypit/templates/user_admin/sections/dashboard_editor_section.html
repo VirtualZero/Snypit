@@ -1,0 +1,23 @@
+<div class="row no-bottom-padding">
+    <div class="col s12">
+        <h3 id="sname">{{ snippet.snippet_name }}<span class="right"
+                id="sicon">{{ snippet.language_icon|safe }}</span></h3>
+        <p class="flow-text">
+            <strong>
+                Description:
+            </strong> <span id="sdesc">{{ snippet.description }}</span> <br>
+            <strong>
+                Tags:
+            </strong> <span id="stags">{{ snippet.tags }}</span>
+        </p>
+        <div class="section"></div>
+    </div>
+</div>
+
+<div class="row no-padding-bottom">
+    <div class="col s12">
+        <textarea name="snippet-content" id="snippet-content" maxlength="50000" ,
+            pattern=".{1,50000}">{{ snippet.snippet_content }}</textarea>
+        <input type="hidden" id="codemirror-mode" value="{{ snippet.codemirror_mode }}">
+    </div>
+</div>

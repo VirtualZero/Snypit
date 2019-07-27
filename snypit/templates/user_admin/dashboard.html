@@ -65,24 +65,28 @@
                     <div class="col s12 m9 l9 no-left-padding">
                         <div class="card grey darken-3 white-text z-depth-0">
                             <div class="card-content">
-                                <div class="row no-bottom-padding">
-                                    <div class="col s12">
-                                        <h3>{{ last_viewed_snippet.snippet_name }}<span class="right">{{ last_viewed_snippet.language_icon|safe }}</span></h3>
-                                        <p class="flow-text">
-                                            <strong>
-                                                Description:
-                                            </strong> {{ last_viewed_snippet.description }}<br>
-                                            <strong>
-                                                Tags:
-                                            </strong> {{ last_viewed_snippet.tags }}
-                                        </p>
-                                        <div class="section"></div>
+                                <div id="editor-section">
+                                    <div class="row no-bottom-padding">
+                                        <div class="col s12">
+                                            <h3 id="sname">{{ last_viewed_snippet.snippet_name }}<span class="right"
+                                                    id="sicon">{{ last_viewed_snippet.language_icon|safe }}</span></h3>
+                                            <p class="flow-text">
+                                                <strong>
+                                                    Description:
+                                                </strong> <span id="sdesc">{{ last_viewed_snippet.description }}</span> <br>
+                                                <strong>
+                                                    Tags:
+                                                </strong> <span id="stags">{{ last_viewed_snippet.tags }}</span>
+                                            </p>
+                                            <div class="section"></div>
+                                        </div>
                                     </div>
-                                </div>
-
-                                <div class="row no-padding-bottom">
-                                    <div class="col s12">
-                                        <textarea name="snippet-content" id="snippet-content" maxlength="50000" , pattern=".{1,50000}">{{ last_viewed_snippet.snippet_content }}</textarea>
+                                    
+                                    <div class="row no-padding-bottom">
+                                        <div class="col s12">
+                                            <textarea name="snippet-content" id="snippet-content" maxlength="50000" ,
+                                                pattern=".{1,50000}">{{ last_viewed_snippet.snippet_content }}</textarea>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -104,8 +108,13 @@
         xhr.open('GET', '/get-snippet?vzsid=' + vzsid + '&vzin={{ session["vzin"] }}')
 
         xhr.onload = function() {
-            const r = JSON.parse(this.response);
-            alert(r.snippet_name)
+            document.getElementById('editor-section').innerHTML = this.response;
+            var editor = CodeMirror.fromTextArea(document.getElementById('snippet-content'), {
+                lineNumbers: true,
+                mode: document.getElementById('codemirror-mode').value,
+                theme: "{{ session['editor_theme'] }}",
+                indentUnit: 4
+            });
         }
 
         xhr.send()
