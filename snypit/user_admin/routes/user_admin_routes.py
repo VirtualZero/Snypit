@@ -42,11 +42,46 @@ def dashboard():
 
     last_viewed_snippet.tags = last_viewed_snippet.tags.replace(',', ', ')
 
+    pinned_snippets = Snippet.query.filter(
+        and_(
+            Snippet.user_id == session['user_id'],
+            Snippet.pinned == True
+        )
+    ).order_by(
+        desc(
+            Snippet.added_on
+        )
+    ).all()
+
     return render_template(
         'user_admin/dashboard.html',
         title=f'Dashboard - {session["username"].title()}',
         last_viewed_snippet=last_viewed_snippet,
-        search_form=SearchForm()
+        search_form=SearchForm(),
+        pinned_snippets=pinned_snippets
+    )
+
+
+@app.route('/get-snippet')
+@login_required
+@validate_vzin
+def get_snippet():
+    snippet = Snippet.query.filter_by(
+        vzsid=request.args.get('vzsid')
+    ).first_or_404()
+
+    if snippet.user_id != session['user_id']:
+        abort(403)
+
+    return jsonify(
+        {
+            'status': 'success',
+            'snippet_name': snippet.snippet_name,
+            'snippet_description': snippet.description,
+            'snippet_tags': snippet.tags.replace(',', ', '),
+            'snippet_content': snippet.snippet_content,
+            'snippet_icon': snippet.language_icon
+        }
     )
 
 

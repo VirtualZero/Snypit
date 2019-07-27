@@ -25,6 +25,41 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="card grey darken-3 white-text z-depth-0">
+                            <div class="card-content">
+                                <div class="row no-bottom-padding">
+                                    <div class="col s12">
+                                        <h5 class="center white-text no-top-padding">
+                                            <i class="fas fa-thumbtack white-text"></i> &nbsp;Pinned Snippets
+                                        </h5>
+                                    </div>
+                                </div>
+
+                                <div class="row no-bottom-padding">
+                                    <div class="col s12">
+                                        {% for pinned_snippet in pinned_snippets %}
+                                            <a href="#" onclick="getSnippet( '{{ pinned_snippet.vzsid }}' )">
+                                                <div class="row no-padding purple darken-1 btn-hover sidebar-snippet-name white-text">
+                                                    <div class="col s10 m11 l11">
+                                                        <p>
+                                                            {{ pinned_snippet.snippet_name }}
+                                                        </p>
+                                                    </div>
+
+                                                    <div class="col s2 m1 l1">
+                                                        <p class="right">
+                                                            {{ pinned_snippet.language_icon|safe }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <div class="sidebar-spacer"></div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="col s12 m9 l9 no-left-padding">
@@ -62,6 +97,20 @@
 {% assets 'snypit_admin_js' %}
     <script type="text/javascript" src="{{ ASSET_URL }}"></script>
 {% endassets %}
+
+<script>
+    function getSnippet(vzsid) {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', '/get-snippet?vzsid=' + vzsid + '&vzin={{ session["vzin"] }}')
+
+        xhr.onload = function() {
+            const r = JSON.parse(this.response);
+            alert(r.snippet_name)
+        }
+
+        xhr.send()
+    }
+</script>
 
 <script>
     var editor = CodeMirror.fromTextArea(document.getElementById('snippet-content'), {
