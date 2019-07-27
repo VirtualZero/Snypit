@@ -345,3 +345,15 @@ class NewSnippetForm(FlaskForm):
             )
         ]
     )
+
+
+class SearchForm(FlaskForm):
+    search_text = StringField(
+        'Search Snippets', 
+        [
+            DataRequired(),
+            Length(
+                max=100
+            )
+        ]
+    )

@@ -16,9 +16,11 @@ from snypit.user_admin.helpers.user_admin_helpers import (
     get_language_icon
 )
 from snypit.forms.forms import (
-    NewSnippetForm
+    NewSnippetForm,
+    SearchForm
 )
 from snypit.models.snippet_models import Snippet
+from sqlalchemy import and_, desc
 import random
 import string
 
@@ -30,9 +32,21 @@ def dashboard():
     if request.args.get('login'):
         flash('Logged in.')
 
+    last_viewed_snippet = Snippet.query.filter_by(
+        user_id=session['user_id']
+    ).order_by(
+        desc(
+            Snippet.last_viewed
+        )
+    ).first()
+
+    last_viewed_snippet.tags = last_viewed_snippet.tags.replace(',', ', ')
+
     return render_template(
         'user_admin/dashboard.html',
-        title=f'Dashboard - {session["username"].title()}'
+        title=f'Dashboard - {session["username"].title()}',
+        last_viewed_snippet=last_viewed_snippet,
+        search_form=SearchForm()
     )
 
 
