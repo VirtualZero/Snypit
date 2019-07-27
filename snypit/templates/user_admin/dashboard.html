@@ -1,8 +1,6 @@
 {% extends 'user_admin/logged_in_base.html' %}
 {% block content %}
 
-
-
 <div>
     <div id="dashboard-content">
         <div class="row no-bottom-padding">
@@ -14,11 +12,12 @@
                                 <div class="row no-bottom-padding">
                                     <div class="col s12 m10 l10 input-field">
                                         {{ search_form.search_text(class="white-text", required="") }}
-                                        {{ search_form.search_text.label }}
+                                        {{ search_form.search_text.label(class="white-text") }}
                                     </div>
 
                                     <div class="col s12 m2 l2 input-field">
-                                        <button class="waves-effect waves-purple btn-flat btn-medium white-text purple darken-1 center btn-hover">
+                                        <div class="sidebar-spacer"></div>
+                                        <button class="waves-effect waves-purple btn-flat btn-medium white-text purple darken-1 center btn-hover full-width">
                                             <i class="fas fa-search"></i>
                                         </button>
                                     </div>
@@ -55,6 +54,76 @@
                                                 </div>
                                             </a>
                                             <div class="sidebar-spacer"></div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card grey darken-3 white-text z-depth-0">
+                            <div class="card-content">
+                                <div class="row no-bottom-padding">
+                                    <div class="col s12">
+                                        <h5 class="center white-text no-top-padding">
+                                            <i class="fas fa-clock"></i> &nbsp;Recent Snippets
+                                        </h5>
+                                    </div>
+                                </div>
+                                
+                                <div class="row no-bottom-padding">
+                                    <div class="col s12">
+                                        {% for recent_snippet in recent_snippets %}
+                                        <a href="#" onclick="getSnippet( '{{ recent_snippet.vzsid }}' )">
+                                            <div class="row no-padding purple darken-1 btn-hover sidebar-snippet-name white-text">
+                                                <div class="col s10 m11 l11">
+                                                    <p>
+                                                        {{ recent_snippet.snippet_name }}
+                                                    </p>
+                                                </div>
+                                
+                                                <div class="col s2 m1 l1">
+                                                    <p class="right">
+                                                        {{ recent_snippet.language_icon|safe }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                        <div class="sidebar-spacer"></div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card grey darken-3 white-text z-depth-0">
+                            <div class="card-content">
+                                <div class="row no-bottom-padding">
+                                    <div class="col s12">
+                                        <h5 class="center white-text no-top-padding">
+                                            <i class="fas fa-fire white-text"></i> &nbsp;Popular Snippets
+                                        </h5>
+                                    </div>
+                                </div>
+                        
+                                <div class="row no-bottom-padding">
+                                    <div class="col s12">
+                                        {% for popular_snippet in popular_snippets %}
+                                        <a href="#" onclick="getSnippet( '{{ popular_snippet.vzsid }}' )">
+                                            <div class="row no-padding purple darken-1 btn-hover sidebar-snippet-name white-text">
+                                                <div class="col s10 m11 l11">
+                                                    <p>
+                                                        {{ popular_snippet.snippet_name }}
+                                                    </p>
+                                                </div>
+                        
+                                                <div class="col s2 m1 l1">
+                                                    <p class="right">
+                                                        {{ popular_snippet.language_icon|safe }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                        <div class="sidebar-spacer"></div>
                                         {% endfor %}
                                     </div>
                                 </div>

@@ -40,7 +40,10 @@ def dashboard():
         )
     ).first()
 
-    last_viewed_snippet.tags = last_viewed_snippet.tags.replace(',', ', ')
+    last_viewed_snippet.last_viewed = db.func.now()
+
+    if last_viewed_snippet.tags:
+        last_viewed_snippet.tags = last_viewed_snippet.tags.replace(',', ', ')
 
     pinned_snippets = Snippet.query.filter(
         and_(
@@ -53,12 +56,36 @@ def dashboard():
         )
     ).all()
 
+    recent_snippets = Snippet.query.filter_by(
+        user_id=session['user_id']
+    ).order_by(
+        desc(
+            Snippet.added_on
+        )
+    ).limit(
+        5
+    ).all()
+
+    popular_snippets = Snippet.query.filter_by(
+        user_id=session['user_id']
+    ).order_by(
+        desc(
+            Snippet.times_viewed
+        )
+    ).limit(
+        5
+    ).all()
+
+    db.session.commit()
+
     return render_template(
         'user_admin/dashboard.html',
         title=f'Dashboard - {session["username"].title()}',
         last_viewed_snippet=last_viewed_snippet,
         search_form=SearchForm(),
-        pinned_snippets=pinned_snippets
+        pinned_snippets=pinned_snippets,
+        recent_snippets=recent_snippets,
+        popular_snippets=popular_snippets
     )
 
 
@@ -73,7 +100,12 @@ def get_snippet():
     if snippet.user_id != session['user_id']:
         abort(403)
 
-    snippet.tags = snippet.tags.replace(',', ', ')
+    snippet.times_viewed+=1
+    snippet.last_viewed = db.func.now()
+    db.session.commit()
+
+    if snippet.tags:
+        snippet.tags = snippet.tags.replace(',', ', ')
 
     return render_template(
         'user_admin/sections/dashboard_editor_section.html',
