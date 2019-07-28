@@ -1,6 +1,7 @@
 from snypit import (
     app,
-    db
+    db,
+    bcrypt
 )
 from flask import (
     render_template, 
@@ -17,9 +18,13 @@ from snypit.user_admin.helpers.user_admin_helpers import (
 )
 from snypit.forms.forms import (
     NewSnippetForm,
-    SearchForm
+    SearchForm,
+    UpdateUsername,
+    UpdateEmail,
+    UpdatePassword
 )
 from snypit.models.snippet_models import Snippet
+from snypit.models.user_models import User
 from sqlalchemy import and_, desc
 import random
 import string
@@ -90,6 +95,8 @@ def dashboard():
 
 
 @app.route('/dashboard-search')
+@login_required
+@validate_vzin
 def dashboard_search():
     search_for = request.args.get('search-for')
     search_match_list = []
@@ -259,3 +266,126 @@ def get_new_snippet_form():
         'user_admin/snippet/section_render/new_snippet_form_section.html',
         new_snippet_form=new_snippet_form
     )
+
+
+@app.route('/account/<username>')
+@login_required
+@validate_vzin
+def account(username):
+    user = User.query.filter_by(
+        vzin=session['vzin']
+    ).first()
+
+    return render_template(
+        'user_admin/account.html',
+        title='Account',
+        update_username=UpdateUsername(),
+        user=user,
+        update_email=UpdateEmail(),
+        update_password=UpdatePassword()
+    )
+
+
+@app.route('/update-username', methods=['POST'])
+@login_required
+@validate_vzin
+def update_username():
+    update_username = UpdateUsername()
+
+    if update_username.validate_on_submit():
+        user = User.query.filter_by(
+            vzin=session['vzin']
+        ).first()
+
+        user.username = update_username.username.data
+        db.session.commit()
+
+        session['username'] = update_username.username.data
+
+        return jsonify(
+            {
+                'status': 'success'
+            }
+        ), 200
+    
+    errors = {}
+
+    for fieldName, errorMessages in update_username.errors.items():
+        errors[fieldName] = errorMessages[0]
+
+    return jsonify(
+        {
+            'status': 'error',
+            'errors': errors
+        }
+    ), 400
+
+@app.route('/update-email', methods=['POST'])
+@login_required
+@validate_vzin
+def update_email():
+    update_email = UpdateEmail()
+
+    if update_email.validate_on_submit():
+        user = User.query.filter_by(
+            vzin=session['vzin']
+        ).first()
+
+        user.email = update_email.email.data
+        db.session.commit()
+
+        session['email'] = update_email.email.data
+
+        return jsonify(
+            {
+                'status': 'success'
+            }
+        ), 200
+
+    errors = {}
+
+    for fieldName, errorMessages in update_email.errors.items():
+        errors[fieldName] = errorMessages[0]
+
+    return jsonify(
+        {
+            'status': 'error',
+            'errors': errors
+        }
+    ), 400
+
+
+@app.route('/update-password', methods=['POST'])
+@login_required
+@validate_vzin
+def update_password():
+    update_password = UpdatePassword()
+
+    if update_password.validate_on_submit():
+        user = User.query.filter_by(
+            vzin=session['vzin']
+        ).first()
+
+        user.pw_hash = bcrypt.generate_password_hash(
+            update_password.password.data
+        ).decode('utf-8')
+
+        db.session.commit()
+
+        return jsonify(
+            {
+                'status': 'success'
+            }
+        ), 200
+
+    errors = {}
+
+    for fieldName, errorMessages in update_password.errors.items():
+        errors[fieldName] = errorMessages[0]
+
+    return jsonify(
+        {
+            'status': 'error',
+            'errors': errors
+        }
+    ), 400

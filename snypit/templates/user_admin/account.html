@@ -1,78 +1,131 @@
-{% extends "base.html" %}
+{% extends "user_admin/logged_in_base.html" %}
 {% block content %}
 
-<div class="valign-wrapper" id="showcase">
+<div style="height:93vh; overflow:auto" class="dashboard-scroll">
     <div class="container" id="content">
-        <div class="row">
+        <div class="row no-bottom-padding">
             <div class="col s12">
-                <div class="card hoverable grey darken-3 button-border-purple">
-                    <div class="card-content">
-                        <div class="row">
-                            <h3 class="white-text">
-                                Account<i class="fas fa-cogs white-text right"></i>
-                            </h3>
+                <div class="section"></div>
+                <div class="card white-text grey darken-3 z-depth-0">
+                    <div class="card-content ">
+                        <div class="row" id="title-row">
+                            <div class="col s12">
+                                <h3 class="white-text">
+                                    Account<i class="fas fa-cogs white-text right"></i>
+                                </h3>
+                            </div>
+                        </div>
+
+                        <div class="row flow-text">
+                            <div class="col s12 m6 l4">
+                                <div id="uname-section">
+                                    <strong>Username:</strong> <span id="uname-text">{{ session['username'].title() }}</span><br>
+                                    <a href="#" onclick="getUpdateUnameForm()" class="btn-flat purple darken-1 white-text waves-effect waves-light btn-hover"><i class="fas fa-pencil-alt white-text"></i></a>
+                                </div>
+
+                                <form action="/update-username" method="POST" id="update-username-form">
+                                    <div id="uname-form-section" style="display: none;">
+                                        <div class="row no-bottom-padding">
+                                            <div class="col s12 input-field">
+                                                {{ update_username.username(class="white-text", value=user.username.title()) }}
+                                                {{ update_username.username.label(class="white-text") }}
+                                                <span class="red-text text-accent-1 helper-text" style="display: none;" id="uname_error_text"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="row no-bottom-padding">
+                                            <div class="col s12">
+                                                <a href="#" onclick="cancelUpdateUnameForm()" class="btn-flat purple darken-1 white-text waves-effect waves-light btn-hover"><i class="fas fa-times"></i></a>
+                                                <button type="submit" class="btn-flat purple darken-1 white-text waves-effect waves-light btn-hover"><i class="fas fa-save"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="col s12 m6 l4">
+                                <div id="email-section">
+                                    <strong>Email:</strong> <span id="email-text">{{ session['email'] }}</span> <br>
+                                    <a href="#" onclick="getUpdateEmailForm()" class="btn-flat purple darken-1 white-text waves-effect waves-light btn-hover"><i class="fas fa-pencil-alt white-text"></i></a>
+                                </div>
+
+                                <form action="/update-email" method="POST", id="update-email-form">
+                                    <div id="email-form-section" style="display: none;">
+                                        <div class="row no-bottom-padding">
+                                            <div class="col s12 input-field">
+                                                {{ update_email.email(class="white-text", value=user.email) }}
+                                                {{ update_email.email.label(class="white-text") }}
+                                                <span class="red-text text-accent-1 helper-text" style="display: none;" id="email_error_text"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="row no-bottom-padding">
+                                            <div class="col s12">
+                                                <a href="#" onclick="cancelUpdateEmailForm()" class="btn-flat purple darken-1 white-text waves-effect waves-light btn-hover"><i class="fas fa-times"></i></a>
+                                                <button type="submit" class="btn-flat purple darken-1 white-text waves-effect waves-light btn-hover"><i class="fas fa-save"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="row flow-text">
+                            <div class="col s12">
+                                <div id="password-section">
+                                    <strong>Password:</strong> ******** <br>
+                                    <a href="#" onclick="getUpdatePasswordForm()"
+                                        class="btn-flat purple darken-1 white-text waves-effect waves-light btn-hover"><i
+                                            class="fas fa-pencil-alt white-text"></i></a>
+                                </div>
+                            
+                                <form action="/update-password" method="POST" , id="update-password-form">
+                                    <div id="password-form-section" style="display: none;">
+                                        <div class="row no-bottom-padding">
+                                            <div class="col s12 input-field">
+                                                {{ update_password.password(class="white-text", value=user.email) }}
+                                                {{ update_password.password.label(class="white-text") }}
+                                                <span class="red-text text-accent-1 helper-text" style="display: none;"
+                                                    id="password_error_text"></span>
+                                            </div>
+
+                                            <div class="col s12 input-field">
+                                                {{ update_password.confirm_password(class="white-text", value=user.email) }}
+                                                {{ update_password.confirm_password.label(class="white-text") }}
+                                                <span class="red-text text-accent-1 helper-text" style="display: none;" id="confirm_password_error_text"></span>
+                                            </div>
+                                        </div>
+                            
+                                        <div class="row no-bottom-padding">
+                                            <div class="col s12">
+                                                <a href="#" onclick="cancelUpdatePasswordForm()"
+                                                    class="btn-flat purple darken-1 white-text waves-effect waves-light btn-hover"><i
+                                                        class="fas fa-times"></i></a>
+                                                <button type="submit"
+                                                    class="btn-flat purple darken-1 white-text waves-effect waves-light btn-hover"><i
+                                                        class="fas fa-save"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
 
                         <div class="row">
                             <div class="col s12">
-                                <ul class="tabs">
-                                    <li class="tab col s6 grey darken-3">
-                                        <a href="#personal-info" class="white-text active">Personal Info</a>
-                                    </li>
-
-                                    <li class="tab col s6 grey darken-3">
-                                        <a href="#snypit-info" class="white-text">Snypit Settings</a>
-                                    </li>
-                                </ul>
-
-                                <div id="personal-info" class="col s12 grey darken-3">
-                                    <div id="personal-info-section">
+                                
                                         <div class="row">
                                             <div class="col s12">
-                                                <div class="section"></div>
-                                                <p class="flow-text white-text">
-                                                    <strong>
-                                                        First Name:
-                                                    </strong>
-                                        
-                                                    <span class="grey-text text-lighten-2">&nbsp;{{ session['first_name'].title() }}</span>
-                                                </p>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="row">
-                                            <div class="col s12">
-                                                <p class="flow-text white-text">
-                                                    <strong>
-                                                        Last Name:
-                                                    </strong>
-                                        
-                                                    <span class="grey-text text-lighten-2">&nbsp;{{ session['last_name'].title() }}</span>
-                                                </p>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="row">
-                                            <div class="col s12">
-                                                <p class="flow-text white-text">
-                                                    <strong>
-                                                        Email:
-                                                    </strong>
-                                        
-                                                    <span class="grey-text text-lighten-2">&nbsp;{{ session['email'] }}</span>
-                                                </p>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="row">
-                                            <div class="col s12">
-                                                <a href="#" onclick="getUserInfo({{ session['user_id'] }})" class="btn-flat purple darken-1 white-text waves-effect waves-light"><i
-                                                        class="fas fa-pencil-alt white-text"></i></a>
+                                                
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
 
+                        <div class="row">
+                            <div class="col s12">
                                 <div id="snypit-info" class="col s12 grey darken-3">
                                     <div id="choose-theme-form-section">
                                         <form action="/save-theme" method="POST" id="save-theme-form">
@@ -81,7 +134,7 @@
                                                 <div class="col s12 m12 l6">
                                                     <h3 class="white-text no-top-padding">Choose Editor Theme</h3>
                                                 </div>
-                                        
+                                
                                                 <div class="col s12 m12 l6 input-field">
                                                     <select class="btn-border-purple" name="theme" id="theme" onchange="updateTheme()">
                                                         {% if session['editor_theme'] == 'seti' %}
@@ -89,336 +142,336 @@
                                                         {% else %}
                                                         <option value="seti">VirtualZero</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == '3024-day' %}
                                                         <option value="3024-day" selected>3024 Day</option>
                                                         {% else %}
                                                         <option value="3024-day">3024 Day</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == '3024-night' %}
                                                         <option value="3024-night" selected>3024 Night</option>
                                                         {% else %}
                                                         <option value="3024-night">3024 Night</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'abcdef' %}
                                                         <option value="abcdef" selected>ABCDEF</option>
                                                         {% else %}
                                                         <option value="abcdef">ABCDEF</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'ambiance-mobile' %}
                                                         <option value="ambiance-mobile" selected>Ambiance Mobile</option>
                                                         {% else %}
                                                         <option value="ambiance-mobile">Ambiance Mobile</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'ambiance' %}
                                                         <option value="ambiance" selected>Ambiance</option>
                                                         {% else %}
                                                         <option value="ambiance">Ambiance</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'base16-dark' %}
                                                         <option value="base16-dark" selected>Base16 Dark</option>
                                                         {% else %}
                                                         <option value="base16-dark">Base16 Dark</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'base16-light' %}
                                                         <option value="base16-light" selected>Base16 Light</option>
                                                         {% else %}
                                                         <option value="base16-light">Base16 Light</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'bespin' %}
                                                         <option value="bespin" selected>Bespin</option>
                                                         {% else %}
                                                         <option value="bespin">Bespin</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'blackboard' %}
                                                         <option value="blackboard" selected>Blackboard</option>
                                                         {% else %}
                                                         <option value="blackboard">Blackboard</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'cobalt' %}
                                                         <option value="cobalt" selected>Cobalt</option>
                                                         {% else %}
                                                         <option value="cobalt">Cobalt</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'colorforth' %}
                                                         <option value="colorforth" selected>Colorforth</option>
                                                         {% else %}
                                                         <option value="colorforth">Colorforth</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'darcula' %}
                                                         <option value="darcula" selected>Darcula</option>
                                                         {% else %}
                                                         <option value="darcula">Darcula</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'dracula' %}
                                                         <option value="dracula" selected>Dracula</option>
                                                         {% else %}
                                                         <option value="dracula">Dracula</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'duotone-dark' %}
                                                         <option value="duotone-dark" selected>Duotone-dark</option>
                                                         {% else %}
                                                         <option value="duotone-dark">Duotone-dark</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'duotone-light' %}
                                                         <option value="duotone-light" selected>Duotone-light</option>
                                                         {% else %}
                                                         <option value="duotone-light">Duotone-light</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'eclipse' %}
                                                         <option value="eclipse" selected>Eclipse</option>
                                                         {% else %}
                                                         <option value="eclipse">Eclipse</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'elegant' %}
                                                         <option value="elegant" selected>Elegant</option>
                                                         {% else %}
                                                         <option value="elegant">Elegant</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'erlang-dark' %}
                                                         <option value="erlang-dark" selected>Erlang-dark</option>
                                                         {% else %}
                                                         <option value="erlang-dark">Erlang-dark</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'gruvbox-dark' %}
                                                         <option value="gruvbox-dark" selected>Gruvbox-dark</option>
                                                         {% else %}
                                                         <option value="gruvbox-dark">Gruvbox-dark</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'hopscotch' %}
                                                         <option value="hopscotch" selected>Hopscotch</option>
                                                         {% else %}
                                                         <option value="hopscotch">Hopscotch</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'icecoder' %}
                                                         <option value="icecoder" selected>Icecoder</option>
                                                         {% else %}
                                                         <option value="icecoder">Icecoder</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'idea' %}
                                                         <option value="idea" selected>Idea</option>
                                                         {% else %}
                                                         <option value="idea">Idea</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'isotope' %}
                                                         <option value="isotope" selected>Isotope</option>
                                                         {% else %}
                                                         <option value="isotope">Isotope</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'lesser-dark' %}
                                                         <option value="lesser-dark" selected>Lesser Dark</option>
                                                         {% else %}
                                                         <option value="lesser-dark">Lesser Dark</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'liquibyte' %}
                                                         <option value="liquibyte" selected>Liquibyte</option>
                                                         {% else %}
                                                         <option value="liquibyte">Liquibyte</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'lucario' %}
                                                         <option value="lucario" selected>Lucario</option>
                                                         {% else %}
                                                         <option value="lucario">Lucario</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'material' %}
                                                         <option value="material" selected>Material</option>
                                                         {% else %}
                                                         <option value="material">Material</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'mbo' %}
                                                         <option value="mbo" selected>MBO</option>
                                                         {% else %}
                                                         <option value="mbo">MBO</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'mdn-like' %}
                                                         <option value="mdn-like" selected>MDN Like</option>
                                                         {% else %}
                                                         <option value="mdn-like">MDN Like</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'midnight' %}
                                                         <option value="midnight" selected>Midnight</option>
                                                         {% else %}
                                                         <option value="midnight">Midnight</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'monokai' %}
                                                         <option value="monokai" selected>Monokai</option>
                                                         {% else %}
                                                         <option value="monokai">Monokai</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'neat' %}
                                                         <option value="neat" selected>Neat</option>
                                                         {% else %}
                                                         <option value="neat">Neat</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'neo' %}
                                                         <option value="neo" selected>Neo</option>
                                                         {% else %}
                                                         <option value="neo">Neo</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'night' %}
                                                         <option value="night" selected>Night</option>
                                                         {% else %}
                                                         <option value="night">Night</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'oceanic-next' %}
                                                         <option value="oceanic-next" selected>Oceanic-next</option>
                                                         {% else %}
                                                         <option value="oceanic-next">Oceanic-next</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'panda-syntax' %}
                                                         <option value="panda-syntax" selected>Panda Syntax</option>
                                                         {% else %}
                                                         <option value="panda-syntax">Panda Syntax</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'paraiso-dark' %}
                                                         <option value="paraiso-dark" selected>Paraiso Dark</option>
                                                         {% else %}
                                                         <option value="paraiso-dark">Paraiso Dark</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'paraiso-light' %}
                                                         <option value="paraiso-light" selected>Paraiso Light</option>
                                                         {% else %}
                                                         <option value="paraiso-light">Paraiso Light</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'pastel-on-dark' %}
                                                         <option value="pastel-on-dark" selected>Pastel On Dark</option>
                                                         {% else %}
                                                         <option value="pastel-on-dark">Pastel On Dark</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'railscasts' %}
                                                         <option value="railscasts" selected>Railscasts</option>
                                                         {% else %}
                                                         <option value="railscasts">Railscasts</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'rubyblue' %}
                                                         <option value="rubyblue" selected>Rubyblue</option>
                                                         {% else %}
                                                         <option value="rubyblue">Rubyblue</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'shadowfox' %}
                                                         <option value="shadowfox" selected>Shadowfox</option>
                                                         {% else %}
                                                         <option value="shadowfox">Shadowfox</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'solarized' %}
                                                         <option value="solarized" selected>Solarized</option>
                                                         {% else %}
                                                         <option value="solarized">Solarized</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'ssms' %}
                                                         <option value="ssms" selected>SSMS</option>
                                                         {% else %}
                                                         <option value="ssms">SSMS</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'the-matrix' %}
                                                         <option value="the-matrix" selected>The Matrix</option>
                                                         {% else %}
                                                         <option value="the-matrix">The Matrix</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'tomorrow-night-bright' %}
                                                         <option value="tomorrow-night-bright" selected>Tomorrow Night Bright</option>
                                                         {% else %}
                                                         <option value="tomorrow-night-bright">Tomorrow Night Bright</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'tomorrow-night-eighties' %}
                                                         <option value="tomorrow-night-eighties" selected>Tomorrow Night Eighties</option>
                                                         {% else %}
                                                         <option value="tomorrow-night-eighties">Tomorrow Night Eighties</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'ttcn' %}
                                                         <option value="ttcn" selected>TTCN</option>
                                                         {% else %}
                                                         <option value="ttcn">TTCN</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'twilight' %}
                                                         <option value="twilight" selected>Twilight</option>
                                                         {% else %}
                                                         <option value="twilight">Twilight</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'vibrant-ink' %}
                                                         <option value="vibrant-ink" selected>Vibrant Ink</option>
                                                         {% else %}
                                                         <option value="vibrant-ink">Vibrant Ink</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'xq-dark' %}
                                                         <option value="xq-dark" selected>XQ Dark</option>
                                                         {% else %}
                                                         <option value="xq-dark">XQ Dark</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'xq-light' %}
                                                         <option value="xq-light" selected>XQ Light</option>
                                                         {% else %}
                                                         <option value="xq-light">XQ Light</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'yeti' %}
                                                         <option value="yeti" selected>Yeti</option>
                                                         {% else %}
                                                         <option value="yeti">Yeti</option>
                                                         {% endif %}
-                                        
+                                
                                                         {% if session['editor_theme'] == 'zenburn' %}
                                                         <option value="zenburn" selected>Zenburn</option>
                                                         {% else %}
                                                         <option value="zenburn">Zenburn</option>
                                                         {% endif %}
-                                        
+                                
                                                     </select>
                                                     <label class="white-text">Choose Theme</label>
                                                 </div>
                                             </div>
-                                        
+                                
                                             <div class="row">
                                                 <div class="col s12">
                                                     <textarea name="snippet_content" id="snippet-content">
@@ -441,11 +494,12 @@ def to_bit_generator(secret_message):
                 continue</textarea>
                                                 </div>
                                             </div>
-                                        
+                                
                                             <div class="row" id="theme-save-row" style="display: none;">
                                                 <div class="col s12">
                                                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-                                                    <button type='submit' class="right transparent darken-1 waves-effect waves-purple btn-flat white-text no-right-padding"
+                                                    <button type='submit'
+                                                        class="right transparent darken-1 waves-effect waves-purple btn-flat white-text no-right-padding"
                                                         id="personal-done-button">Save</button>
                                                     <a href="#" onclick="cancelThemeChange()" class="btn-flat transparent right white-text">Cancel</a>
                                                 </div>
@@ -455,84 +509,192 @@ def to_bit_generator(secret_message):
                                 </div>
                             </div>
                         </div>
-
-                        <div class="row" id="done-button-row">
-                            <div class="col s12">
-                                <a href="/{{ session['first_name'].title() }}_{{ session['last_name'].title() }}" class="right purple darken-1 waves-effect waves-purple btn-flat white-text" id="personal-done-button">Done</a>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col s12">
-                                <div class="progress" style="display: none;" id="preloader">
-                                    <div class="indeterminate"></div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<script src="/static/codemirror_modes/python/python.js"></script>
+
+
+{% assets 'snypit_admin_js' %}
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+
+<script>
+    function getUpdateUnameForm() {
+        document.getElementById('uname-section').style.display = 'none';
+        document.getElementById('uname-form-section').style.display = 'block';
+    }
+</script>
+
+<script>
+    function getUpdateEmailForm() {
+        document.getElementById('email-section').style.display = 'none';
+        document.getElementById('email-form-section').style.display = 'block';
+    }
+</script>
+
+<script>
+    function getUpdatePasswordForm() {
+        document.getElementById('password-section').style.display = 'none';
+        document.getElementById('password-form-section').style.display = 'block';
+    }
+</script>
+
+<script>
+    function cancelUpdateUnameForm() {
+        document.getElementById('uname-section').style.display = 'block';
+        document.getElementById('uname-form-section').style.display = 'none';
+    }
+</script>
+
+<script>
+    function cancelUpdateEmailForm() {
+        document.getElementById('email-section').style.display = 'block';
+        document.getElementById('email-form-section').style.display = 'none';
+    }
+</script>
+
+<script>
+    function cancelUpdatePasswordForm() {
+        document.getElementById('password-section').style.display = 'block';
+        document.getElementById('password-form-section').style.display = 'none';
+    }
+</script>
+
+<script>
+    document.getElementById("update-username-form").addEventListener('submit', makeRequest);
+    function makeRequest(e) {
+        e.preventDefault();
+        var csrf_token = "{{ csrf_token() }}";
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/update-username?vzin={{ session["vzin"] }}', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+        xhr.setRequestHeader("X-CSRFToken", csrf_token);
+        var params = "username=" + document.getElementById('username').value;
+
+        xhr.onload = function () {
+            var r = JSON.parse(this.response);
+
+            if (this.status === 200) {
+                cancelUpdateUnameForm()
+                document.getElementById('uname_error_text').style.display = 'none';
+                document.getElementById('uname-text').innerHTML = document.getElementById('username').value;
+                M.toast({ html: '<p><i class="fas fa-check green-text text-lighten-2 center"></i> &nbsp;Updated!</p>', classes: 'grey darken-3 white-text' })
+            }
+
+            else if (this.status === 400) {
+
+                if (r.hasOwnProperty('errors')) {
+                    if (r.errors.hasOwnProperty('username')) {
+                        uname_error_text.style.display = 'block';
+                        uname_error_text.innerHTML = r.errors.username;
+                    }
+                }
+            }
+        };
+        xhr.onerror = function () {
+            M.toast({ html: '<p><i class="fas fa-2x fa-exclamation-triangle red-text text-accent-1 center"></i></p> &nbsp;&nbsp;&nbsp;<p>An error occured submitting the form.</p>', classes: 'grey darken-3 white-text center' })
+        };
+        xhr.send(params);
+    };
+</script>
+
+<script>
+    document.getElementById("update-email-form").addEventListener('submit', makeRequest);
+    function makeRequest(e) {
+        e.preventDefault();
+        var csrf_token = "{{ csrf_token() }}";
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/update-email?vzin={{ session["vzin"] }}', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+        xhr.setRequestHeader("X-CSRFToken", csrf_token);
+        var params = "email=" + document.getElementById('email').value;
+
+        xhr.onload = function () {
+            var r = JSON.parse(this.response);
+
+            if (this.status === 200) {
+                cancelUpdateEmailForm()
+                document.getElementById('email_error_text').style.display = 'none';
+                document.getElementById('email-text').innerHTML = document.getElementById('email').value;
+                M.toast({ html: '<p><i class="fas fa-check green-text text-lighten-2 center"></i> &nbsp;Updated!</p>', classes: 'grey darken-3 white-text' })
+            }
+
+            else if (this.status === 400) {
+
+                if (r.hasOwnProperty('errors')) {
+                    if (r.errors.hasOwnProperty('email')) {
+                        email_error_text.style.display = 'block';
+                        email_error_text.innerHTML = r.errors.email;
+                    }
+                }
+            }
+        };
+        xhr.onerror = function () {
+            M.toast({ html: '<p><i class="fas fa-2x fa-exclamation-triangle red-text text-accent-1 center"></i></p> &nbsp;&nbsp;&nbsp;<p>An error occured submitting the form.</p>', classes: 'grey darken-3 white-text center' })
+        };
+        xhr.send(params);
+    };
+</script>
+
+<script>
+    document.getElementById("update-password-form").addEventListener('submit', makeRequest);
+    function makeRequest(e) {
+        e.preventDefault();
+        var csrf_token = "{{ csrf_token() }}";
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/update-password?vzin={{ session["vzin"] }}', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+        xhr.setRequestHeader("X-CSRFToken", csrf_token);
+        var params = "password=" + document.getElementById('password').value + "&confirm_password=" + document.getElementById('confirm_password').value;
+
+        xhr.onload = function () {
+            var r = JSON.parse(this.response);
+
+            if (this.status === 200) {
+                cancelUpdatePasswordForm()
+                document.getElementById('password_error_text').style.display = 'none';
+                document.getElementById('confirm_password_error_text').style.display = 'none';
+                document.getElementById('password').value = '';
+                document.getElementById('confirm_password').value = '';
+                M.updateTextFields();
+                M.toast({ html: '<p><i class="fas fa-check green-text text-lighten-2 center"></i> &nbsp;Updated!</p>', classes: 'grey darken-3 white-text' })
+            }
+
+            else if (this.status === 400) {
+
+                if (r.hasOwnProperty('errors')) {
+                    if (r.errors.hasOwnProperty('password')) {
+                        password_error_text.style.display = 'block';
+                        password_error_text.innerHTML = r.errors.password;
+                    }
+
+                    if (r.errors.hasOwnProperty('confirm_password')) {
+                        confirm_password_error_text.style.display = 'block';
+                        confirm_password_error_text.innerHTML = r.errors.confirm_password;
+                    }
+                }
+            }
+        };
+        xhr.onerror = function () {
+            M.toast({ html: '<p><i class="fas fa-2x fa-exclamation-triangle red-text text-accent-1 center"></i></p> &nbsp;&nbsp;&nbsp;<p>An error occured submitting the form.</p>', classes: 'grey darken-3 white-text center' })
+        };
+        xhr.send(params);
+    };
+</script>
+
+<script>
+    M.AutoInit()
+</script>
 
 <script>
     var editor = CodeMirror.fromTextArea(document.getElementById('snippet-content'), {
         lineNumbers: true,
-        readOnly: 'nocursor',
         indentUnit: 4,
         mode: 'python',
         theme: "{{ session['editor_theme'] }}"
-    });
-</script>
-
-<script>
-    function cancelThemeChange() {
-        $.ajax({
-            url: '/cancel-theme-change',
-            type: 'get',
-            success: function (response) {
-                $('#choose-theme-form-section').html(response);
-            }
-        })
-    }
-</script>
-
-<script>
-    function saveTheme(user_id) {
-        $.ajax({
-            url: '/save-theme?user_id=' + user_id,
-            type: 'get',
-            success: function (response) {
-                $('#personal-info-section').html(response);
-            }
-        })
-    }
-</script>
-
-<script>
-    $(document).ready(function () {
-            $('.tabs').tabs();
-        });
-</script>
-
-<script>
-    function getUserInfo(user_id) {
-        $.ajax({
-            url: '/update-personal-details?user_id=' + user_id,
-            type: 'get',
-            success: function (response) {
-                $('#personal-info-section').html(response);
-            }
-        })
-    }
-</script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var elems = document.querySelectorAll('select');
-        var instances = M.FormSelect.init(elems);
     });
 </script>
 
@@ -545,35 +707,6 @@ def to_bit_generator(secret_message):
         document.getElementById('done-button-row').style.display = 'none';
         document.getElementById('theme-save-row').style.display = 'block';
     }
-</script>
-
-<script>
-    $(document).ready(function (e) {
-
-        $('#save-theme-form').on('submit', function (e) {
-            e.preventDefault();
-
-            document.getElementById('theme-save-row').style.display = 'none';
-            document.getElementById('done-button-row').style.display = 'block';
-
-            new_save_theme_request = $.ajax({
-                url: '/save-theme?user_id={{ session["user_id"] }}',
-                type: 'POST',
-                data: $('#save-theme-form').serialize(),
-                success: M.toast({ html: '<p>Theme Updated!</p>', classes: 'grey darken-3 white-text flow-text button-border-purple z-depth-5' })
-            });
-
-            var csrf_token = "{{ csrf_token() }}";
-
-            $.ajaxSetup({
-                beforeSend: function (xhr, settings) {
-                    if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
-                        xhr.setRequestHeader("X-CSRFToken", csrf_token);
-                    }
-                }
-            });
-        });
-    });
 </script>
 
 {% endblock %}

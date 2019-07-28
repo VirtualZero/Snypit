@@ -357,3 +357,71 @@ class SearchForm(FlaskForm):
             )
         ]
     )
+
+
+class UpdateUsername(FlaskForm):
+    username = StringField(
+        'Username',
+        [
+            DataRequired(
+                message='This field is required.'
+            ),
+            Length(max=20)
+        ]
+    )
+
+
+class UpdateEmail(FlaskForm):
+    def unique_user(form, field):
+        existing_user = User.query.filter_by(
+            email=field.data
+        ).first()
+
+        if existing_user:
+            raise ValidationError(
+                'That email address is taken.'
+            )
+
+    email = StringField(
+        'Email',
+        [
+            DataRequired(
+                message='This field is required.'
+            ),
+            email(),
+            Length(max=100),
+            unique_user
+        ]
+    )
+
+
+class UpdatePassword(FlaskForm):
+    password = PasswordField(
+        "New Password",
+        [
+            DataRequired(
+                message='This field is required.'
+            ),
+            Length(
+                min=8,
+                max=128
+            )
+        ]
+    )
+
+    confirm_password = PasswordField(
+        "Confirm New Password",
+        [
+            DataRequired(
+                message='This field is required.'
+            ),
+            Length(
+                min=8,
+                max=128
+            ),
+            EqualTo(
+                'password',
+                message="Passwords must match."
+            )
+        ]
+    )

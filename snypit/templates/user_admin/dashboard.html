@@ -199,7 +199,7 @@
         function makeSearchRequest(e) {
             e.preventDefault();
             const xhr = new XMLHttpRequest();
-            xhr.open("GET", "/dashboard-search?search-for=" + document.getElementById('search_text').value);
+            xhr.open("GET", "/dashboard-search?search-for=" + document.getElementById('search_text').value + "&vzin={{ session['vzin'] }}");
 
             xhr.onload = function () {
                 document.getElementById('editor-section').innerHTML = this.response;

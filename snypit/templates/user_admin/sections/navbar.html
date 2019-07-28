@@ -21,9 +21,19 @@
                         {% endif %}
                     </li>
 
+                    {% if request.path != '/new-snippet' %}
                     <li>
-                        <a href="#!" class="dropdown-trigger" data-target="new-dropdown">New<i class="material-icons right">arrow_drop_down</i></a>
+                        <a href="/new-snippet?vzin={{ session['vzin'] }}&username={{ session['username'].title() }}" class="waves-effect waves-light">New</a>
+                        <!--<a href="#!" class="dropdown-trigger" data-target="new-dropdown">New<i class="material-icons right">arrow_drop_down</i></a>-->
                     </li>
+                    {% endif %}
+
+                    {% if 'account' not in request.path %}
+                    <li>
+                        <a href="/account/{{ session['username'].title() }}?vzin={{ session['vzin'] }}"
+                            class="waves-effect waves-light">Account</a>
+                    </li>
+                    {% endif %}
 
                     <li>
                         <a href="/logout" class="waves-effect waves-light">Logout</a>
@@ -34,6 +44,6 @@
     </nav>
 </div>
 
-<ul id="new-dropdown" class="dropdown-content grey darken-4">
+{#<ul id="new-dropdown" class="dropdown-content grey darken-4">
     <li class="hoverchange"><a href="/new-snippet" class="white-text">Snippet</a></li>
-</ul>
+</ul>#}
