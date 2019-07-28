@@ -6,7 +6,7 @@
 
 {% block content %}
 
-<div class="valign-wrapper full-height">
+<div class="valign-wrapper" style="min-height: 90vh;">
     <div class="container" id="content">
         <div class="row no-bottom-padding">
             <div class="col s12">
@@ -36,9 +36,9 @@
                                     <div class="section"></div>
                                     <div class="col s12">
                                         {% if 'vzin' in session %}
-                                            <a href="/dashboard?vzin={{ session['vzin'] }}&username={{ session['username'].title() }}" class="grey-text text-darken-4 red accent-1 right btn-flat waves-effect waves-purple btn-hover">Home</a>
+                                            <a href="/dashboard?vzin={{ session['vzin'] }}&username={{ session['username'].title() }}" class="purple darken-1 right btn-flat waves-effect white-text waves-purple btn-hover">Home</a>
                                         {% else %}
-                                            <a href="/" class="grey-text text-darken-4 red accent-1 right btn-flat waves-effect waves-purple btn-hover">Home</a>
+                                            <a href="/" class="purple darken-1 right btn-flat waves-effect white-text waves-purple btn-hover">Home</a>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -50,5 +50,9 @@
         </div>
     </div>
 </div>
+
+{% assets 'snypit_admin_js' %}
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
 
 {% endblock %}
