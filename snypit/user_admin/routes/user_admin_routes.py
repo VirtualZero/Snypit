@@ -45,6 +45,9 @@ def dashboard():
         )
     ).first()
 
+    if not last_viewed_snippet:
+        last_viewed_snippet = Snippet.query.get(1)
+
     last_viewed_snippet.last_viewed = db.func.now()
 
     if last_viewed_snippet.tags:
