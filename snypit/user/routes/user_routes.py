@@ -236,7 +236,7 @@ def create_account_submit():
         db.session.commit()
 
         requests.post(
-            'https://mailapi.virtualzero.tech/mail/send-mail',
+            os.environ['MAIL_API_URL'],
             headers={
                 'X-API-KEY': os.environ['MAIL_API_KEY']
             },
@@ -354,7 +354,7 @@ def reset_confirmation_email():
         db.session.commit()
 
         requests.post(
-            'https://mailapi.virtualzero.tech/mail/send-mail',
+            os.environ['MAIL_API_URL'],
             headers={
                 'X-API-KEY': os.environ['MAIL_API_KEY']
             },
@@ -423,7 +423,7 @@ def resend_email_confirmation():
     db.session.commit()
 
     requests.post(
-        'https://mailapi.virtualzero.tech/mail/send-mail',
+        os.environ['MAIL_API_URL'],
         headers={
             'X-API-KEY': os.environ['MAIL_API_KEY']
         },
@@ -488,7 +488,7 @@ def send_password_reset_link():
         db.session.commit()
 
         requests.post(
-            'https://mailapi.virtualzero.tech/mail/send-mail',
+            os.environ['MAIL_API_URL'],
             headers={
                 'X-API-KEY': os.environ['MAIL_API_KEY']
             },
