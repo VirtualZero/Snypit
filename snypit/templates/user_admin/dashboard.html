@@ -235,6 +235,7 @@
                 theme: "{{ session['editor_theme'] }}",
                 indentUnit: 4
             });
+            new ClipboardJS('#copy-snippet')
         }
 
         xhr.send()

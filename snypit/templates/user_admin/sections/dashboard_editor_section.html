@@ -21,3 +21,12 @@
         <input type="hidden" id="codemirror-mode" value="{{ snippet.codemirror_mode }}">
     </div>
 </div>
+
+<div class="row no-bottom-padding">
+    <div class="col s12">
+        <div class="section"></div>
+        <button onclick="alertCopied()" data-clipboard-text="{{ snippet.snippet_content }}"
+            id="copy-snippet"
+            class="btn-flat purple darken-1 waves-effect waves-purple btn-hover white-text right">Copy</button>
+    </div>
+</div>
