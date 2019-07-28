@@ -18,6 +18,7 @@ def make_bundles():
     admin_js = Bundle(
         'js/materialize.min.js',
         'js/codemirror.js',
+        'js/clipboard.min.js',
         'fontawesome/fontawesome-all.min.js',
         'codemirror_modes/clike/clike.js',
         'codemirror_modes/css/css.js',

@@ -89,6 +89,39 @@ def dashboard():
     )
 
 
+@app.route('/dashboard-search')
+def dashboard_search():
+    search_for = request.args.get('search-for')
+    search_match_list = []
+
+    user_snippets = Snippet.query.filter_by(
+        user_id=session['user_id']
+    ).order_by(
+        desc(
+            Snippet.added_on
+        )
+    ).all()
+
+    for user_snippet in user_snippets:
+        if user_snippet.tags:
+            if search_for in user_snippet.snippet_name.lower() or \
+                search_for in user_snippet.language.lower() or \
+                search_for in user_snippet.description.lower() or \
+                search_for in user_snippet.tags.lower():
+                search_match_list.append(user_snippet)
+
+        else:
+            if search_for in user_snippet.snippet_name.lower() or \
+                search_for in user_snippet.language.lower() or \
+                search_for in user_snippet.description.lower():
+                search_match_list.append(user_snippet)
+
+    return render_template(
+        'user_admin/sections/search_results.html',
+        search_match_list=search_match_list
+    )
+
+
 @app.route('/get-snippet')
 @login_required
 @validate_vzin

@@ -9,19 +9,22 @@
                     <div class="col s12 m3 l3">
                         <div class="card grey darken-3 white-text z-depth-0">
                             <div class="card-content">
-                                <div class="row no-bottom-padding">
-                                    <div class="col s12 m10 l10 input-field">
-                                        {{ search_form.search_text(class="white-text", required="") }}
-                                        {{ search_form.search_text.label(class="white-text") }}
+                                <form action="dashboard-search" id="search-form">
+                                    <div class="row no-bottom-padding">
+                                        <div class="col s12 m10 l10 input-field">
+                                            {{ search_form.search_text(class="white-text", required="") }}
+                                            {{ search_form.search_text.label(class="white-text") }}
+                                        </div>
+                                    
+                                        <div class="col s12 m2 l2 input-field">
+                                            <div class="sidebar-spacer"></div>
+                                            <button
+                                                class="waves-effect waves-purple btn-flat btn-medium white-text purple darken-1 center btn-hover full-width">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                        </div>
                                     </div>
-
-                                    <div class="col s12 m2 l2 input-field">
-                                        <div class="sidebar-spacer"></div>
-                                        <button class="waves-effect waves-purple btn-flat btn-medium white-text purple darken-1 center btn-hover full-width">
-                                            <i class="fas fa-search"></i>
-                                        </button>
-                                    </div>
-                                </div>
+                                </form>
                             </div>
                         </div>
 
@@ -151,10 +154,17 @@
                                         </div>
                                     </div>
                                     
-                                    <div class="row no-padding-bottom">
+                                    <div class="row no-bottom-padding">
                                         <div class="col s12">
                                             <textarea name="snippet-content" id="snippet-content" maxlength="50000" ,
                                                 pattern=".{1,50000}">{{ last_viewed_snippet.snippet_content }}</textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="row no-bottom-padding">
+                                        <div class="col s12">
+                                            <div class="section"></div>
+                                            <button onclick="alertCopied()" data-clipboard-text="{{ last_viewed_snippet.snippet_content }}" id="copy-snippet" class="btn-flat purple darken-1 waves-effect waves-purple btn-hover white-text right">Copy</button>
                                         </div>
                                     </div>
                                 </div>
@@ -170,6 +180,47 @@
 {% assets 'snypit_admin_js' %}
     <script type="text/javascript" src="{{ ASSET_URL }}"></script>
 {% endassets %}
+
+<script>
+    new ClipboardJS('#copy-snippet')
+</script>
+
+<script>
+    function alertCopied() {
+        M.toast({ html: '<p><i class="fas fa-check green-text text-lighten-2 center"></i> &nbsp;Copied!</p>', classes: 'grey darken-3 white-text' })
+    };
+</script>
+
+<script>
+    document.getElementById('search-form').addEventListener('submit', makeSearchRequest);
+        function makeSearchRequest(e) {
+            e.preventDefault();
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", "/dashboard-search?search-for=" + document.getElementById('search_text').value);
+
+            xhr.onload = function () {
+                document.getElementById('editor-section').innerHTML = this.response;
+                var matches = document.querySelectorAll('.search-result-textarea');
+                
+                for (i=0; i < matches.length; i++) {
+                    var matchId = matches[i].getAttribute('id');
+                    var id = matchId.match(/\d+/g).map(Number);
+                    var editorSection = 'search-results-editor-section' + id;
+                    var editor = CodeMirror.fromTextArea(document.getElementById(matchId), {
+                        lineNumbers: true,
+                        //mode: {#'{{ search_match.codemirror_mode }}',#}
+                        theme: "{{ session['editor_theme'] }}",
+                    });
+
+                    if (document.getElementById(editorSection).clientHeight >= 350) {
+                        editor.setSize(null, 225);
+                    };
+                };
+            }
+
+            xhr.send()
+        };
+</script>
 
 <script>
     function getSnippet(vzsid) {
