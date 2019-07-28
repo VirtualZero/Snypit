@@ -389,3 +389,24 @@ def update_password():
             'errors': errors
         }
     ), 400
+
+
+@app.route('/update-theme', methods=['POST'])
+@login_required
+@validate_vzin
+def update_theme():
+    if request.method == 'POST':
+        user = User.query.filter_by(
+            vzin=session['vzin']
+        ).first()
+
+        user.editor_theme = request.form['theme']
+        db.session.commit()
+
+        session['editor_theme'] = request.form['theme']
+
+        return jsonify(
+            {
+                'status': 'success'
+            }
+        ), 200
