@@ -19,8 +19,11 @@
                         <div class="row flow-text">
                             <div class="col s12 m6 l4">
                                 <div id="uname-section">
-                                    <strong>Username:</strong> <span id="uname-text">{{ session['username'].title() }}</span><br>
-                                    <a href="#" onclick="getUpdateUnameForm()" class="btn-flat purple darken-1 white-text waves-effect waves-light btn-hover"><i class="fas fa-pencil-alt white-text"></i></a>
+                                    <div class="input-field">
+                                        <input disabled value="{{ session['username'].title() }}" id="uname-text" type="text" class="validate white-text">
+                                        <label for="uname-text" class="white-text">Username</label>
+                                        <a href="#" onclick="getUpdateUnameForm()" class="btn-flat purple darken-1 white-text waves-effect waves-light btn-hover"><i class="fas fa-pencil-alt white-text"></i></a>
+                                    </div>
                                 </div>
 
                                 <form action="/update-username" method="POST" id="update-username-form">
@@ -45,8 +48,11 @@
 
                             <div class="col s12 m6 l4">
                                 <div id="email-section">
-                                    <strong>Email:</strong> <span id="email-text">{{ session['email'] }}</span> <br>
-                                    <a href="#" onclick="getUpdateEmailForm()" class="btn-flat purple darken-1 white-text waves-effect waves-light btn-hover"><i class="fas fa-pencil-alt white-text"></i></a>
+                                    <div class="input-field">
+                                        <input disabled value="{{ session['email'] }}" id="email-text" type="text" class="validate white-text">
+                                        <label for="email-text" class="white-text">Email</label>
+                                        <a href="#" onclick="getUpdateEmailForm()" class="btn-flat purple darken-1 white-text waves-effect waves-light btn-hover"><i class="fas fa-pencil-alt white-text"></i></a>
+                                    </div>
                                 </div>
 
                                 <form action="/update-email" method="POST", id="update-email-form">
@@ -68,15 +74,14 @@
                                     </div>
                                 </form>
                             </div>
-                        </div>
 
-                        <div class="row flow-text">
-                            <div class="col s12">
+                            <div class="col s12 m6 l4">
                                 <div id="password-section">
-                                    <strong>Password:</strong> ******** <br>
-                                    <a href="#" onclick="getUpdatePasswordForm()"
-                                        class="btn-flat purple darken-1 white-text waves-effect waves-light btn-hover"><i
-                                            class="fas fa-pencil-alt white-text"></i></a>
+                                    <div class="input-field">
+                                        <input disabled value="********" id="password-text" type="text" class="validate white-text">
+                                        <label for="password-text" class="white-text">Password</label>
+                                        <a href="#" onclick="getUpdatePasswordForm()" class="btn-flat purple darken-1 white-text waves-effect waves-light btn-hover"><i class="fas fa-pencil-alt white-text"></i></a>
+                                    </div>
                                 </div>
                             
                                 <form action="/update-password" method="POST" , id="update-password-form">
@@ -547,6 +552,7 @@ def to_bit_generator(secret_message):
     function cancelUpdateUnameForm() {
         document.getElementById('uname-section').style.display = 'block';
         document.getElementById('uname-form-section').style.display = 'none';
+        document.getElementById('uname_error_text').style.display = 'none';
     }
 </script>
 
@@ -554,6 +560,7 @@ def to_bit_generator(secret_message):
     function cancelUpdateEmailForm() {
         document.getElementById('email-section').style.display = 'block';
         document.getElementById('email-form-section').style.display = 'none';
+        document.getElementById('email_error_text').style.display = 'none';
     }
 </script>
 
@@ -561,6 +568,11 @@ def to_bit_generator(secret_message):
     function cancelUpdatePasswordForm() {
         document.getElementById('password-section').style.display = 'block';
         document.getElementById('password-form-section').style.display = 'none';
+        document.getElementById('password_error_text').style.display = 'none';
+        document.getElementById('confirm_password_error_text').style.display = 'none';
+        document.getElementById('password').value = '';
+        document.getElementById('confirm_password').value = '';
+        M.updateTextFields();
     }
 </script>
 
@@ -710,7 +722,7 @@ def to_bit_generator(secret_message):
             var r = JSON.parse(this.response);
 
             if (this.status === 200) {
-                 document.getElementById('done-button-row').style.display = 'block';
+                document.getElementById('done-button-row').style.display = 'block';
                 document.getElementById('theme-save-row').style.display = 'none';
                 M.toast({ html: '<p><i class="fas fa-check green-text text-lighten-2 center"></i> &nbsp;Updated!</p>', classes: 'grey darken-3 white-text' })
             }
