@@ -6,7 +6,7 @@
         <div class="row no-bottom-padding">
             <div class="col s12">
                 <div class="row no-bottom-padding ">
-                    <div class="col s12 m3 l3 dashboard-scroll" style="height: 93vh !important; overflow-y: auto !important">
+                    <div class="col s12 m6 l3 dashboard-scroll" style="height: 93vh !important; overflow-y: auto !important">
                         <div class="card grey darken-3 white-text z-depth-0">
                             <div class="card-content">
                                 <form action="dashboard-search" id="search-form">
@@ -43,13 +43,13 @@
                                         {% for pinned_snippet in pinned_snippets %}
                                             <a href="#" onclick="getSnippet( '{{ pinned_snippet.vzsid }}' )">
                                                 <div class="row no-padding purple darken-1 btn-hover sidebar-snippet-name white-text">
-                                                    <div class="col s10 m11 l11">
+                                                    <div class="col s10 m10 l10">
                                                         <p>
                                                             {{ pinned_snippet.snippet_name }}
                                                         </p>
                                                     </div>
 
-                                                    <div class="col s2 m1 l1">
+                                                    <div class="col s2 m2 l2">
                                                         <p class="right">
                                                             {{ pinned_snippet.language_icon|safe }}
                                                         </p>
@@ -78,13 +78,13 @@
                                         {% for recent_snippet in recent_snippets %}
                                         <a href="#" onclick="getSnippet( '{{ recent_snippet.vzsid }}' )">
                                             <div class="row no-padding purple darken-1 btn-hover sidebar-snippet-name white-text">
-                                                <div class="col s10 m11 l11">
+                                                <div class="col s10 m10 l10">
                                                     <p>
                                                         {{ recent_snippet.snippet_name }}
                                                     </p>
                                                 </div>
                                 
-                                                <div class="col s2 m1 l1">
+                                                <div class="col s2 m2 l2">
                                                     <p class="right">
                                                         {{ recent_snippet.language_icon|safe }}
                                                     </p>
@@ -113,13 +113,13 @@
                                         {% for popular_snippet in popular_snippets %}
                                         <a href="#" onclick="getSnippet( '{{ popular_snippet.vzsid }}' )">
                                             <div class="row no-padding purple darken-1 btn-hover sidebar-snippet-name white-text">
-                                                <div class="col s10 m11 l11">
+                                                <div class="col s10 m10 l10">
                                                     <p>
                                                         {{ popular_snippet.snippet_name }}
                                                     </p>
                                                 </div>
                         
-                                                <div class="col s2 m1 l1">
+                                                <div class="col s2 m2 l2">
                                                     <p class="right">
                                                         {{ popular_snippet.language_icon|safe }}
                                                     </p>
@@ -134,7 +134,7 @@
                         </div>
                     </div>
 
-                    <div class="col s12 m9 l9 dashboard-scroll" style="height: 93vh !important; overflow-y: auto !important">
+                    <div class="col s12 m6 l9 dashboard-scroll" style="height: 93vh !important; overflow-y: auto !important">
                         <div class="card grey darken-3 white-text z-depth-0">
                             <div class="card-content">
                                 <div id="editor-section">
