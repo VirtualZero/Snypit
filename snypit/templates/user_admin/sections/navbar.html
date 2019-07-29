@@ -1,7 +1,7 @@
 <div class="navbar-fixed" id="fixed-nav">
     <nav class="grey darken-3">
         <div>
-            <div class="nav-wrapper">
+            <div class="nav-wrapper hide-on-med-and-down">
                 <a href="/dashboard?vzin={{ session['vzin'] }}&username={{ session['username'].title() }}" class="brand-logo white-text waves-effect waves-purple nav-border-left" id="logo-home-link">
                     <i class="fas fa-code purple-text text-darken-1"></i> Snypit
                 </a>
@@ -39,7 +39,12 @@
                         <a href="/logout" class="waves-effect waves-light">Logout</a>
                     </li>
                 </ul>
+                
             </div>
+            <a href="/dashboard?vzin={{ session['vzin'] }}&username={{ session['username'].title() }}" class="brand-logo white-text waves-effect waves-purple center hide-on-large-only" id="logo-home-link">
+                    <i class="fas fa-code purple-text text-darken-1"></i> Snypit
+                </a>
+            <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
         </div>
     </nav>
 </div>

@@ -1,106 +1,144 @@
 {% extends "user/logged_out_base.html" %}
 {% block content %}
 
-<div class="valign-wrapper full-height">
-    <div class="container" id="content">
-        <div class="row no-bottom-padding">
-            <div class="col s12">
-                <div class="card z-depth-0 grey darken-3 white-text">
-                    <div class="card-content">
-                        <div id="create-account-form-section">
-                            <form action="/create-account-submit" method="POST" id="create-account-form">
-                                <div class="row">
-                                    <div class="col s12">
-                                        <h3 class="">
-                                            Create Account<i class="fas fa-user-plus  right"></i>
-                                        </h3>
-                                        <div class="section"></div>
-                                    </div>
+<div class="container" id="content">
+    <div class="row no-bottom-padding">
+        <div class="col s12">
+            <div class="section"></div>
+            <div class="card z-depth-0 grey darken-3 white-text">
+                <div class="card-content">
+                    <div id="create-account-form-section">
+                        <form action="/create-account-submit" method="POST" id="create-account-form">
+                            <div class="row">
+                                <div class="col s12">
+                                    <h3 class="">
+                                        Create Account<i class="fas fa-user-plus  right"></i>
+                                    </h3>
+                                    <div class="section"></div>
                                 </div>
-                            
-                                <div class="row no-bottom-padding">
-                                    <div class="col s12 m12 l6 input-field">
-                                        <i class="material-icons prefix ">person</i>
-                                        {{ create_account_form.username(class="white-text", required="", maxlength="20", pattern=".{1,20}", title="Must be less than 20 characters.")}}
-                                        {{ create_account_form.username.label }}
-
-                                        <span class="red-text text-accent-1 helper-text" style="display: none;" id="username_error_text"></span>
-                
-                                        {% for error in create_account_form.username.errors %}
-                                            <span class="red-text text-accent-1">{{ error }}</span>
-                                        {% endfor %}
-                                    </div>
-
-                                    <div class="col s12 m12 l6 input-field">
-                                        <i class="material-icons prefix ">email</i>
-                                        {{ create_account_form.email(class="white-text", required="", type="email", maxlength="100", pattern=".{1,100}", title="Must be less than 100 characters.")}}
-                                        {{ create_account_form.email.label }}
-
-                                        <span class="red-text text-accent-1 helper-text" style="display: none;" id="email_error_text"></span>
-                                        
-                                        {% for error in create_account_form.email.errors %}
-                                            <span class="red-text text-accent-1">{{ error }}</span>
-                                        {% endfor %}
-                                    </div>
+                            </div>
+            
+                            <div class="row no-bottom-padding">
+                                <div class="col s12 m12 l6 input-field">
+                                    <i class="material-icons prefix ">person</i>
+                                    {{ create_account_form.username(class="white-text", required="", maxlength="20", pattern=".{1,20}", title="Must be less than 20 characters.")}}
+                                    {{ create_account_form.username.label }}
+            
+                                    <span class="red-text text-accent-1 helper-text" style="display: none;"
+                                        id="username_error_text"></span>
+            
+                                    {% for error in create_account_form.username.errors %}
+                                    <span class="red-text text-accent-1">{{ error }}</span>
+                                    {% endfor %}
                                 </div>
-
-                                <div class="row">
-                                    <div class="col s12 m12 l6 input-field">
-                                        <i class="material-icons prefix ">lock</i>
-                                        {{ create_account_form.password(class="white-text", required="", type="password", pattern=".{8,128}", maxlength="128", title="Must be at 8-128 characters.")}}
-                                        {{ create_account_form.password.label }}
-
-                                        <span class="red-text text-accent-1 helper-text" style="display: none;" id="password_error_text"></span>
-                                        
-                                        {%for error in create_account_form.password.errors %}
-                                            <span class="red-text accent-1">{{ error }}</span>
-                                        {% endfor %}
-                                    </div>
-                                
-                                    <div class="col s12 m12 l6 input-field">
-                                        <i class="material-icons prefix ">lock</i>
-                                        {{ create_account_form.confirm_password(class="white-text", required="", type="password", pattern=".{8,128}", maxlength="128", title="Must be at 8-128 characters.")}}
-                                        {{ create_account_form.confirm_password.label }}
-
-                                        <span class="red-text text-accent-1 helper-text" style="display: none;" id="confirm_password_error_text"></span>
-                                        
-                                        {%for error in create_account_form.confirm_password.errors %}
-                                            <span class="red-text accent-1">{{ error }}</span>
-                                        {% endfor %}
-                                    </div>
+            
+                                <div class="col s12 m12 l6 input-field">
+                                    <i class="material-icons prefix ">email</i>
+                                    {{ create_account_form.email(class="white-text", required="", type="email", maxlength="100", pattern=".{1,100}", title="Must be less than 100 characters.")}}
+                                    {{ create_account_form.email.label }}
+            
+                                    <span class="red-text text-accent-1 helper-text" style="display: none;"
+                                        id="email_error_text"></span>
+            
+                                    {% for error in create_account_form.email.errors %}
+                                    <span class="red-text text-accent-1">{{ error }}</span>
+                                    {% endfor %}
                                 </div>
-
-                                <div class="row">
-                                    <div class="col s12 center">
-                                        <div class="section"></div>
-                                        <p class="flow-text ">
-                                            <label for="confirm_tos">
-                                                <input type="checkbox" id="confirm_tos" name="confirm_tos" class="filled-in" required>
-                                                <span class="flow-text white-text">I Agree to the Terms of Service</span>
-                                            </label>
-                                        </p>
-                                        <a href="#" class="white-text"><small>Terms of Service &nbsp;<i class="fas fa-external-link-alt white-text"></i></small></a>
-                                    </div>
+                            </div>
+            
+                            <div class="row">
+                                <div class="col s12 m12 l6 input-field">
+                                    <i class="material-icons prefix ">lock</i>
+                                    {{ create_account_form.password(class="white-text", required="", type="password", pattern=".{8,128}", maxlength="128", title="Must be at 8-128 characters.")}}
+                                    {{ create_account_form.password.label }}
+            
+                                    <span class="red-text text-accent-1 helper-text" style="display: none;"
+                                        id="password_error_text"></span>
+            
+                                    {%for error in create_account_form.password.errors %}
+                                    <span class="red-text accent-1">{{ error }}</span>
+                                    {% endfor %}
                                 </div>
-                        
+            
+                                <div class="col s12 m12 l6 input-field">
+                                    <i class="material-icons prefix ">lock</i>
+                                    {{ create_account_form.confirm_password(class="white-text", required="", type="password", pattern=".{8,128}", maxlength="128", title="Must be at 8-128 characters.")}}
+                                    {{ create_account_form.confirm_password.label }}
+            
+                                    <span class="red-text text-accent-1 helper-text" style="display: none;"
+                                        id="confirm_password_error_text"></span>
+            
+                                    {%for error in create_account_form.confirm_password.errors %}
+                                    <span class="red-text accent-1">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+            
+                            <div class="row">
+                                <div class="col s12 center">
+                                    <div class="section"></div>
+                                    <p class="flow-text ">
+                                        <label for="confirm_tos">
+                                            <input type="checkbox" id="confirm_tos" name="confirm_tos" class="filled-in" required>
+                                            <span class="flow-text white-text">I Agree to the Terms of Service</span>
+                                        </label>
+                                    </p>
+                                    <a href="#" class="white-text"><small>Terms of Service &nbsp;<i
+                                                class="fas fa-external-link-alt white-text"></i></small></a>
+                                </div>
+                            </div>
+            
+                            <div class="hide-on-med-and-down">
                                 <div class="row">
                                     <div class="col s12 right">
                                         <div class="section"></div>
                                         <div id="create-account-form-btns">
                                             <p>
-                                                <i class="fas fa-sign-in-alt"></i> &nbsp;Already have an account? <a href="/" style="text-decoration: underline;" class="white-text">Login</a>.
-                                                <button class="waves-effect waves-purple btn-flat purple darken-1 right white-text btn-spacing btn-hover" type="submit">Create</button>
-                                                <a href="/" class="waves-effect waves-purple btn-flat white-text purple darken-1 right btn-hover">Cancel</a>
+                                                <i class="fas fa-sign-in-alt"></i> &nbsp;Already have an account? <a href="/"
+                                                    style="text-decoration: underline;" class="white-text">Login</a>.
+                                                <button
+                                                    class="waves-effect waves-purple btn-flat purple darken-1 right white-text btn-spacing btn-hover"
+                                                    type="submit">Create</button>
+                                                <a href="/"
+                                                    class="waves-effect waves-purple btn-flat white-text purple darken-1 right btn-hover">Cancel</a>
                                             </p>
                                         </div>
-
+                                
                                         <div class="progress" style="display: none;" id="create-account-preloader">
                                             <div class="indeterminate"></div>
                                         </div>
                                     </div>
                                 </div>
-                            </form>
-                        </div>
+                            </div>
+
+                            <div class="hide-on-large-only">
+                                <div class="row">
+                                    <div class="col s12 right">
+                                        <div class="section"></div>
+                                        <div id="mobile-create-account-form-btns">
+                                            <div class="row">
+                                                <div class="col s12 center">
+                                                    <a href="/" class="waves-effect waves-purple btn-flat white-text purple darken-1 btn-hover">Cancel</a>
+                                                    <button class="waves-effect waves-purple btn-flat purple darken-1 white-text btn-spacing btn-hover"
+                                                        type="submit">Create</button>
+                                                </div>
+                                            </div>
+
+                                            <div class="row no-bottom-padding">
+                                                <div class="col s12 center">
+                                                    <div class="section"></div>
+                                                    <i class="fas fa-sign-in-alt"></i> &nbsp;Already have an account? <a href="/" style="text-decoration: underline;" class="white-text">Login</a>.
+                                                </div>
+                                            </div>
+                                        </div>
+                            
+                                        <div class="progress" style="display: none;" id="mobile-create-account-preloader">
+                                            <div class="indeterminate"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -119,7 +157,9 @@
         var xhr;
         var csrf_token = "{{ csrf_token() }}";
         var preloader = document.getElementById("create-account-preloader");
+        var mobilePreloader = document.getElementById("mobile-create-account-preloader");
         var formBtns = document.getElementById("create-account-form-btns");
+        var mobileFormBtns = document.getElementById("mobile-create-account-form-btns");
         var username = document.getElementById('username').value;
         var email = document.getElementById('email').value;
         var password = document.getElementById('password').value;
@@ -149,7 +189,9 @@
         }
 
         formBtns.style.display = 'none';
+        mobileFormBtns.style.display = 'none';
         preloader.style.display = "block";
+        mobilePreloader.style.display = "block";
 
         xhr = new XMLHttpRequest();
         xhr.open('POST', '/create-account-submit', true);
@@ -163,7 +205,9 @@
         var params = usernameString + emailString + passwordString + confirmPasswordString + tosString;
         xhr.onload = function () {
             preloader.style.display = "none";
+            mobilePreloader.style.display = "none";
             formBtns.style.display = 'block';
+            mobileFormBtns.style.display = 'block';
 
             var r = JSON.parse(this.response);
 

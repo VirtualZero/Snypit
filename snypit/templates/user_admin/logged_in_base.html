@@ -27,6 +27,27 @@
         <main class="full-height">
             {% include 'user_admin/sections/navbar.html' %}
 
+            <ul id="mobile-nav" class="sidenav grey darken-3">
+                <div class="container">
+                    <li>
+                        <a href="/dashboard?vzin={{ session['vzin'] }}&username={{ session['username'].title() }}" class="white-text waves-effect waves-purple" id="logo-home-link">Dashboard
+                </a>
+                    </li>
+            
+                    <li>
+                        <a href="/new-snippet?vzin={{ session['vzin'] }}&username={{ session['username'].title() }}" class="waves-effect waves-purple white-text">New</a>
+                    </li>
+            
+                    <li>
+                        <a href="/account/username={{ session['username'].title() }}?vzin={{ session['vzin'] }}" class="waves-effect waves-purple white-text">Account</a>
+                    </li>
+            
+                    <li>
+                        <a href="/logout" class="waves-effect waves-purple white-text"">Logout</a>
+                    </li>
+                </div>
+            </ul>
+
             {% block content %}
 
             {% endblock %}
