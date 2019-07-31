@@ -171,6 +171,7 @@ def new_snippet():
 
 @app.route('/new-snippet-submit', methods=['POST'])
 @login_required
+@validate_vzin
 def new_snippet_submit():
     new_snippet_form = NewSnippetForm()
 
@@ -264,6 +265,8 @@ def new_snippet_submit():
     
 
 @app.route('/get-new-snippet-form')
+@login_required
+@validate_vzin
 def get_new_snippet_form():
     new_snippet_form = NewSnippetForm()
     return render_template(

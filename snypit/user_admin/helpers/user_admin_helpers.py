@@ -23,8 +23,11 @@ def validate_vzin(f):
             '/logout'
         ]
 
+        print(f'\nSession: {session["vzin"]}\n{request.args["vzin"]}\n')
+
         if request.path not in excluded_routes:
             if request.args.get('vzin') != session['vzin']:
+                
                 return redirect(
                     f'{request.path}?vzin={session["vzin"]}&username={session["username"].title()}'
                 )

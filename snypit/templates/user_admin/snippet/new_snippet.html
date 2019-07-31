@@ -190,7 +190,7 @@
     function getNewSnippetForm() {
         document.getElementById('title-row').style.display = 'block';
         var xhr = new XMLHttpRequest();
-        xhr.open('GET', '/get-new-snippet-form', true);
+        xhr.open('GET', '/get-new-snippet-form?vzin={{ session["vzin"] }}&username={{ session["username"].title() }}', true);
         xhr.onload = function () {
             if (this.status === 200) {
                 document.getElementById('new-snippet-form-section').innerHTML = this.response;
@@ -303,7 +303,7 @@
                     preloader.style.display = "block";
 
                     var xhr = new XMLHttpRequest();
-                    xhr.open('POST', '/new-snippet-submit', true);
+                    xhr.open('POST', '/new-snippet-submit?vzin={{ session["vzin"] }}&username={{ session["username"].title() }}', true);
                     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
                     xhr.setRequestHeader("X-CSRFToken", csrf_token);
                     xhr.onload = function () {
@@ -471,7 +471,7 @@
             preloader.style.display = "block";
 
             var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/new-snippet-submit', true);
+            xhr.open('POST', '/new-snippet-submit?vzin={{ session["vzin"] }}&username={{ session["username"].title() }}', true);
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
             xhr.setRequestHeader("X-CSRFToken", csrf_token);
             xhr.onload = function () {

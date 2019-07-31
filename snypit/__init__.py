@@ -43,6 +43,5 @@ from snypit.models.snippet_models import (
 
 
 # Routes
-from snypit.errors.routes import error_routes
 from snypit.user.routes import user_routes
 from snypit.user_admin.routes import user_admin_routes
