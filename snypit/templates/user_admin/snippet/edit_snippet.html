@@ -152,7 +152,8 @@
         </div>
     </div>
 </div>
-
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+    integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
 {% assets 'snypit_admin_js' %}
     <script type="text/javascript" src="{{ ASSET_URL }}"></script>
 {% endassets %}
@@ -177,7 +178,8 @@
             }
         }
 
-        M.updateTextFields()
+        M.textareaAutoResize(document.getElementById('description'));
+        M.updateTextFields();
         M.AutoInit();
     });
 </script>
@@ -203,7 +205,7 @@
         const xhr = new XMLHttpRequest();
         xhr.open("POST", "/delete-snippet/{{ snippet.vzsid }}?vzin={{ session['vzin'] }}&username={{ session['username'].title() }}");
         xhr.setRequestHeader("X-CSRFToken", csrf_token);
-        
+
         xhr.onload = function () {
             if (this.status === 200) {
                 window.location.replace("/dashboard?vzin={{ session['vzin'] }}&username={{ session['username'].title() }}");
