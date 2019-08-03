@@ -55,7 +55,6 @@ def dashboard():
     if last_viewed_snippet.tags:
         if ',' in last_viewed_snippet.tags:
             last_viewed_snippet.tags = re.sub(',\s*', ', ', last_viewed_snippet.tags)
-            #last_viewed_snippet.tags = last_viewed_snippet.tags.replace(',', ', ')
 
     pinned_snippets = Snippet.query.filter(
         and_(
@@ -103,7 +102,7 @@ def dashboard():
 @login_required
 @validate_vzin
 def dashboard_search():
-    search_for = request.args.get('search-for')
+    search_for = request.args.get('search-for').lower()
     search_match_list = []
 
     user_snippets = Snippet.query.filter_by(
