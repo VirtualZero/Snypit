@@ -25,8 +25,7 @@
 <div class="row no-bottom-padding">
     <div class="col s12">
         <div class="section"></div>
-        <button onclick="alertCopied()" data-clipboard-text="{{ snippet.snippet_content }}"
-            id="copy-snippet"
-            class="btn-flat purple darken-1 waves-effect waves-purple btn-hover white-text right">Copy</button>
+        <button onclick="alertCopied()" data-clipboard-text="{{ snippet.snippet_content }}" id="copy-snippet" class="btn-spacing btn-flat purple darken-1 waves-effect waves-purple btn-hover white-text right">Copy</button>
+        <a href="/edit-snippet/{{ snippet.vzsid }}?vzin={{ session['vzin'] }}&username={{ session['username'].title() }}" class="btn-flat purple darken-1 waves-effect waves-purple btn-hover white-text right">Edit</a>
     </div>
 </div>

@@ -29,6 +29,7 @@ from sqlalchemy import and_, desc
 import random
 import string
 import urllib
+import re
 
 
 @app.route('/dashboard')
@@ -52,7 +53,9 @@ def dashboard():
     last_viewed_snippet.last_viewed = db.func.now()
 
     if last_viewed_snippet.tags:
-        last_viewed_snippet.tags = last_viewed_snippet.tags.replace(',', ', ')
+        if ',' in last_viewed_snippet.tags:
+            last_viewed_snippet.tags = re.sub(',\s*', ', ', last_viewed_snippet.tags)
+            #last_viewed_snippet.tags = last_viewed_snippet.tags.replace(',', ', ')
 
     pinned_snippets = Snippet.query.filter(
         and_(
@@ -84,8 +87,6 @@ def dashboard():
     ).limit(
         5
     ).all()
-
-    db.session.commit()
 
     return render_template(
         'user_admin/dashboard.html',
@@ -176,7 +177,7 @@ def new_snippet_submit():
     new_snippet_form = NewSnippetForm()
 
     if new_snippet_form.validate_on_submit():
-        if len(request.form['tags']) > 500:
+        if len(request.form['tags']) > 200:
             return jsonify(
                 {
                     'status': 'error',
@@ -264,6 +265,86 @@ def new_snippet_submit():
     ), 400
     
 
+@app.route('/edit-snippet-submit', methods=['POST'])
+@login_required
+@validate_vzin
+def edit_snippet_submit():
+    new_snippet_form = NewSnippetForm()
+
+    if new_snippet_form.validate_on_submit():
+        snippet = Snippet.query.filter_by(
+            vzsid=request.args.get('vzsid')
+        ).first_or_404()
+
+        if len(request.form['tags']) > 200:
+            return jsonify(
+                {
+                    'status': 'error',
+                    'errors': {
+                        'tags': 'There are too many tags.'
+                    }
+                }
+            ), 400
+
+        tags = request.form['tags'] if request.form['tags'] else None
+
+        if not request.form['snippet']:
+            return jsonify(
+                {
+                    'status': 'error',
+                    'errors': {
+                        'snippet': 'This field is required.'
+                    }
+                }
+            ), 400
+
+        if len(request.form['snippet']) > 50000:
+            return jsonify(
+                {
+                    'status': 'error',
+                    'errors': {
+                        'snippet': 'Cannot exceed 50,000 characters.'
+                    }
+                }
+            ), 400
+
+        pinned = True if request.form['pin'] == 'True' else False
+
+        if 'CPlusPlus' in new_snippet_form.language.data:
+            new_snippet_form.language.data = 'C++||clike'
+
+        snippet.snippet_name = new_snippet_form.snippet_name.data.strip()
+        snippet.language_icon = get_language_icon(new_snippet_form.language.data.split('||')[0])
+        snippet.codemirror_mode = new_snippet_form.language.data.split('||')[1]
+        snippet.language = new_snippet_form.language.data.split('||')[0]
+        snippet.description = new_snippet_form.description.data.strip()
+        snippet.tags = tags
+        snippet.pinned = pinned
+        print(f"\n\n{request.form['snippet']}")
+        snippet.snippet_content = request.form['snippet']
+
+        db.session.commit()
+
+        return jsonify(
+            {
+                'status': 'success',
+                'language_icon': snippet.language_icon
+            }
+        ), 200
+
+    errors = {}
+
+    for fieldName, errorMessages in new_snippet_form.errors.items():
+        errors[fieldName] = errorMessages[0]
+
+    return jsonify(
+        {
+            'status': 'error',
+            'errors': errors
+        }
+    ), 400
+
+
 @app.route('/get-new-snippet-form')
 @login_required
 @validate_vzin
@@ -272,6 +353,22 @@ def get_new_snippet_form():
     return render_template(
         'user_admin/snippet/section_render/new_snippet_form_section.html',
         new_snippet_form=new_snippet_form
+    )
+
+
+@app.route('/edit-snippet/<vzsid>')
+@login_required
+@validate_vzin
+def edit_snippet(vzsid):
+    snippet = Snippet.query.filter_by(
+        vzsid=vzsid
+    ).first_or_404()
+
+    return render_template(
+        'user_admin/snippet/edit_snippet.html',
+        title='Edit Snippet',
+        new_snippet_form=NewSnippetForm(),
+        snippet=snippet
     )
 
 

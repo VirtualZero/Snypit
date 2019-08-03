@@ -1,0 +1,311 @@
+{% extends "user_admin/logged_in_base.html" %}
+{% block content %}
+
+<div style="height:93vh; overflow:auto" class="dashboard-scroll">
+    <div class="container" id="content">
+        <div class="row no-bottom-padding">
+            <div class="col s12">
+                <div class="section"></div>
+                <div class="card white-text grey darken-3 z-depth-0">
+                    <div class="card-content ">
+                        <div class="row" id="title-row">
+                            <div class="col s12">
+                                <h3 class="white-text">
+                                    Edit Snippet<i class="fas fa-code white-text right"></i>
+                                </h3>
+                            </div>
+                        </div>
+
+                        <div id="edit-snippet-form-section">
+                            <form action="/edit-snippet-submit" method="POST" id="edit-snippet-form">
+                                <div class="row no-bottom-padding">
+                                    <div id="sname">
+                                        <div class="col s12 m12 l6 input-field no-top-padding">
+                                            <i class="material-icons prefix ">title</i>
+                                            {{ new_snippet_form.snippet_name(class="white-text", value=snippet.snippet_name, required="", maxlength="150", pattern=".{1,150}", title="Must be less than 150 characters.")}}
+                                            {{ new_snippet_form.snippet_name.label(class="white-text") }}
+
+                                            <span class="red-text text-accent-1 helper-text" style="display: none;"
+                                                id="name_error_text"></span>
+
+                                            {% for error in new_snippet_form.snippet_name.errors %}
+                                            <span class="red-text accent-1">{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+
+                                    <div id="slang">
+                                        <div class="col s12 m12 l6 input-field no-top-padding">
+                                            <i class="material-icons prefix ">code</i>
+                                            {{ new_snippet_form.language(class="white", required="", onchange="updateLanguage()")}}
+
+                                            <span class="red-text text-accent-1 helper-text" style="display: none;"
+                                                id="language_error_text"></span>
+
+                                            {% for error in new_snippet_form.language.errors %}
+                                            <span class="red-text accent-1">{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row no-bottom-padding">
+                                    <div id="sdesc">
+                                        <div class="col s12 input-field no-top-padding">
+                                            <i class="material-icons prefix ">description</i>
+                                            {{ new_snippet_form.description(class="white-text materialize-textarea", required="", maxlength="1500", pattern=".{1,1500}", title="Must be less than 1500 characters.")}}
+                                            {{ new_snippet_form.description.label(class="white-text") }}
+
+                                            <span class="red-text text-accent-1 helper-text" style="display: none;"
+                                                id="description_error_text"></span>
+
+                                            {% for error in new_snippet_form.description.errors %}
+                                            <span class="red-text accent-1">{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row" id="stagsnpin">
+                                    <div class="col s12 m12 l8 input-field no-top-padding">
+                                        <i class="fas fa-tags prefix form-icon"></i>
+                                        {{ new_snippet_form.tags(class="white-text materialize-textarea", value=snippet.tags, required="", maxlength="200", pattern=".{1,200}", title="Must be less than 200 characters.")}}
+                                        {{ new_snippet_form.tags.label(class="white-text") }}
+
+                                        <span class="red-text text-accent-1 helper-text" style="display: none;"
+                                            id="tags_error_text"></span>
+
+                                        {% for error in new_snippet_form.description.errors %}
+                                            <span class="red-text accent-1">{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+
+                                    <div class="col s12 m12 l4 center">
+                                        <div class="section">
+                                            <label>
+                                                <input type="checkbox" class="filled-in white-text" name="pin" id="pin"
+                                                    style="margin-top:1rem !important;padding-top:1rem !important;" />
+                                                <span class="white-text center"><i class="fas fa-thumbtack"></i>
+                                                    &nbsp;Pin to my favorites!</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col s12 input-field">
+                                        <textarea name="snippet" id="snippet" maxlength="50000" ,
+                                            pattern=".{1,50000}">{{ snippet.snippet_content }}</textarea>
+                                        <span class="red-text text-accent-1 helper-text help-text-top-padding"
+                                            style="display: none;" id="snippet_error_text"></span>
+                                    </div>
+                                </div>
+
+                                <div class="row" id="save-edit-snippet-button-row">
+                                    <div class="col s12">
+                                        <div id="edit-snippet-btns">
+                                            <span class="right">
+                                                <a href="/dashboard?vzin={{ session['vzin'] }}&username={{ session['username'].title() }}"
+                                                    class="purple darken-1 white-text waves-effect waves-purple btn-hover btn-flat">Cancel</a>&nbsp;
+                                                <button type="submit"
+                                                    class="btn-flat purple darken-1 white-text waves-effect waves-purple btn-hover"
+                                                    id="snippet-submit-button">Save</button>
+                                            </span>
+                                        </div>
+
+                                        <div class="progress" style="display: none;" id="edit-snippet-preloader">
+                                            <div class="indeterminate"></div>
+                                        </div>
+
+                                        <div class="row no-bottom-padding" id="another-snippet-row" style="display: none;">
+                                            <div class="col s12">
+                                                <span class="right">
+                                                    <a href="/dashboard?vzin={{ session['vzin'] }}&username={{ session['username'].title() }}"
+                                                        class="btn-flat purple darken-1 white-text waves-effect waves-purple btn-hover">Done</a>&nbsp;
+                                                    <a href="/edit-snippet/{{ snippet.vzsid }}?vzin={{ session['vzin'] }}&username={{ session['username'].title() }}" class="btn-flat purple darken-1 white-text btn-hover waves-effect waves-purple">Edit</a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% assets 'snypit_admin_js' %}
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        if ('{{ snippet.pinned }}' == 'True') {
+            document.getElementById("pin").checked = true;
+        };
+
+        document.getElementById('description').innerHTML = '{{ snippet.description }}';
+        document.getElementById('snippet').value = encodeURIComponent(`{{ snippet.snippet_content }}`);
+
+        var selectBox = document.getElementById("language");
+        var selectOptions = selectBox.options;
+        var selectValue = '{{ snippet.language }}||{{ snippet.codemirror_mode }}';
+
+        for (var opt, j = 0; opt = selectOptions[j]; j++) {
+            if (opt.value == selectValue) {
+                selectBox.selectedIndex = j;
+                break;
+            }
+        }
+
+        M.updateTextFields()
+        M.AutoInit();
+    });
+</script>
+
+<script>
+    var editor = CodeMirror.fromTextArea(document.getElementById('snippet'), {
+        lineNumbers: true,
+        mode: 'python',
+        theme: "{{ session['editor_theme'] }}"
+    });
+
+    function updateLanguage() {
+        var selectBox = document.getElementById("language");
+        var selectedLanguage = selectBox.options[selectBox.selectedIndex].value.split("||")[1];
+        editor.setOption("mode", selectedLanguage);
+        
+    };
+</script>
+
+<script>
+        document.getElementById("edit-snippet-form").addEventListener('submit', makeRequest);
+        function makeRequest(e) {
+            e.preventDefault();
+            var csrf_token = "{{ csrf_token() }}";
+            var preloader = document.getElementById("edit-snippet-preloader");
+            var formBtns = document.getElementById("edit-snippet-btns");
+            var snippetName = encodeURIComponent(document.getElementById('snippet_name').value);
+            var snippetLanguage = document.getElementById('language').value;
+            var snippetDescription = encodeURIComponent(document.getElementById('description').value);
+            var snippetContent = encodeURIComponent(editor.getValue());
+            var nameErrorText = document.getElementById('name_error_text');
+            var languageErrorText = document.getElementById('language_error_text');
+            var descErrorText = document.getElementById('description_error_text');
+            var tagsErrorText = document.getElementById('tags_error_text');
+            var snippetErrorText = document.getElementById('snippet_error_text');
+            var tags = 'tags=' + encodeURIComponent(document.getElementById('tags').value) + '&';
+
+            if (document.getElementById('pin').checked) {
+                var pin = 'pin=True&';
+            }
+
+            else {
+                var pin = 'pin=False&';
+            };
+
+            nameErrorText.style.display = "none";
+            languageErrorText.style.display = "none";
+            descErrorText.style.display = "none";
+            tagsErrorText.style.display = "none";
+            snippetErrorText.style.display = "none";
+
+            if (snippetLanguage === "none||none") {
+                languageErrorText.style.display = 'block';
+                languageErrorText.innerHTML = 'This field is required.'
+                return false;
+            };
+
+            if (snippetContent == "") {
+                snippetErrorText.style.display = 'block';
+                snippetErrorText.innerHTML = 'This field is required.'
+                return false;
+            }
+
+            if (snippetContent.length > 50000) {
+                snippetErrorText.style.display = 'block';
+                snippetErrorText.innerHTML = 'Cannot exceed 50,000 characters.'
+                return false;
+            }
+
+            if (tags.length > 200) {
+                tagsErrorText.style.display = 'block';
+                tagsErrorText.innerHTML = 'There are too many tags.';
+                return false;
+            }
+
+            var name = "snippet_name=" + snippetName + "&";
+            var language = "language=" + snippetLanguage + "&";
+            var description = "description=" + snippetDescription + "&";
+            var snippet = "snippet=" + snippetContent;
+            var params = name + language + description + tags + pin + snippet;
+
+            formBtns.style.display = 'none';
+            preloader.style.display = "block";
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/edit-snippet-submit?vzin={{ session["vzin"] }}&username={{ session["username"].title() }}&vzsid={{ snippet.vzsid }}', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+            xhr.setRequestHeader("X-CSRFToken", csrf_token);
+            xhr.onload = function () {
+                preloader.style.display = "none";
+                formBtns.style.display = 'block';
+
+                var r = JSON.parse(this.response);
+
+                if (this.status === 200) {
+                    formBtns.style.display = 'none';
+                    document.getElementById('another-snippet-row').style.display = 'block';
+                    document.getElementById('title-row').style.display = 'none';
+                    document.getElementById('slang').style.display = 'none';
+                    document.getElementById('sname').innerHTML = "<div class='col s12'><h3 class='white-text'>" + decodeURIComponent(snippetName) + "<span class='right'>" + r.language_icon + "</span></h3></div>";
+                    document.getElementById('sdesc').innerHTML = "<div class='col s12 m12 l12'><p class='white-text flow-text'><strong>" + snippetLanguage.split("||")[0] + "</strong><br>"+ decodeURIComponent(snippetDescription) + "</p></div>";
+                    document.getElementById('stagsnpin').style.display = 'none';
+                    M.toast({ html: '<p>Snippet Saved!</p>', classes: 'grey darken-3 white-text' });
+                }
+
+                else if (this.status === 400) {
+
+                    if (r.hasOwnProperty('errors')) {
+                        if (r.errors.hasOwnProperty('language')) {
+                            languageErrorText.style.display = 'block';
+                            languageErrorText.innerHTML = r.errors.language;
+                        }
+
+                        if (r.errors.hasOwnProperty('snippet_name')) {
+                            nameErrorText.style.display = 'block';
+                            nameErrorText.innerHTML = r.errors.snippet_name;
+                        }
+
+                        if (r.errors.hasOwnProperty('description')) {
+                            descriptionErrorText.style.display = 'block';
+                            descriptionErrorText.innerHTML = r.errors.description;
+                        }
+
+                        if (r.errors.hasOwnProperty('snippet')) {
+                            snippetErrorText.style.display = 'block';
+                            snippetErrorText.innerHTML = r.errors.snippet;
+                        }
+
+                        if (r.errors.hasOwnProperty('tags')) {
+                            tagsErrorText.style.display = 'block';
+                            tagsErrorText.innerHTML = r.errors.tags;
+                        }
+                    }
+                }
+            };
+
+            xhr.onerror = function () {
+                formBtns.style.display = 'block';
+                preloader.style.display = 'none';
+                M.toast({ html: '<p><i class="fas fa-2x fa-exclamation-triangle red-text text-accent-1 center"></i></p> &nbsp;&nbsp;&nbsp;<p>An error occured submitting the form.</p>', classes: 'grey darken-3 white-text center' })
+            };
+
+            xhr.send(params);
+        };
+</script>
+
+{% endblock %}

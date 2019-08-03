@@ -346,6 +346,13 @@ class NewSnippetForm(FlaskForm):
         ]
     )
 
+    tags = StringField(
+        'Tags, <i>Comma Separated</i>',
+        [
+            Length(max=200)
+        ]
+    )
+
 
 class SearchForm(FlaskForm):
     search_text = StringField(

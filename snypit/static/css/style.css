@@ -197,3 +197,8 @@ ul.dropdown-content.select-dropdown li span:hover {
 .nav-border-right {
     margin-right: 1rem;
 }
+
+.form-icon {
+    height:1.5rem;
+    margin-top:.5rem;
+}
