@@ -371,6 +371,26 @@ def edit_snippet(vzsid):
     )
 
 
+@app.route('/delete-snippet/<vzsid>', methods=['POST'])
+@login_required
+@validate_vzin
+def delete_snippet(vzsid):
+    snippet = Snippet.query.filter_by(
+        vzsid=vzsid
+    ).first_or_404()
+
+    db.session.delete(snippet)
+    db.session.commit()
+
+    flash('Snippet Deleted!')
+
+    return jsonify(
+        {
+            'status': 'success'
+        }
+    ), 200
+
+
 @app.route('/account/<username>')
 @login_required
 @validate_vzin
