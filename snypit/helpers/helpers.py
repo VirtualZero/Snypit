@@ -39,6 +39,7 @@ def make_bundles():
         'codemirror_modes/xml/xml.js',
         'codemirror_modes/yaml/yaml.js',
         'codemirror_modes/yaml-frontmatter/yaml-frontmatter.js',
+        'js/simplescrollbars.js',
         output='assets/snypit_admin.js',
         filters='jsmin'
     )
@@ -100,6 +101,7 @@ def make_bundles():
         'codemirror_themes/xq-light.css',
         'codemirror_themes/yeti.css',
         'codemirror_themes/zenburn.css',
+        'css/simplescrollbars.css',
         'css/style.css',
         output='assets/snypit_admin.css',
         filters='cssmin'

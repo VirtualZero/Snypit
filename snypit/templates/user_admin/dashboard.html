@@ -212,6 +212,7 @@
                         lineNumbers: true,
                         mode: document.getElementById('cmmode' + id).value,
                         theme: "{{ session['editor_theme'] }}",
+                        scrollbarStyle: 'simple'
                     });
 
                     if (document.getElementById(editorSection).clientHeight >= 350) {
