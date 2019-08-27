@@ -64,7 +64,8 @@ def landing():
 
     return render_template(
         'landing/landing.html',
-        title='Snypit',
+        title='Snypit | Start Managing Your Code Snippets for Free',
+        meta='Manage your valuable code snippets and increase productivity. Get started using Snypit for free.',
         login_form=login_form
     )
 
@@ -161,7 +162,8 @@ def create_account():
 
     return render_template(
         'user/create_account.html',
-        title='Create Account',
+        title='Snypit | Create an Account',
+        meta='Create a Snypit account to start managing and organizing your valuable code snippets for free.',
         create_account_form=create_account_form
     )
 
