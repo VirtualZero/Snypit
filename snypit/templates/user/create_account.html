@@ -74,7 +74,7 @@
                                 </div>
                             </div>
             
-                            <div class="row">
+                            <!-- <div class="row">
                                 <div class="col s12 center">
                                     <div class="section"></div>
                                     <p class="flow-text ">
@@ -86,7 +86,7 @@
                                     <a href="#" class="white-text"><small>Terms of Service &nbsp;<i
                                                 class="fas fa-external-link-alt white-text"></i></small></a>
                                 </div>
-                            </div>
+                            </div> -->
             
                             <div class="hide-on-med-and-down">
                                 <div class="row">
@@ -165,12 +165,12 @@
         var password = document.getElementById('password').value;
         var confirmPassword = document.getElementById('confirm_password').value;
 
-        if (document.getElementById('confirm_tos').checked) {
+        /*if (document.getElementById('confirm_tos').checked) {
             var confirmTOS = 'True';
         }
         else {
             var confirmTOS = 'False';
-        };
+        };*/
 
         var unameErrorText = document.getElementById('username_error_text');
         var emailErrorText = document.getElementById('email_error_text');
@@ -201,8 +201,8 @@
         var emailString = "email=" + email + "&";
         var passwordString = "password=" + password + "&";
         var confirmPasswordString = "confirm_password=" + confirmPassword + "&";
-        var tosString = "confirm_tos=" + confirmTOS;
-        var params = usernameString + emailString + passwordString + confirmPasswordString + tosString;
+        //var tosString = "confirm_tos=" + confirmTOS;
+        var params = usernameString + emailString + passwordString + confirmPasswordString; // add + tosString to end to use
         xhr.onload = function () {
             preloader.style.display = "none";
             mobilePreloader.style.display = "none";

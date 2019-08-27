@@ -50,11 +50,12 @@ def dashboard():
     if not last_viewed_snippet:
         last_viewed_snippet = Snippet.query.get(1)
 
-    last_viewed_snippet.last_viewed = db.func.now()
+    if last_viewed_snippet: # For dev if db doesn't start @1
+        last_viewed_snippet.last_viewed = db.func.now()
 
-    if last_viewed_snippet.tags:
-        if ',' in last_viewed_snippet.tags:
-            last_viewed_snippet.tags = re.sub(',\s*', ', ', last_viewed_snippet.tags)
+        if last_viewed_snippet.tags:
+            if ',' in last_viewed_snippet.tags:
+                last_viewed_snippet.tags = re.sub(',\s*', ', ', last_viewed_snippet.tags)
 
     pinned_snippets = Snippet.query.filter(
         and_(

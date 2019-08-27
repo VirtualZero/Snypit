@@ -180,7 +180,7 @@ def create_account_submit():
             request.remote_addr
         )
 
-        if request.form['confirm_tos'] == 'True':
+        """ if request.form['confirm_tos'] == 'True':
             confirmed_TOS = True
 
         else:
@@ -191,7 +191,7 @@ def create_account_submit():
                         'tos': 'tos error'
                     }
                 }
-            ), 400
+            ), 400 """
 
         pw_hash = bcrypt.generate_password_hash(
             password
@@ -230,7 +230,7 @@ def create_account_submit():
         db.session.flush()
 
         new_user.account_created_from_ip = account_created_from_ip
-        new_user.agreed_to_tos = confirmed_TOS
+        new_user.agreed_to_tos = True
         new_user.verify_email_token = verify_email_token
         new_user.email_confirmed = False
         db.session.commit()
