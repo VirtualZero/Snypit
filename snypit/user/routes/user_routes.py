@@ -391,9 +391,18 @@ def reset_confirmation_email():
 def email_confirmation_sent():
     reset_confirm_email_form = Reset_Confirm_Email_Form()
     email = request.args.get('email')
+
+    user = User.query.filter_by(
+        email=email
+    ).first()
+
+    if not email or not user or user.email_confirmed:
+        return redirect('/')
+
     return render_template(
         'user/email_confirmation_sent.html',
-        title="Email Confirmation Sent",
+        title="Snypit | Your Account Confirmation Email has been Sent",
+        meta='We hope you enjoy using Snypit, your account confirmation email has been sent.',
         email=email,
         reset_confirm_email_form=reset_confirm_email_form
     )
@@ -449,7 +458,8 @@ def forgot_password():
     forgot_password_form = ForgotPasswordForm()
     return render_template(
         'user/forgot_password.html',
-        title='Forgot Password',
+        title='Snypit | Reset Your Password',
+        meta='If you forget your Snypit account password, you can reset it on this page.',
         forgot_password_form=forgot_password_form)
 
 
