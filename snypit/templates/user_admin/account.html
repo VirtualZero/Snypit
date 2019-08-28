@@ -528,6 +528,19 @@ def to_bit_generator(secret_message):
 {% endassets %}
 
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        M.AutoInit();
+        var editor = CodeMirror.fromTextArea(document.getElementById('snippet-content'), {
+            lineNumbers: true,
+            indentUnit: 4,
+            mode: 'python',
+            theme: "{{ session['editor_theme'] }}",
+            scrollbarStyle: 'simple'
+        });
+    });
+</script>
+
+<script>
     function getUpdateUnameForm() {
         document.getElementById('uname-section').style.display = 'none';
         document.getElementById('uname-form-section').style.display = 'block';
@@ -603,7 +616,7 @@ def to_bit_generator(secret_message):
                 cancelUpdateUnameForm()
                 document.getElementById('uname_error_text').style.display = 'none';
                 document.getElementById('uname-text').innerHTML = document.getElementById('username').value;
-                M.toast({ html: '<p><i class="fas fa-check green-text text-lighten-2 center"></i> &nbsp;Updated!</p>', classes: 'grey darken-3 white-text' })
+                M.toast({ html: '<p><i class="fas fa-check green-text text-lighten-2 center"></i> &nbsp;Updated!</p>', classes: 'purple darken-1 white-text' })
             }
 
             else if (this.status === 400) {
@@ -641,7 +654,7 @@ def to_bit_generator(secret_message):
                 cancelUpdateEmailForm()
                 document.getElementById('email_error_text').style.display = 'none';
                 document.getElementById('email-text').innerHTML = document.getElementById('email').value;
-                M.toast({ html: '<p><i class="fas fa-check green-text text-lighten-2 center"></i> &nbsp;Updated!</p>', classes: 'grey darken-3 white-text' })
+                M.toast({ html: '<p><i class="fas fa-check green-text text-lighten-2 center"></i> &nbsp;Updated!</p>', classes: 'purple darken-1 white-text' })
             }
 
             else if (this.status === 400) {
@@ -682,7 +695,7 @@ def to_bit_generator(secret_message):
                 document.getElementById('password').value = '';
                 document.getElementById('confirm_password').value = '';
                 M.updateTextFields();
-                M.toast({ html: '<p><i class="fas fa-check green-text text-lighten-2 center"></i> &nbsp;Updated!</p>', classes: 'grey darken-3 white-text' })
+                M.toast({ html: '<p><i class="fas fa-check green-text text-lighten-2 center"></i> &nbsp;Updated!</p>', classes: 'purple darken-1 white-text' })
             }
 
             else if (this.status === 400) {
@@ -724,7 +737,7 @@ def to_bit_generator(secret_message):
             if (this.status === 200) {
                 document.getElementById('done-button-row').style.display = 'block';
                 document.getElementById('theme-save-row').style.display = 'none';
-                M.toast({ html: '<p><i class="fas fa-check green-text text-lighten-2 center"></i> &nbsp;Updated!</p>', classes: 'grey darken-3 white-text' })
+                M.toast({ html: '<p><i class="fas fa-check green-text text-lighten-2 center"></i> &nbsp;Updated!</p>', classes: 'purple darken-1 white-text' })
             }
         };
 
@@ -733,19 +746,6 @@ def to_bit_generator(secret_message):
         };
         xhr.send(params);
     };
-</script>
-
-<script>
-    M.AutoInit()
-</script>
-
-<script>
-    var editor = CodeMirror.fromTextArea(document.getElementById('snippet-content'), {
-        lineNumbers: true,
-        indentUnit: 4,
-        mode: 'python',
-        theme: "{{ session['editor_theme'] }}"
-    });
 </script>
 
 <script type="text/javascript">

@@ -137,27 +137,7 @@
                     <div class="col s12 m6 l9 dashboard-scroll" style="height: 93vh !important; overflow-y: auto !important">
                         <div class="card grey darken-3 white-text z-depth-0">
                             <div class="card-content">
-                                <div class="row valign-wrapper no-bottom-padding" id="editor-preloader">
-                                    <div class="col s12 center">
-                                        <div class="preloader-wrapper big active">
-                                            <div class="spinner-layer spinner-blue-only">
-                                                <div class="circle-clipper left">
-                                                    <div class="circle"></div>
-                                                </div>
-                                
-                                                <div class="gap-patch">
-                                                    <div class="circle"></div>
-                                                </div>
-                                
-                                                <div class="circle-clipper right">
-                                                    <div class="circle"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div id="editor-section" style="display: hidden;">
+                                <div id="editor-section">
                                     <div class="row no-bottom-padding">
                                         <div class="col s12 ">
                                             <h3 id="sname">{{ last_viewed_snippet.snippet_name }}<span class="right"
@@ -212,8 +192,6 @@
             indentUnit: 4,
             value: `{{ last_viewed_snippet.snippet_content }}`
         });
-        document.getElementById('editor-preloader').style.display = 'none';
-        document.getElementById('editor-section').style.display = 'block';
         new ClipboardJS('#copy-snippet');
     })
 </script>

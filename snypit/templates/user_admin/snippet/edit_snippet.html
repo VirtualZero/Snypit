@@ -186,15 +186,17 @@
 <script>
     var editor = CodeMirror.fromTextArea(document.getElementById('snippet'), {
         lineNumbers: true,
-        mode: 'python',
-        theme: "{{ session['editor_theme'] }}"
+        mode: '{{ snippet.codemirror_mode }}',
+        theme: "{{ session['editor_theme'] }}",
+        scrollbarStyle: 'simple'
     });
+</script>
 
+<script>
     function updateLanguage() {
         var selectBox = document.getElementById("language");
         var selectedLanguage = selectBox.options[selectBox.selectedIndex].value.split("||")[1];
         editor.setOption("mode", selectedLanguage);
-        
     };
 </script>
 
